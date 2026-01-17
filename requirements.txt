@@ -1,5 +1,5 @@
 Flask==2.3.2
-Flask-SQLAlchemy==3.0.3
+Flask_SQLAlchemy
 SQLAlchemy==2.0.19
 Werkzeug==2.3.7
 requests==2.32.3
@@ -9,4 +9,4 @@ numpy==1.24.6
 pybind11==2.12.3
 Pillow==10.0.1
 python-dotenv==1.0.0
-gunicorn==21.2.0
+gunicorn
