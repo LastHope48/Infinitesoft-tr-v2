@@ -1,0 +1,180 @@
+body {
+    background-color: black;
+}
+::selection {
+    background: gray;
+    color: aquamarine;
+}
+.baslik {
+    text-align: center;
+    color: aqua;
+    font-size: 50px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.list {
+    display: flex;
+    justify-content: space-around;
+}
+.list__item a {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: inherit;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 24px;
+    border: 1px solid #EB8028;
+    transition: 0.2s;
+}
+.item__img {
+    object-fit: contain;
+    width: 150px;
+}
+.list__item a:hover {
+    box-shadow: 1px 1px 4px 4px greenyellow;
+}
+.list__item span {
+    color: aquamarine;
+    font-size: 50px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.header__item {
+    font-size: 100px;
+    text-align: center;
+}
+.header {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left;
+    background-color: #CCE59D;
+    padding: 10vh 30px;
+    margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.site-footer{
+  margin-top: 80px;
+  padding: 20px;
+  text-align: center;
+  background: rgba(5, 175, 226, 0.6);
+  color: #f5deb3;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+  z-index: 2;
+}
+
+.site-footer p{
+  margin: 0;
+}
+.sticky-update-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    background: linear-gradient(135deg, #ff9800, #ff5722);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 14px;
+
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    transition: all 0.3s ease;
+}
+
+.sticky-update-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+}
+
+.sticky-update-btn .icon {
+    font-size: 18px;
+}
+
+/* Mobilde sadece ikon kalsın */
+@media (max-width: 600px) {
+    .sticky-update-btn .text {
+        display: none;
+    }
+
+    .sticky-update-btn {
+        padding: 12px;
+        border-radius: 50%;
+    }
+}
+/* HEADER */
+.header {
+    background-color: #1a1a1a; /* koyu şık header */
+    padding: 50px 60px; /* daha geniş padding, yukarı/aşağı 50px, sağ/sol 60px */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5); /* gölgeyi biraz artırdık */
+    flex-wrap: wrap;
+    min-height: 180px; /* header yüksekliği büyüdü */
+}
+
+.header__item {
+    color: #fff;
+    font-size: 2.5rem; /* font daha büyük */
+    margin: 0;
+    flex: 1 1 auto;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Buton */
+.btn-primary {
+    background: linear-gradient(135deg, #ff7f50, #ff6347);
+    color: white !important;
+    padding: 18px 36px; /* buton daha büyük ve dolgun */
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 1.3rem;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 28px rgba(255,99,71,0.6);
+}
+
+/* Responsive küçük ekran */
+@media (max-width: 600px) {
+    .header {
+        flex-direction: column;
+        align-items: center;
+        min-height: auto;
+        padding: 30px 20px;
+    }
+    
+    .btn-primary {
+        margin-top: 20px;
+        width: 100%;
+        text-align: center;
+        padding: 16px 0;
+        font-size: 1.2rem;
+    }
+
+    .header__item {
+        font-size: 2rem;
+        width: 100%;
+    }
+}

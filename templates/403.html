@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>403 – Erişim Reddedildi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: radial-gradient(circle at top, #1a1a1a, #000);
+            color: #eaeaea;
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .box {
+            text-align: center;
+            padding: 40px 50px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.15);
+            max-width: 420px;
+        }
+
+        h1 {
+            font-size: 72px;
+            margin: 0;
+            color: #ff4d4d;
+            letter-spacing: 4px;
+        }
+
+        h2 {
+            margin: 10px 0 20px;
+            font-weight: 500;
+        }
+
+        p {
+            color: #bdbdbd;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .lock {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        a {
+            display: inline-block;
+            padding: 12px 22px;
+            border-radius: 8px;
+            background: #ff4d4d;
+            color: #000;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        a:hover {
+            background: #ff6b6b;
+            transform: translateY(-2px);
+        }
+
+        .hint {
+            margin-top: 18px;
+            font-size: 12px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <div class="lock">🔒</div>
+        <h1>403</h1>
+        <h2>Erişim Reddedildi</h2>
+        <p>
+            Bu dosya veya dizin <strong>gizlidir</strong>.<br>
+            Buraya erişim yetkin bulunmuyor.
+        </p>
+        <a href="/">Ana Sayfaya Dön</a>
+        <a href="javascript:history.back()" class="button secondary">Geri Git</a>
+        <div class="hint">
+            HTTP 403 • Forbidden
+        </div>
+    <footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+    </div>
+
+</body>
+</html>

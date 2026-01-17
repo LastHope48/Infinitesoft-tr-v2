@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infinitesoft-tr Uygulama</title>
+<link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+<style>
+/* Tam ekran ve yavaş gradient arka plan animasyonu */
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(120deg, aqua, aquamarine);
+    background-size: 200% 200%;
+    animation: slowGradient 30s ease infinite; /* daha yavaş 30s */
+}
+
+/* Animasyon keyframes */
+@keyframes slowGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Container: başlık ve buton üst üste */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px 60px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+/* Başlık */
+h1 {
+    color: white;
+    font-size: 3rem;
+    margin: 0;
+    text-shadow: 1px 1px 8px rgba(0,0,0,0.4);
+}
+
+/* İndir butonu */
+.btn-download {
+    background: linear-gradient(135deg, #00ffff, #7fffd4);
+    color: #1a1a1a;
+    padding: 20px 50px;
+    border-radius: 14px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-download:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+}
+
+/* Responsive: küçük ekranlarda da güzel gözükmesi için */
+@media (max-width: 700px) {
+    .container {
+        padding: 30px 20px;
+        gap: 20px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .btn-download {
+        font-size: 1.3rem;
+        padding: 16px 32px;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Infinitesoft-tr Uygulamasını İndirin!</h1>
+    <a href="/infinitesoft-tr.exe" class="btn-download">İndir</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Broadcast</title>
+    <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+    <style>
+        body {
+            background: #0f172a;
+            color: #e5e7eb;
+            font-family: system-ui;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .panel {
+            background: #020617;
+            padding: 30px;
+            border-radius: 12px;
+            width: 360px;
+            box-shadow: 0 0 40px rgba(0,0,0,.6);
+        }
+        input, textarea, button {
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+        }
+        textarea {
+            resize: none;
+            height: 80px;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="panel">
+    <h2>📢 Broadcast</h2>
+
+    <form method="POST" action="/admin/broadcast">
+        <textarea name="message" placeholder="Mesaj"></textarea>
+        <input type="number" name="minutes" value="5">
+        <button>Gönder</button>
+    </form>
+<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</div>
+</body>
+</html>

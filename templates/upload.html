@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>InfiniteCloud Upload</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/decor_upload.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
+</head>
+<body>
+    <div class="nav">
+    <a class="btn" href="/infinitecloud">
+        <i class="fa-solid fa-house"></i> Ana Sayfa
+    </a>
+    <a href="/infinitecloud/files" class="btn_yellow">
+        <i class="fa-solid fa-file"></i> Dosyalar
+    </a>
+    <a href="/admin" class="btn_red">
+        <i class="fa-solid fa-user"></i> Admin Giriş
+    </a>
+    <a href="/" class="btn_blue">
+        <i class="fa-brands fa-squarespace"></i> Projeler
+    </a>
+    </div>
+<main>
+<div class="upload-box">
+    <img src="../static/img/upload_mor.png" alt="upload-icon-purple">
+    <h2>Dosya Yükle</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        <input type="password" name="password" placeholder="Şifre" required>
+        <input type="file" name="file" required>
+        <label>
+            <input type="checkbox" name="is_global">
+            🌍 Küresel olsun
+        </label>
+        {% if can_delete %}
+        <label>
+            <input type="checkbox" name="high_lighted">
+            ⭐ Admin özel çerçeve
+        </label>
+        {% endif %}
+        <button type="submit">Yükle</button>
+    </form>
+
+    {% if msg %}
+        <p class="msg">{{ msg }}</p>
+    {% endif %}
+</div>
+</main>
+<footer class="site-footer">
+    <p>Dosya yüklerken iki kere düşün çünkü yüklenen dosyaları bir tek adminler silebilir!</p>
+</footer>
+<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

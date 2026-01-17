@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>500 | Sunucu Hatası</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at top, #3f1d1d, #020617);
+            color: #f8fafc;
+        }
+        .card {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(12px);
+            border-radius: 22px;
+            padding: 50px 44px;
+            max-width: 540px;
+            width: 92%;
+            text-align: center;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.6);
+            animation: appear 0.9s ease-out;
+        }
+        @keyframes appear {
+            from { opacity: 0; transform: translateY(30px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .code {
+            font-size: 96px;
+            font-weight: 800;
+            line-height: 1;
+            background: linear-gradient(135deg, #fb7185, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 18px;
+        }
+        h1 {
+            margin: 0 0 14px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        p {
+            margin: 0 0 30px;
+            font-size: 16px;
+            color: #e5e7eb;
+            line-height: 1.7;
+        }
+        .actions {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        a.button {
+            text-decoration: none;
+            padding: 13px 24px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.25s ease;
+        }
+        .primary {
+            background: linear-gradient(135deg, #fb7185, #f43f5e);
+            color: #450a0a;
+        }
+        .primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(244,63,94,0.4);
+        }
+        .secondary {
+            border: 1px solid rgba(148,163,184,0.35);
+            color: #f8fafc;
+            background: transparent;
+        }
+        .secondary:hover {
+            background: rgba(148,163,184,0.12);
+        }
+        .hint {
+            margin-top: 26px;
+            font-size: 14px;
+            color: #cbd5f5;
+            opacity: 0.85;
+        }
+        footer {
+            margin-top: 18px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="code">500</div>
+        <h1>Sunucu Tarafında Bir Hata Oluştu</h1>
+        <p>
+            Bir şeyler yolunda gitmedi ve sunucu isteğini işleyemedi.<br />
+            Sorunun farkındayız, en kısa sürede düzeltiliyor.
+        </p>
+        <div class="actions">
+            <a href="/" class="button primary">Ana Sayfaya Git</a>
+            <a href="javascript:location.reload()" class="button secondary">Tekrar Dene</a>
+        </div>
+        <div class="hint">
+            Eğer sorun devam ederse lütfen biraz sonra tekrar deneyin.
+        </div>
+<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+    </div>
+</body>
+</html>

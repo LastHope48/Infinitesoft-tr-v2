@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Infinitesoft-tr | Yenilikler</title>
+    <link rel="icon" href="{{url_for('static', filename='favicon.ico')}}">
+    <link rel="stylesheet" href="../static/css/decor_updates.css">
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div class="updates-wrapper">
+    <h1 class="updates-title">🚀 Ürün Güncellemeleri</h1>
+
+    <div class="timeline">
+        {% for u in updates %}
+        <div class="update-card">
+            <div class="update-header">
+                <span class="version">{{ u.version }}</span>
+                <span class="date">
+                    {{ u.created_at.strftime("%d %B %Y • %H:%M") }}
+                </span>
+            </div>
+
+            <div class="update-content">
+                {{ u.content }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</div>
+
+</body>
+</html>
