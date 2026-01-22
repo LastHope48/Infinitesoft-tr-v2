@@ -14,6 +14,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 PYANYWHERE_UPLOAD_URL = "https://wf5528.pythonanywhere.com/upload"
 PYANYWHERE_LIST_URL   = "https://wf5528.pythonanywhere.com/list"
 PYANYWHERE_SECRET     = "aa"
+HF_URL="https://wf5528-infinitesoft-tr.hf.space/remove-bg"
 PA_EXE_URL = "https://wf5529.pythonanywhere.com/static/uygulama/infinitesoft-tr.exe"
 if DATABASE_URL:
     if DATABASE_URL.startswith("postgres://"):
@@ -615,20 +616,24 @@ def indir():
     )
 
 # BACKGROUND REMOVER
-@app.route("/backdeleter")
+@app.route("/backdeleter",methods=["GET","POST"])
 def back_delete():
   return render_template("background_remover.html")
-@app.route("/backdeleter/remove",methods=["POST"])
+@app.route("/backdeleter/remove", methods=["POST"])
 def delete_back():
-  file=request.files["image"]
-  if not file:
-    return "Resim Seçilmedi",400
-  input_bytes=file.read()
-  output_bytes=remove(input_bytes)
-  return send_file(
-      io.BytesIO(output_bytes),
-      mimetype="img/png"
-  )
+    file = request.files["image"]
+
+    r = requests.post(
+        HF_URL,
+        files={"image": (file.filename, file.read())},
+        timeout=60
+    )
+
+    return Response(
+        r.content,
+        mimetype="image/png"
+    )
+
 # KART
 @app.route('/cards')
 def index():
@@ -682,4 +687,5 @@ def internal_error(e):
 with app.app_context():
     db.create_all()
 if __name__=="__main__":
-    app.run(debug=True, host="0.0.0.0" ,port=7680)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)

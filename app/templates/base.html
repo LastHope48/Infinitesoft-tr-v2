@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Infinitesoft{% endblock %}</title>
-
+    <meta name="description" content="Infinitesoft-tr'nin ürettiği projelere bakın!">
     <!-- GLOBAL CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-
+    <link rel="shortcut icon" href="{{url_for('static',filename='favicon.ico')}}">
     <!-- SAYFA ÖZEL CSS -->
     {% block css %}
     <link rel="stylesheet" href="{{url_for('static',filename='css/decor_projects.css')}}">

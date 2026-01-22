@@ -3,11 +3,8 @@ Flask_SQLAlchemy==3.1.1
 SQLAlchemy==2.0.19
 Werkzeug==2.3.7
 requests==2.32.3
-rembg[cpu]==2.0.72
-opencv-python==4.9.0.80
 numpy>=2.0.0
 Pillow>=10.3.0
 python-dotenv==1.0.0
 gunicorn
-onnxruntime
 torch
