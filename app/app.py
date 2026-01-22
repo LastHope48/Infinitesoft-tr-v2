@@ -1,4 +1,3 @@
-from rembg import remove
 import os,uuid
 from flask import Flask,render_template,render_template_string,request,send_from_directory,send_file,redirect,session,url_for,Response,abort,jsonify
 import requests
