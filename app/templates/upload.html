@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>InfiniteCloud Upload</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_submit.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/decor_upload.css') }}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
+</head>
+<body>
+    <div class="nav">
+    <a class="btn" href="/infinitecloud">
+        <i class="fa-solid fa-house"></i> Ana Sayfa
+    </a>
+    <a href="/infinitecloud/files" class="btn_yellow">
+        <i class="fa-solid fa-file"></i> Dosyalar
+    </a>
+    <a href="/admin" class="btn_red">
+        <i class="fa-solid fa-user"></i> Admin Giriş
+    </a>
+    <a href="/" class="btn_blue">
+        <i class="fa-brands fa-squarespace"></i> Projeler
+    </a>
+    </div>
+<main>
+<div class="upload-box">
+    <img src="../static/img/upload_mor.png" alt="upload-icon-purple">
+    <h2>Dosya Yükle</h2>
+
+<form method="post" enctype="multipart/form-data" id="uploadForm">
+    <div class="password-wrapper">
+        <input type="password" id="passwordInput" name="password" placeholder="Şifre" required>
+<span id="togglePassword" class="toggle-password">
+    <i class="fa-solid fa-eye"></i>
+</span>
+
+    </div>
+
+    <input type="file" name="file" required>
+    <label>
+        <input type="checkbox" name="is_global">
+        🌍 Küresel olsun
+    </label>
+    {% if can_delete %}
+    <label>
+        <input type="checkbox" name="high_lighted">
+        ⭐ Admin özel çerçeve
+    </label>
+    {% endif %}
+
+<div class="button-container">
+  <a href="#" class="submit">S U B M I T</a>
+  <div class="tick-circle">
+    <!-- Ortalanmış tik -->
+    <svg viewBox="0 0 24 24">
+      <path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.193 9.203-4.193-4.2a1 1 0 0 0-1.414 1.414l4.9 4.9a1 1 0 0 0 1.414 0l9.91-9.9z"/>
+    </svg>
+  </div>
+</div>
+
+
+</form>
+
+        <p class="msg" id="msg">{{ msg }}</p>
+</div>
+
+</main>
+<footer class="site-footer">
+    <p>Dosya yüklerken iki kere düşün çünkü yüklenen dosyaları bir tek adminler silebilir!</p>
+</footer>
+<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* ===== UPLOAD + TIK ===== */
+    const submitBtn = document.querySelector(".button-container .submit");
+    const tickCircle = document.querySelector(".tick-circle");
+    const form = document.getElementById("uploadForm");
+    const msg = document.getElementById("msg");
+
+    submitBtn.addEventListener("click", async function (e) {
+        e.preventDefault();
+
+        submitBtn.style.transform = "scale(0.3)";
+        submitBtn.style.opacity = "0";
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch("/infinitecloud/upload", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            msg.textContent = result.message;
+            msg.style.color = result.success ? "lightgreen" : "red";
+
+            if (result.success) {
+                tickCircle.style.width = "50px";
+                tickCircle.style.height = "50px";
+                tickCircle.style.transform = "translate(-50%, -50%) scale(1)";
+            } else {
+                submitBtn.style.transform = "scale(1)";
+                submitBtn.style.opacity = "1";
+            }
+
+        } catch (err) {
+            msg.textContent = "❌ Sunucu hatası";
+            msg.style.color = "red";
+            submitBtn.style.transform = "scale(1)";
+            submitBtn.style.opacity = "1";
+            console.error(err);
+        }
+    });
+
+    /* ===== ŞİFRE GÖSTER / GİZLE ===== */
+    const passwordInput = document.getElementById("passwordInput");
+    const togglePassword = document.getElementById("togglePassword");
+
+    togglePassword.addEventListener("click", function () {
+        const isPassword = passwordInput.type === "password";
+        passwordInput.type = isPassword ? "text" : "password";
+
+        this.innerHTML = isPassword
+            ? '<i class="fa-solid fa-eye-slash"></i>'
+            : '<i class="fa-solid fa-eye"></i>';
+    });
+
+});
+</script>
+
+
+</body>
+</html>

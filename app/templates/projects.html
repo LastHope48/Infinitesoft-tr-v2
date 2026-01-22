@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Infinitesoft-tr{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/decor_projects.css') }}">
+<link rel="stylesheet" href="../static/css/selection.css">
+{% endblock %}
+
+{% block content %}
+
+<main>
+    <header class="header">
+        <h3 class="header__item">
+            Infinitesoft-tr.com'un ürettiği projelere bakın!
+        </h3>
+    <a href="{{ url_for('uygulama') }}" class="btn btn-primary">Uygulamayı İndir</a>
+    </header>
+
+    <ul class="list">
+        <li class="list__item">
+            <a href="/infinitecloud">
+                <img class="item__img"
+                     src="{{ url_for('static', filename='img/upload-icon-4.png') }}"
+                     alt="bulut">
+                <span>Infinitecloud</span>
+            </a>
+        </li>
+
+        <li class="list__item">
+            <a href="/camsepeti">
+                <img class="item__img"
+                     src="{{ url_for('static', filename='img/camsepeti.png') }}"
+                     alt="camsepeti">
+                <span>Çamsepeti</span>
+            </a>
+        </li>
+
+                <li class="list__item">
+            <a href="#">
+                <img class="item__img"
+                     src="{{ url_for('static', filename='img/mouse_pushgame.png') }}"
+                     alt="PUSHGAME">
+                <span>Push Game</span>
+            </a>
+        </li>
+                    <li class="list__item">
+            <a href="/backdeleter">
+                <img class="item__img"
+                     src="{{ url_for('static', filename='img/eraser.png') }}"
+                     alt="Background Remover">
+                <span>Background Remover</span>
+            </a>
+        </li>
+    <li class="list__item">
+        <a href="/cards">
+            <img class="item__img"
+             src="{{url_for('static',filename='img/post_icon.png')}}"
+             alt="Cards">
+            <span>Notes</span>
+        </a>
+    </li>
+    <li class="list__item">
+        <a href="/text_editor">
+            <img src="{{url_for('static',filename='img/note.png')}}" alt="text_editor" class="item__img">
+            <span>Text Editor</span>
+        </a>
+    </li>
+    </ul>
+</main>
+{% if not can_delete %}
+<a href="/admin" class="admin-btn">🔑</a>
+{% endif %}
+<footer class="site-footer">
+    <p>Versiyon: 4.5.0</p>
+</footer>
+<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+<a href="/news" class="sticky-update-btn">
+    <span class="icon">⬆️</span>
+    <span class="text">Ürün Güncelleştirmeleri</span>
+</a>
+
+{% endblock %}

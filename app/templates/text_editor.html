@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/selection.css">
+    <title>Not Defteri</title>
+    <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+        input, textarea, button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #ff4272;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ff1f57;
+        }
+    </style>
+</head>
+<body>
+    <h1>Not Defteri</h1>
+
+    <input type="text" id="filename" placeholder="Dosya Adı (örn: not.txt)">
+    <textarea id="content" rows="10" placeholder="Merhaba mangolar ve karpuzlar"></textarea>
+    <button onclick="downloadFile()">İndir</button>
+
+    <script>
+        function downloadFile() {
+            const filename = document.getElementById('filename').value || 'not.txt';
+            const content = document.getElementById('content').value;
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+    </script>
+</body>
+</html>

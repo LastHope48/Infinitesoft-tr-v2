@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infinitesoft-tr | Background Remover</title>
+<link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+<link rel="stylesheet" href="../static/css/selection.css">
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #6dd5ed, #2193b0);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        color: #fff;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        margin-top: 60px;
+        width: 90%;
+        max-width: 500px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+    }
+
+    p {
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    label.file-upload {
+        display: inline-block;
+        background-color: #fff;
+        color: #2193b0;
+        padding: 12px 25px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    label.file-upload:hover {
+        background-color: #e0e0e0;
+    }
+
+    button.submit-btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 12px 30px;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #fff;
+        background-color: #ff6b6b;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button.submit-btn:hover {
+        background-color: #ff4757;
+    }
+
+    img#result {
+        margin-top: 25px;
+        max-width: 100%;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        display: none;
+    }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎨 Resminizin Arka Planını Kaldırın</h1>
+    <p>Kolayca resminizi yükleyin ve arka planını temizleyin.</p>
+
+    <form id="bgForm" method="POST" enctype="multipart/form-data">
+        <input type="file" id="fileInput" name="image" accept="img/*" required>
+        <label for="fileInput" class="file-upload">Dosya Seç</label><br>
+        <button type="submit" class="submit-btn">Arka Planı Kaldır</button>
+    </form>
+
+    <img id="result" alt="Sonuç" />
+</div>
+
+<script>
+    const form = document.getElementById("bgForm");
+    const fileInput = document.getElementById("fileInput");
+    const resultImg = document.getElementById("result");
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const response = await fetch("/remove-bg", {
+            method: "POST",
+            body: formData
+        });
+
+        if (response.ok) {
+            const blob = await response.blob();
+            resultImg.src = URL.createObjectURL(blob);
+            resultImg.style.display = "block";
+        } else {
+            alert("Bir hata oluştu, lütfen tekrar deneyin.");
+        }
+    });
+</script>
+
+</body>
+</html>
