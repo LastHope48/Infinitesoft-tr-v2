@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Infinitesoft-tr | Background Remover</title>
 <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+<link rel="stylesheet" href="../static/css/font_awesome.css">
 <link rel="stylesheet" href="../static/css/selection.css">
 <style>
     body {
@@ -176,10 +177,167 @@
 .download-btn:hover {
     transform: translateY(-3px);
 }
+.menu-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: -350px;   /* genişliği kadar → tamamen gizli */
+  width: 280px;
+  height: 100%;
+  background: #111;
+  color: white;
+  transition: 0.3s ease;
+  z-index: 1002;
+  padding: 20px;
+}
+
+.side-menu.active {
+  left: 0;        /* butona basınca */
+}
+
+.menu-list a {
+  position: relative;
+  display: block;
+  padding: 12px 16px;
+  margin: 10px 0;
+  color: white;
+  text-decoration: none;
+  background: #2a2a2a;          /* gri zemin */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* dıştaki minicik boşluk efekti */
+.menu-list a::after {
+  content: "";
+  position: absolute;
+  inset: 2px;                  /* her kenardan 2px boşluk */
+  background: #2a2a2a;
+  border-radius: 6px;
+  z-index: 1;
+}
+
+/* yeşil animasyon katmanı */
+.menu-list a::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  background: linear-gradient(90deg, #00ff88, #00cc66);
+  transform: translateX(-100%);
+  transition: 0.35s ease;
+  border-radius: 6px;
+  z-index: 2;
+}
+
+/* yazıyı üste al */
+.menu-list a span {
+  position: relative;
+  z-index: 3;
+}
+
+.menu-list a:hover::before {
+  transform: translateX(0);
+}
+
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.side-menu ul {
+  list-style: none;
+  padding: 0;
+}
+
+.side-menu li {
+  margin: 15px 0;
+}
+
+.side-menu a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  z-index: 1000;
+}
+
+.overlay.active {
+  display: block;
+}
+.download-btn {
+  display: none;
+  margin-top: 20px;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #00ff88, #00cc66);
+  color: #0a0a0a;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  align-items: center;
+  gap: 10px;
+  transition: 0.25s ease;
+  box-shadow: 0 10px 25px rgba(0,255,136,0.3);
+}
+
+.download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(0,255,136,0.5);
+}
+.download-btn {
+  animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
 
 </style>
 </head>
 <body>
+<!-- Menü butonu -->
+<button id="menuBtn" class="menu-btn">
+  <i class="fa-solid fa-bars"></i>
+</button>
+
+<!-- Yan menü -->
+<div id="sideMenu" class="side-menu">
+  <div class="menu-header">
+    Menü
+    <span id="closeMenu">✕</span>
+  </div>
+  <ul class="menu-list">
+    <li><a href="/backdeleter"><span>Ana Sayfa</span></a></li>
+    <li><a href="/backdeleter/images"><span>Resimlerim</span></a></li>
+    <li><a href="#"><span>İletişim</span></a></li>
+    <li class="alt"><a href="/"><span>Projeler</span></a></li>
+  </ul>
+</div>
+
+<!-- Overlay -->
+<div id="overlay" class="overlay"></div>
 
 <div class="container">
     <h1>🎨 Resminizin Arka Planını Kaldırın</h1>
@@ -201,50 +359,15 @@
         <span>Sonuç</span>
     </div>
 </div>
-
-<a id="downloadBtn" class="submit-btn" style="display:none;" download="result.png">
-    ⬇️ Sonucu İndir
+<a id="downloadBtn" class="download-btn" style="display:none">
+  <i class="fa-solid fa-download"></i>
+  Sonucu indir
 </a>
 
+
 </div>
-<script>
-const form = document.getElementById("bgForm");
-const fileInput = document.getElementById("fileInput");
-const resultImg = document.getElementById("result");
-const originalImg = document.getElementById("original");
-const downloadBtn = document.getElementById("downloadBtn");
-
-form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const file = fileInput.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("image", file);
-
-    // solda orijinal
-    originalImg.src = URL.createObjectURL(file);
-    originalImg.style.display = "block";
-
-    const res = await fetch("https://wf5528-infinitesoft-tr.hf.space/remove-bg", {
-        method: "POST",
-        body: formData
-    });
-
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-
-    // sağda sonuç
-    resultImg.src = url;
-    resultImg.style.display = "block";
-
-    downloadBtn.href = url;
-    downloadBtn.style.display = "inline-block";
-});
-downloadBtn.style.display = "block";
-</script>
-
-
+<script src="{{url_for('static',filename='js/menu_open.js')}}"></script>
+<script src="{{url_for('static',filename='js/download_background.js')}}"></script>
+<script src="{{url_for('static',filename='js/send_image.js')}}"></script>
 </body>
 </html>
