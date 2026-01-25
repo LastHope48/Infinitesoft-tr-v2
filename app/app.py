@@ -7,12 +7,17 @@ import io,zipfile
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
+
+load_dotenv()  # .env dosyasını yükler
+
 app=Flask(__name__)
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 PYANYWHERE_UPLOAD_URL = "https://wf5528.pythonanywhere.com/upload"
 PYANYWHERE_LIST_URL   = "https://wf5528.pythonanywhere.com/list"
-PYANYWHERE_SECRET     = "aa"
+PYANYWHERE_SECRET   = os.getenv("PYANYWHERE_SECRET")
+ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "dev-token")  # 'dev-token' lokal için
 HF_URL="https://wf5528-infinitesoft-tr.hf.space/remove-bg"
 PA_EXE_URL = "https://wf5529.pythonanywhere.com/static/uygulama/infinitesoft-tr.exe"
 if DATABASE_URL:
@@ -39,7 +44,7 @@ else:
     ADMIN_PASSWORD_HASH = "admin"
 db=SQLAlchemy(app )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key=os.urandom(32)
+app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret")
 UPLOAD_FOLDER = "/home/wf5528/infinitecloud_api/uploads"
 app.config["UPLOAD_FOLDER"]="uploads"
 ALLOWED={"png","jpg","jpeg","mp4","mov","pdf","webp","mp3","pptx","zip"}
@@ -614,11 +619,29 @@ def indir():
         mimetype="application/octet-stream"
     )
 
-# BACKGROUND REMOVER
-@app.route("/backdeleter",methods=["GET","POST"])
+# AI_TOOLS
+@app.route("/ai_tools")
+def tools():
+    return render_template("ai_tools.html")
+@app.route("/ai_tools/images")
+def images():
+    return render_template("images.html")
+@app.route("/api/delete/<filename>")
+def api_delete(filename):
+    token = request.headers.get("X-SECRET")
+    if token != os.environ.get("ADMIN_TOKEN"):
+        return jsonify({"ok": False, "error": "Yetki yok"}), 403
+
+    # dosya silme işlemi
+    try:
+        os.remove(os.path.join("uploads", filename))
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+@app.route("/ai_tools/backdeleter",methods=["GET","POST"])
 def back_delete():
   return render_template("background_remover.html")
-@app.route("/backdeleter/remove", methods=["POST"])
+@app.route("/ai_tools/backdeleter/remove", methods=["POST"])
 def delete_back():
     file = request.files["image"]
 
