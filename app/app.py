@@ -163,6 +163,9 @@ def allowed(filename):
 @app.route("/")
 def projects():
     return render_template("projects.html")
+@app.route("/maintanence")
+def maintanence():
+    return render_template("maintanence.html")
 @app.route("/infinitecloud")
 def cloud():
     return render_template("home_cloud.html")

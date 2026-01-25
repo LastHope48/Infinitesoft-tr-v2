@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Infinitesoft{% endblock %}</title>
-    <meta name="description" content="Infinitesoft-tr'nin ürettiği projelere bakın!">
+    <meta name="description" content="Infinitesoft-tr'nin ürettiği projelere bakın! Infinitecloud adlı bulutumuz,AI tools ile arkaplan kaldırma vb. işlerinizde yardımcı olacaktır! Ancak sakın Çamsepeti adlı projemize kredi kartı bilgilerinizi girmeyin, okul projesidir.Sizi de bekleriz!">
     <!-- GLOBAL CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <link rel="shortcut icon" href="{{url_for('static',filename='favicon.ico')}}">
     <!-- SAYFA ÖZEL CSS -->
     {% block css %}
     <link rel="stylesheet" href="{{url_for('static',filename='css/decor_projects.css')}}">
     {% endblock %}
     {% block icon %}
-    <link rel="icon" href="{{url_for ('static', filename='favicon.ico')}}">
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
     {% endblock %}
 </head>
 <body>
@@ -26,6 +26,18 @@
 {% if session.can_delete %}
 <a href="/admins" class="admin-btn">⚙</a>
 {% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Infinitesoft-tr",
+  "url": "https://infinitesoft-tr.com",
+  "logo": "https://infinitesoft-tr.com/static/favicon.ico",
+  "sameAs": [
+    "https://github.com/LastHope48"
+  ]
+}
+</script>
 
 </body>
 </html>
