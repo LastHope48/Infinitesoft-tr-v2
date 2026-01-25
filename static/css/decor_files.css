@@ -1,0 +1,256 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css);
+.counter {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #9fffe0;
+    opacity: 0.85;
+}
+body::-webkit-scrollbar {
+  width: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+    background: black;
+    color: aquamarine;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+.files-page {
+    text-align: center;
+    padding: 40px;
+}
+
+.cloud-img {
+    width: 300px;
+    margin: 20px auto;
+    display: block;
+}
+
+.file-list {
+    list-style: none;
+    padding: 0;
+    max-width: 600px;
+    margin: 0 auto 30px;
+    max-height: 70vh;
+    overflow-y: auto;
+
+    scrollbar-width: none;
+    overflow: visible; /* 🔥 KRİTİK */
+
+}
+.file-list::-webkit-scrollbar {
+    display: none;
+}
+.file-list li {
+    display: flex;
+    justify-content: space-between;
+    background: #111;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    border: 1px solid #2affc6;
+    overflow: visible;
+}
+
+.file-list a {
+    color: #00ff99;
+    text-decoration: none;
+}
+
+.file-list a:hover {
+    text-decoration: underline;
+}
+
+.danger-btn {
+    color: red;
+    border: 1px solid red;
+    padding: 12px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+}
+
+.danger-btn:hover {
+    background: red;
+    color: black;
+}
+.action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #333;
+}
+
+.download-btn {
+    padding: 10px 18px;
+    background: #0f766e;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.danger-btn {
+    padding: 10px 18px;
+    background: #b91c1c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.danger-btn:hover {
+    background: #dc2626;
+}
+.site-footer{
+  margin-top: 80px;
+  padding: 20px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.6);
+  color: #f5deb3;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+  z-index: 2;
+}
+
+.site-footer p{
+  margin: 0;
+}
+.nav {
+    display: flex;
+    gap: 10px;
+    align-self: center; /* 🔥 stretch’i kırar */
+    justify-content: center;
+}
+.btn{
+  display: inline-block;
+  padding: 24px 48px;
+  background: #2e8b57;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+}
+.btn_red {
+  display: inline-block;
+  padding: 24px 48px;
+  background: #eb0606;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+}
+.btn_red:hover {
+    background: #6b0000;
+}
+.btn_blue {
+  display: inline-block;
+  padding: 24px 48px;
+  background: #06a3eb;
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+}
+.btn_blue:hover {
+    background: rgb(6, 65, 228);
+}
+.btn_yellow {
+  display: inline-block;
+  padding: 24px 48px;
+  background: #bebb06;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+}
+.btn_yellow:hover {
+    background: #727002;
+}
+.btn:hover{
+  background: #246b45;
+}
+.file-list li.file-item {
+    list-style: none;
+    background: #0f0f0f;
+    border: 1px solid #222;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    border-radius: 10px;
+    transition: all 0.25s ease;
+    position: relative;
+}
+/* Admin */
+.file-list li.file-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+}
+.file-list li.admin-featured {
+    border: 2px solid #8b5cf6;
+    border-radius: 0; /* keskin köşe */
+
+    background: linear-gradient(
+        135deg,
+        rgba(139,92,246,0.18),
+        rgba(0,0,0,0.9)
+    );
+
+    box-shadow:
+        0 0 0 1px rgba(139,92,246,0.4),
+        0 0 20px rgba(139,92,246,0.4);
+}
+
+.file-list li.admin-featured:hover {
+    box-shadow:
+        0 0 0 2px rgba(139,92,246,0.8),
+        0 0 40px rgba(139,92,246,0.9);
+}
+
+.admin-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+
+    background: #8b5cf6;
+    color: #000;
+    font-size: 11px;
+    font-weight: bold;
+
+    padding: 4px 8px;
+    letter-spacing: 1px;
+    border-radius: 4px;
+
+    box-shadow: 0 0 12px rgba(139,92,246,0.8);
+}
+/* admin değil */
+.file-list-wrapper {
+    max-height: 70vh;
+    overflow-y: auto;
+
+    scrollbar-width: none;
+}
+.file-list-wrapper::-webkit-scrollbar {
+    display: none;
+}
+

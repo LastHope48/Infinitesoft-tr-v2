@@ -1,0 +1,15 @@
+# flyctl launch added from .gitignore
+**\*.exe
+**\*.pkg
+**\build
+**\dist
+
+# flyctl launch added from .venv\.gitignore
+.venv\**\*
+
+# flyctl launch added from infinitecloud_api\.gitignore
+infinitecloud_api\**\*
+
+# flyctl launch added from infinitesoft-tr-app\.gitignore
+infinitesoft-tr-app\**\*
+fly.toml

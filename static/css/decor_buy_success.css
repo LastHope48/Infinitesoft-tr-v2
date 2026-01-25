@@ -1,0 +1,124 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css);
+.btn{
+  display: inline-block;
+  padding: 24px 48px;
+  background: #2e8b57;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+}
+.btn:hover{
+  background: #246b45;
+}
+.baslik {
+    text-align: center;
+    font-size: 50px;
+    color: antiquewhite;
+}
+.baslik_alt {
+    text-align: center;
+    font-size: 35px;
+    color: antiquewhite;
+}
+body {
+    background-image: url(../img/enchanted_background.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    cursor: url(../img/mouse_baba.png),auto;
+}
+::selection {
+    background: blueviolet;
+    color:chartreuse
+}
+.snow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+
+    background-image:
+        radial-gradient(white 1px, transparent 1px),
+        radial-gradient(white 1.5px, transparent 1.5px);
+
+    background-size: 120px 120px, 180px 180px;
+
+    animation:
+        snowFall 30s linear infinite,
+        snowWind 12s ease-in-out infinite;
+    opacity: 0.6;
+}
+
+@keyframes snowFall {
+    from {
+        background-position-y: -100vh, -200vh;
+    }
+    to {
+        background-position-y: 100vh, 200vh;
+    }
+}
+
+@keyframes snowWind {
+    0%   { transform: translateX(0); }
+    50%  { transform: translateX(10px); }
+    100% { transform: translateX(0); }
+}
+.tik {
+    width: 500px;
+    display: block;
+    margin: 20px auto;
+}
+.ok {
+    text-align: center;
+    color: antiquewhite;
+    font-size: 30px;
+}
+.site-footer{
+  margin-top: 80px;
+  padding: 20px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.6);
+  color: #f5deb3;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+  z-index: 2;
+}
+
+.site-footer p{
+  margin: 0;
+}
+.btn_red {
+  display: inline-block;
+  padding: 24px 48px;
+  background: #eb0606;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+}
+.btn_red:hover {
+    background: #6b0000;
+}
+.btn_yellow {
+  display: inline-block;
+  padding: 24px 48px;
+  background: #bebb06;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+}
+.btn_yellow:hover {
+    background: #727002;
+}

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Çamsepeti-Home</title>
+    <link rel="stylesheet" href="../static/css/decor_home.css">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
+    <link rel="stylesheet" href="../static/css/selection.css">
+</head>
+<body>
+    <a class="btn" href="/camsepeti/home">
+        <i class="fa-solid fa-house"></i> Ana Sayfa
+    </a>
+    <a href="/camsepeti/logout" class="btn_red">
+        <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+    </a>
+    <a href="/camsepeti/sepet" class="btn_yellow">
+        <i class="fa-solid fa-basket-shopping"></i> Sepetim
+    </a>
+    <a href="/" class="btn_blue">
+        <i class="fa-brands fa-squarespace"></i> Projeler
+    </a>
+    <h2 class="sepetim_h2">Sepetim</h2>
+    <div class="snow"></div>
+    <main>
+    <h1 class="header_text_big">ÇAMSEPETİ</h1>
+    <h2 class="header_text_small">Yılbaşı için hediyeler/süsler satın alın!</h2>
+    </main>
+    <div class="products">
+        <div class="product">
+            <img src="../static/img/yilbasiagaci.png" alt="yilbasiagaci1">
+            <h3>Yılbaşı ağacı</h3>
+            <p class="price">999 ₺</p>
+            <form action="/camsepeti/sepete_ekle" method="post">
+                <input type="hidden" name="ad" value="Yılbaşı ağacı">
+                <input type="hidden" name="fiyat" value="999">
+                <input type="hidden" name="resim" value="yilbasiagaci.png">
+                <button class="button">Sepete Ekle</button>
+            </form>
+        </div>
+        <div class="product">
+            <img src="../static/img/camagacisusu.png" alt="sus">
+            <h3>Kalp şeklinde renkli yılbaşı ağacı süsü</h3>
+            <p class="price">300 ₺</p>
+            <form action="/camsepeti/sepete_ekle" method="post">
+                <input type="hidden" name="ad" value="Kalp şeklinde renkli yılbaşı ağacı süsü">
+                <input type="hidden" name="fiyat" value="300">
+                <input type="hidden" name="resim" value="camagacisusu.png">
+                <button class="button">Sepete Ekle</button>
+            </form>
+        </div>
+                <div class="product">
+            <img src="../static/img/cuce.png" alt="cuce">
+            <h3>Yılbaşına Özel Dekoratif Noel Baba Sunumluk Biblo Çerezlik Anahtarlık Saksı Heykel</h3>
+            <p class="price">435 ₺</p>
+            <form action="/camsepeti/sepete_ekle" method="post">
+                <input type="hidden" name="ad" value="Yılbaşına Özel Dekoratif Noel Baba Sunumluk Biblo Çerezlik Anahtarlık Saksı Heykel">
+                <input type="hidden" name="fiyat" value="435">
+                <input type="hidden" name="resim" value="cuce.png">
+                <button class="button">Sepete Ekle</button>
+            </form>
+        </div>
+                <div class="product">
+            <img src="../static/img/bardak.jpg" alt="bardak">
+            <h3>Yılbaşına özel bardak/kupa</h3>
+            <p class="price">150 ₺</p>
+            <form action="/camsepeti/sepete_ekle" method="post">
+                <input type="hidden" name="ad" value="Yılbaşına özel bardak/kupa">
+                <input type="hidden" name="fiyat" value="150">
+                <input type="hidden" name="resim" value="bardak.jpg">
+                <button class="button">Sepete Ekle</button>
+            </form>
+        </div>
+                        <div class="product">
+            <img src="../static/img/karyapraklar.webp" alt="cuce">
+            <h3>3 Adet kar beyazı yaprakları</h3>
+            <p class="price">234 ₺</p>
+            <form action="/camsepeti/sepete_ekle" method="post">
+                <input type="hidden" name="ad" value="3 Adet kar beyazı yaprakları">
+                <input type="hidden" name="fiyat" value="234">
+                <input type="hidden" name="resim" value="karyapraklar.webp">
+                <button class="button">Sepete Ekle</button>
+            </form>
+        </div>
+                <div class="product">
+            <img src="../static/img/snowspray.jpeg" alt="spray">
+            <h3>Kar spreyi</h3>
+            <p class="price">300 ₺</p>
+            <form action="/camsepeti/sepete_ekle" method="post">
+                <input type="hidden" name="ad" value="Kar spreyi">
+                <input type="hidden" name="fiyat" value="300">
+                <input type="hidden" name="resim" value="snowspray.jpeg">
+                <button class="button">Sepete Ekle</button>
+            </form>
+        </div>
+                <div class="product">
+            <img src="../static/img/yilbasicorabi1.jpeg" alt="yilbasiagaci1">
+            <h3>Yılbaşı Çorabı 4 tane</h3>
+            <p class="price">200 ₺</p>
+            <form action="/camsepeti/sepete_ekle" method="post">
+                <input type="hidden" name="ad" value="Yılbaşı Çorapları 4 tane">
+                <input type="hidden" name="fiyat" value="200">
+                <input type="hidden" name="resim" value="yilbasicorabi1.jpeg">
+                <button class="button">Sepete Ekle</button>
+            </form>
+        </div>
+                <div class="product">
+            <img src="../static/img/yilbasicorabi2.jpeg" alt="yilbasiagaci1">
+            <h3>Yılbaşı Çorapları 4 tane</h3>
+            <p class="price">200 ₺</p>
+            <form action="/camsepeti/sepete_ekle" method="post">
+                <input type="hidden" name="ad" value="Yılbaşı Çorapları 4 tane">
+                <input type="hidden" name="fiyat" value="200">
+                <input type="hidden" name="resim" value="yilbasicorabi2.jpeg">
+                <button class="button">Sepete Ekle</button>
+            </form>
+        </div>
+                <div class="product">
+            <img src="../static/img/yilbasiisigi.jpeg" alt="yilbasiagaci1">
+            <h3>Yılbaşı ışığı süs</h3>
+            <p class="price">678 ₺</p>
+            <form action="/camsepeti/sepete_ekle" method="post">
+                <input type="hidden" name="ad" value="Yılbaşı ışığı süs">
+                <input type="hidden" name="fiyat" value="678">
+                <input type="hidden" name="resim" value="yilbasiisigi.jpeg">
+                <button class="button">Sepete Ekle</button>
+            </form>
+        </div>
+                <div class="product">
+            <img src="../static/img/yilbasiagaci.png" alt="yilbasiagaci1">
+            <h3>simli şerit süsler</h3>
+            <p class="price">70 ₺</p>
+            <form action="/camsepeti/sepete_ekle" method="post">
+                <input type="hidden" name="ad" value="simli şerit süsler">
+                <input type="hidden" name="fiyat" value="70">
+                <input type="hidden" name="resim" value="sus_5.jpeg">
+                <button class="button">Sepete Ekle</button>
+            </form>
+        </div>
+    </div>
+    <footer class="site-footer">
+        <p>
+            ⚠️ Çamsepeti bir okul projesidir. Gerçek kişisel bilgilerinizi paylaşmayınız.
+        </p>
+    </footer>
+    <footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
