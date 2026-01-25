@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Infinitesoft-tr | PushGame</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/decor_pushgame.css">
+    <link rel="stylesheet" href="../static/css/selection.css">
+    <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+</head>
+<body>
+<div id="fan">
+  <div class="blade"></div>
+  <div class="blade"></div>
+  <div class="blade"></div>
+</div>
+<form action="{{url_for('game')}}" method="post">
+<button id="target" type="submit">Oyuna başlamak için tıkla!</button>
+</form>
+<script>
+const FAN_OFFSET = 60; // mouse ile fan arası mesafe
+
+const fan = document.getElementById("fan");
+const target = document.getElementById("target");
+
+let targetX = 400;
+let targetY = 250;
+let vx = 0;
+let vy = 0;
+
+target.style.left = targetX + "px";
+target.style.top  = targetY + "px";
+
+document.addEventListener("mousemove", e => {
+    // fan mouse'u takip etsin
+let dirX = vx;
+let dirY = vy;
+
+// henüz hareket yoksa mouse yönünü baz al
+if (Math.abs(dirX) + Math.abs(dirY) < 0.1) {
+    dirX = targetX - e.clientX;
+    dirY = targetY - e.clientY;
+}
+
+const len = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
+const nx = dirX / len;
+const ny = dirY / len;
+
+// mouse'tan geri çek
+fan.style.left = (e.clientX - nx * FAN_OFFSET - fan.offsetWidth / 2) + "px";
+fan.style.top  = (e.clientY - ny * FAN_OFFSET - fan.offsetHeight / 2) + "px";
+
+
+const targetCenterX = targetX + target.offsetWidth / 2;
+const targetCenterY = targetY + target.offsetHeight / 2;
+
+const dx = targetCenterX - e.clientX;
+const dy = targetCenterY - e.clientY;
+
+
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const maxRange = 200;
+
+    if (distance < maxRange && distance > 0) {
+        const strength = (maxRange - distance) / maxRange;
+        const force = strength * 10;
+
+        const nx = dx / distance;
+        const ny = dy / distance;
+
+        vx += nx * force;
+        vy += ny * force;
+    }
+});
+
+function update() {
+    targetX += vx;
+    targetY += vy;
+
+    // sürtünme
+    vx *= 0.92;
+    vy *= 0.92;
+
+    // fan yönü = buton kaçış yönü
+    if (Math.abs(vx) + Math.abs(vy) > 0.01) {
+        const angle = Math.atan2(vy, vx) * 180 / Math.PI;
+        fan.style.transform = `rotate(${angle}deg)`;
+    }
+
+    // ekran dışıysa ortaya ışınla
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const tw = target.offsetWidth;
+    const th = target.offsetHeight;
+
+    if (
+        targetX < -tw || targetX > w ||
+        targetY < -th || targetY > h
+    ) {
+        targetX = (w - tw) / 2;
+        targetY = (h - th) / 2;
+        vx = 0;
+        vy = 0;
+    }
+
+    target.style.left = targetX + "px";
+    target.style.top  = targetY + "px";
+
+    requestAnimationFrame(update);
+}
+
+update();
+</script>
+<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>

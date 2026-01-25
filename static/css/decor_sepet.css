@@ -1,0 +1,158 @@
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css);
+.btn{
+  display: inline-block;
+  padding: 24px 48px;
+  background: #2e8b57;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+}
+.btn:hover{
+  background: #246b45;
+}
+.btn_red {
+  display: inline-block;
+  padding: 24px 48px;
+  background: #eb0606;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+}
+.btn_red:hover {
+    background: #6b0000;
+}
+.btn_yellow {
+  display: inline-block;
+  padding: 24px 48px;
+  background: #bebb06;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+}
+.btn_yellow:hover {
+    background: #727002;
+}
+body {
+    background-image: url(../img/enchanted_background.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    min-height: 100vh;
+    margin: 0;
+    cursor: url(../img/mouse_baba.png),auto;
+}
+.snow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+
+    background-image:
+        radial-gradient(white 1px, transparent 1px),
+        radial-gradient(white 1.5px, transparent 1.5px);
+
+    background-size: 120px 120px, 180px 180px;
+
+    animation:
+        snowFall 30s linear infinite,
+        snowWind 12s ease-in-out infinite;
+    opacity: 0.6;
+}
+
+@keyframes snowFall {
+    from {
+        background-position-y: -100vh, -200vh;
+    }
+    to {
+        background-position-y: 100vh, 200vh;
+    }
+}
+
+@keyframes snowWind {
+    0%   { transform: translateX(0); }
+    50%  { transform: translateX(10px); }
+    100% { transform: translateX(0); }
+}
+.sepet {
+    position: fixed;
+    right: 20px;
+    top: 100px;
+    width: 280px;
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.sepet-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.sepet-item img {
+    width: 50px;
+}
+.img0 {
+    justify-content: center;
+}
+.sepetim_h2 {
+    text-align: center;
+    color: antiquewhite;
+    font-size: 50px;
+}
+.baslik {
+    text-align: center;
+    font-size: 60px;
+    color: antiquewhite;
+}
+.header {
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.buy {
+    background-color: greenyellow;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 200px;
+    display: flex;
+    margin: 40px auto;
+    border-radius: 5px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    transition: 0.3s;
+}
+.buy a {
+    text-decoration-line: none;
+    color: azure;
+    text-align: center;
+    font-size: 50px;
+}
+.homebutton {
+    background-color: rgb(0,162,232);
+}
+.site-footer{
+  margin-top: 80px;
+  padding: 20px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.6);
+  color: #f5deb3;
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+  z-index: 2;
+}
+
+.site-footer p{
+  margin: 0;
+}

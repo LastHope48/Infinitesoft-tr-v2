@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <title>InfiniteCloud</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/decor_home_cloud.css">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
+    <link rel="stylesheet" href="../static/css/selection.css">
+</head>
+<body>
+<main>
+    <h1 class="sirketbaslik">
+        Infinitesoft-tr'nin yapmış olduğu Infinitecloud uygulamasına göz atın!
+    </h1>
+</main>
+    <div class="scroll_wrapper">
+    <ul class="list">
+        <!-- YÜKLE -->
+        <li class="list__item">
+            <a href="{{ url_for('upload') }}">
+                <img class="item__img" src="../static/img/upload-icon-4.png" alt="yükle">
+                <span>Yükle</span>
+            </a>
+        </li>
+
+        <!-- DOSYALAR -->
+        <li class="list__item">
+            <a href="{{ url_for('files') }}">
+                <img class="item__img" src="../static/img/global.png" alt="dosyalar">
+                <span>Global Dosyalar</span>
+            </a>
+        </li>
+        <!-- Benim Dosyalarım -->
+        <li class="list__item">
+            <a href="{{ url_for('myfiles') }}">
+                <img class="item__img" src="../static/img/files.webp" alt="dosyalar">
+                <span>Benim Dosyalarım</span>
+            </a>
+        </li>
+        <!-- ADMIN -->
+        <li class="list__item admin-item">
+            <a href="{{ url_for('reset_login') }}">
+                <img class="item__img" src="../static/img/admin.png" alt="admin">
+                <span>Admin</span>
+            </a>
+        </li>
+        <li class="list__item">
+            <a href="{{ url_for('projects') }}">
+                <img class="item__img" src="../static/img/return.png" alt="return">
+                <span>Projeler</span>
+            </a>
+        </li>
+    </ul>
+    </div>
+<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>

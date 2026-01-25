@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Güncelleme Paylaş</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/decor_make_update.css') }}">
+    <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+    <link rel="stylesheet" href="../static/css/selection.css">
+</head>
+<body>
+
+<div class="admin-box">
+    <h2>🚀 Yeni Güncelleme Paylaş</h2>
+
+    <form method="POST">
+        <label>Versiyon</label>
+        <input type="text" name="version" placeholder="v1.2.0" required>
+
+        <label>Güncellenen / Düzeltilenler</label>
+        <textarea name="content" rows="8" placeholder="- Hata düzeltildi&#10;- Performans artırıldı" required></textarea>
+
+        <button type="submit">Paylaş</button>
+    </form>
+</div>
+<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
