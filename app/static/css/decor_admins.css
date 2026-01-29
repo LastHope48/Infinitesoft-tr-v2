@@ -19,9 +19,10 @@ body {
 
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
 }
+
 
 .admin-card {
     background: rgba(255, 255, 255, 0.08);
@@ -32,6 +33,22 @@ body {
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+.admin-card {
+    padding: 50px 40px;
+    min-height: 200px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.admin-card h3 {
+    font-size: 28px !important;
+}
+
+.admin-card p {
+    font-size: 17px !important;
 }
 
 .admin-card img {
@@ -53,4 +70,19 @@ body {
     transform: translateY(-8px) scale(1.02);
     background: rgba(255, 255, 255, 0.15);
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+}
+@media (max-width: 600px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .admin-card {
+        padding: 40px 24px;
+        min-height: 180px;
+    }
+
+    .admin-card h3 {
+        font-size: 24px;
+    }
 }

@@ -11,6 +11,10 @@ body {
     align-items: center;
     color: #fff;
 }
+body {
+    justify-content: flex-start !important;
+    padding-top: 10vh !important;
+}
 
 /* Başlık */
 .reset-main {
@@ -35,6 +39,24 @@ body {
     box-shadow: 0 0 30px rgba(0,255,180,0.2);
     width: 320px;
     gap: 20px;
+}
+.reset-form {
+    width: 100% !important;
+    max-width: 480px !important;
+    min-height: 320px !important;
+    padding: 50px 40px !important;
+}
+.reset-title {
+    font-size: clamp(26px, 5vw, 40px) !important;
+}
+.reset-form input[type="password"] {
+    padding: 16px;
+    font-size: 18px;
+}
+
+.reset-form button {
+    padding: 16px;
+    font-size: 18px;
 }
 
 /* Input alanı */

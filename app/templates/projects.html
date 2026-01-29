@@ -6,7 +6,17 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/decor_projects.css') }}">
 <link rel="stylesheet" href="../static/css/selection.css">
 {% endblock %}
+{% block head %}
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-4E0S2QW6KC');
+</script>
+{% endblock %}
 {% block content %}
 
 <main>
@@ -72,7 +82,7 @@
 <a href="/admin" class="admin-btn">🔑</a>
 {% endif %}
 <footer class="site-footer">
-    <p>Versiyon: 4.8.0</p>
+    <p>Versiyon: 4.9.0</p>
 </footer>
 <footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
   © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.

@@ -66,6 +66,13 @@ ul {
     text-align: center;
     margin-bottom: 70px;
 }
+.main__title {
+    font-size: clamp(22px, 5vw, 40px) !important;
+}
+
+.card__title {
+    font-size: clamp(18px, 4vw, 22px) !important;
+}
 
 .cards-list {
     display: flex;
@@ -252,4 +259,59 @@ ul {
 .main__link:hover {
     color: #F8FAFC;
     background:  rgba(14, 165, 233, 1);
+}
+/* MOBIL RESPONSIVE PATCH */
+@media (max-width: 768px) {
+
+    .main__title {
+        font-size: 26px;
+        margin-bottom: 40px;
+    }
+
+    /* Kart listesi */
+    .cards-list {
+        padding: 0 10px;
+        gap: 16px;
+    }
+
+    .card {
+        width: 100%;
+        height: auto;
+        min-height: 380px;
+    }
+
+    .card__img {
+        width: 160px;
+        height: auto;
+    }
+
+    /* Form */
+    .form__card {
+        width: 100%;
+        padding: 20px 10px;
+    }
+
+    .form__inputs label,
+    .form__card label {
+        width: 100%;
+    }
+
+    .form__input,
+    .form__text {
+        width: 100%;
+    }
+
+    .form__button {
+        width: 100%;
+    }
+
+    /* İçerik sayfası */
+    .main__block {
+        padding: 20px;
+    }
+
+    .main__text {
+        font-size: 15px;
+        line-height: 24px;
+    }
 }

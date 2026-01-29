@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
-
+from sqlalchemy.exc import IntegrityError
 load_dotenv()  # .env dosyasını yükler
 
 app=Flask(__name__)
@@ -231,21 +231,31 @@ def buy():
     if "user_id" not in session:
         return redirect("camsepeti")
     return render_template("buy.html")
+
 @app.route("/camsepeti/register",methods=["GET","POST"])
 def register():
     if request.method=="POST":
-        try:
-            name=request.form["name"]
-            password=request.form["password"]
+        name=request.form["name"]
+        password=request.form["password"]
 
+        if Account.query.filter_by(name=name).first():
+            return "Bu kullanıcı adı zaten var"
+
+        try:
             hashed_pw=generate_password_hash(password)
             new_user=Account(name=name,password=hashed_pw)
             db.session.add(new_user)
             db.session.commit()
-        except:
+        except IntegrityError:
+            db.session.rollback()
             return "Bu kullanıcı adı zaten var"
+        except Exception as e:
+            db.session.rollback()
+            return f"GERÇEK HATA: {e}"
+
         return redirect("/camsepeti")
     return render_template("register.html")
+
 @app.route("/camsepeti",methods=["GET","POST"])
 def login():
     if request.method=="POST":
