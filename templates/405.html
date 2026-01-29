@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>405 | Yönteme İzin Verilmiyor</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_any_background.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
+    <link rel="stylesheet" href="../static/css/405.css">
+    <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+</head>
+<body>
+    <div class="card">
+        <div class="code">405</div>
+        <h1>Method Not Allowed</h1>
+        <p>
+            Bu sayfaya kullanılan HTTP metodu desteklenmiyor.<br/>
+            Yanlış bir istek göndermiş olabilirsin veya form yöntemi hatalı.
+        </p>
+        <div class="actions">
+            <a href="/" class="button primary">Ana Sayfaya Dön</a>
+            <a href="javascript:history.back()" class="button secondary">Geri Git</a>
+        </div>
+<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+    </div>
+</body>
+</html>

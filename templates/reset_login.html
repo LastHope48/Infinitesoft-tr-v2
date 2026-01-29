@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Reset</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
+    <link rel="stylesheet" href="../static/css/decor_reset-login.css">
+    <link rel="stylesheet" href="../static/css/selection.css">
+</head>
+<body>
+    <main class="reset-main">
+        <h2 class="reset-title">🔐 Admin olarak giriş yap</h2>
+    </main>
+
+    <form class="reset-form" method="post">
+        <input type="password" name="password" placeholder="Admin şifresi" required>
+        <button type="submit" class="reset-form-button-blue">Giriş</button>
+        <button onclick="window.location.href='/'" class="reset-form-button-red">Geri Dön</button>
+    </form>
+    {% if msg %}
+        <p class="reset-msg">{{ msg }}</p>
+    {% endif %}
+<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

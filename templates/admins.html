@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/decor_admins.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="../static/css/selection.css">
+</head>
+<body>
+
+<div class="admin-container">
+    <h1>Admin Kontrol Paneli</h1>
+    <p class="subtitle">Yönetim araçlarını buradan kullanabilirsiniz</p>
+
+    <div class="card-grid">
+
+        <!-- Broadcast -->
+        <a href="/admin/broadcast-panel" class="admin-card">
+            <h3>📣Broadcast</h3>
+            <p>Site geneline duyuru mesajı yayınla</p>
+        </a>
+
+        <!-- Yenilik / Güncelleme -->
+        <a href="/admin/news" class="admin-card">
+            <h3>🚀Yenilik Ekle</h3>
+            <p>Sisteme yeni özellik veya güncelleme ekle</p>
+        </a>
+
+    </div>
+
+</div>
+<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+<script>
+    fetch("/delete/" + filename, {
+  method: "DELETE",
+  headers: {
+    "X-SECRET": "123456"
+  }
+})
+
+</script>
+</body>
+</html>

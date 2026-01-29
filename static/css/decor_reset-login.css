@@ -1,0 +1,108 @@
+/* Body ve genel ayarlar */
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top, #0f2027, #000);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+
+/* Başlık */
+.reset-main {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.reset-title {
+    font-size: 28px;
+    color: #7fffd4;
+    letter-spacing: 1px;
+}
+
+/* Form kutusu */
+.reset-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(2,6,23,0.9);
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(0,255,180,0.2);
+    width: 320px;
+    gap: 20px;
+}
+
+/* Input alanı */
+.reset-form input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    font-size: 16px;
+}
+
+.reset-form input[type="password"]::placeholder {
+    color: rgba(255,255,255,0.6);
+}
+
+/* Buton */
+.reset-form button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.reset-form-button-blue {
+    background: #2563eb;
+}
+.reset-form-button-red {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #ee0000;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.reset-form-button-blue:hover {
+    background: #1e40af;
+    transform: translateY(-2px);
+}
+.reset-form-button-red:hover {
+    background: #a00202;
+    transform: translateY(-2px);
+}
+/* Mesaj */
+.reset-msg {
+    margin-top: 15px;
+    font-weight: bold;
+    color: #ff6b6b; /* hata rengi */
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+    .reset-form {
+        width: 90%;
+        padding: 30px 20px;
+    }
+
+    .reset-title {
+        font-size: 24px;
+    }
+}

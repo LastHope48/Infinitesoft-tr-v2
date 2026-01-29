@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <title>Çamsepeti-Login</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/decor_welcome.css">
+    <link rel="stylesheet" href="../static/css/selection.css">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
+</head>
+<body>
+    <div class="snow"></div>
+    <header class="top">
+        <div class="text_with_img">
+        </div>
+    </header>
+    <main>
+    <h1 class="header_text_big">ÇAMSEPETİ</h1>
+    <h2 class="header_text_small">Bilgiler doğru mu?</h2>
+    </main>
+    {% block content %}
+    <p class="namep">İsim: {{name}}</p>
+    <p class="emailp">E-posta: {{email}}</p>
+    <div class="link_home_div">
+        <img src="../static/img/question.png" alt="question_mark">
+        <a href="/camsepetihome" class="div_a">
+            <span>Bilgiler doğru mu?</span>
+        </a>
+    </div>
+    {% endblock %}
+        <footer class="site-footer">
+        <p>
+            ⚠️ Çamsepeti bir okul projesidir. Gerçek kişisel bilgilerinizi paylaşmayınız.
+        </p>
+    </footer>
+<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
