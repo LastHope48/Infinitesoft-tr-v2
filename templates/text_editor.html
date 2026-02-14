@@ -4,38 +4,103 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../static/css/selection.css">
     <title>Not Defteri</title>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-4E0S2QW6KC');
+</script>
     <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background: #f4f4f4;
-        }
-        input, textarea, button {
-            width: 100%;
-            margin-top: 10px;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        button {
-            background-color: #ff4272;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #ff1f57;
-        }
-    </style>
+<style>
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(180deg, #f9fafb, #eef2f7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1f2933;
+}
+
+.app {
+    width: 100%;
+    max-width: 520px;
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ff4272;
+}
+
+input, textarea {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px 14px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    background: #f9fafb;
+    color: #111827;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #ff4272;
+    box-shadow: 0 0 0 2px rgba(255,66,114,0.2);
+}
+
+textarea {
+    min-height: 180px;
+    resize: vertical;
+}
+
+button {
+    margin-top: 18px;
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ff5f8f, #ff4272);
+    color: white;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(255,66,114,0.35);
+}
+
+@media (max-width: 600px) {
+    .app {
+        margin: 16px;
+        padding: 20px;
+    }
+}
+</style>
+
+
 </head>
 <body>
+  <div class="app">
     <h1>Not Defteri</h1>
 
     <input type="text" id="filename" placeholder="Dosya Adı (örn: not.txt)">
     <textarea id="content" rows="10" placeholder="Merhaba mangolar ve karpuzlar"></textarea>
     <button onclick="downloadFile()">İndir</button>
+  </div>
+
 
     <script>
         function downloadFile() {

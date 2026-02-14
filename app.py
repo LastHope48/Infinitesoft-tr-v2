@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
-
+from sqlalchemy.exc import IntegrityError
 load_dotenv()  # .env dosyasını yükler
 
 app=Flask(__name__)
@@ -20,6 +20,8 @@ PYANYWHERE_SECRET   = os.getenv("PYANYWHERE_SECRET")
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "dev-token")  # 'dev-token' lokal için
 HF_URL="https://wf5528-infinitesoft-tr.hf.space/remove-bg"
 PA_EXE_URL = "https://wf5529.pythonanywhere.com/static/uygulama/infinitesoft-tr.exe"
+UPLOAD_FOLDER_GUIDES = "static/uploads"
+app.config["UPLOAD_FOLDER_GUIDES"] = UPLOAD_FOLDER_GUIDES
 if DATABASE_URL:
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
@@ -50,6 +52,16 @@ app.config["UPLOAD_FOLDER"]="uploads"
 ALLOWED={"png","jpg","jpeg","mp4","mov","pdf","webp","mp3","pptx","zip"}
 app.config["MAX_CONTENT_LENGTH"]=50*1024*1024
 if DATABASE_URL:
+    class Recipe(db.Model):
+        __tablename__="recipes_table"
+        __table_args__={"schema":"storage"}
+        id = db.Column(db.Integer, primary_key=True)
+        title = db.Column(db.String(150), nullable=False)
+        image_url = db.Column(db.String(300))
+        desc = db.Column(db.Text)
+        ingredients = db.Column(db.Text)
+        steps = db.Column(db.Text)
+        created_at = db.Column(db.DateTime, server_default=db.func.now())
     class Account(db.Model):
         __tablename__ = "accounts_table"
         __table_args__ = {"schema": "auth"}
@@ -100,12 +112,21 @@ if DATABASE_URL:
         created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 else:
+    class Recipe(db.Model):
+        __tablename__="recipes_table"
+        id = db.Column(db.Integer, primary_key=True)
+        title = db.Column(db.String(150), nullable=False)
+        image_url = db.Column(db.String(300))
+        desc = db.Column(db.Text)
+        ingredients = db.Column(db.Text)
+        steps = db.Column(db.Text)
+        created_at = db.Column(db.DateTime, server_default=db.func.now())
     class Account(db.Model):
         __tablename__ = "accounts_table"
 
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(20), nullable=False, unique=True)
-        password = db.Column(db.String(100), nullable=False)
+        password = db.Column(db.String(300), nullable=False)
 
     class Card(db.Model):
         __tablename__="card_table"
@@ -231,21 +252,31 @@ def buy():
     if "user_id" not in session:
         return redirect("camsepeti")
     return render_template("buy.html")
+
 @app.route("/camsepeti/register",methods=["GET","POST"])
 def register():
     if request.method=="POST":
-        try:
-            name=request.form["name"]
-            password=request.form["password"]
+        name=request.form["name"]
+        password=request.form["password"]
 
+        if Account.query.filter_by(name=name).first():
+            return "Bu kullanıcı adı zaten var"
+
+        try:
             hashed_pw=generate_password_hash(password)
             new_user=Account(name=name,password=hashed_pw)
             db.session.add(new_user)
             db.session.commit()
-        except:
+        except IntegrityError:
+            db.session.rollback()
             return "Bu kullanıcı adı zaten var"
+        except Exception as e:
+            db.session.rollback()
+            return f"GERÇEK HATA: {e}"
+
         return redirect("/camsepeti")
     return render_template("register.html")
+
 @app.route("/camsepeti",methods=["GET","POST"])
 def login():
     if request.method=="POST":
@@ -269,7 +300,7 @@ def upload():
             return jsonify(success=False, message="❌ Şifre yanlış")
 
         file = request.files.get("file")
-        if not file or not allowed(file.filename):
+        if not file or not allowed(file.filename) and session.get("can_delete") is not True:
             return jsonify(success=False, message="❌ Geçersiz dosya")
 
         original_name = secure_filename(file.filename)
@@ -695,6 +726,63 @@ def form_create():
 @app.route("/text_editor")
 def editor():
     return render_template("text_editor.html")
+# GUIDES
+@app.route("/guides")
+def guides_home():
+    recipes=Recipe.query.all()
+    return render_template("guides.html",recipes=recipes)
+@app.route("/recipes/<int:id>")
+def recipe_detail(id):
+    recipe = Recipe.query.get_or_404(id)
+    return render_template("recipe.html", recipe=recipe)
+@app.route("/recipes/<int:id>/delete", methods=["POST"])
+def delete_recipe(id):
+    if not session.get("can_delete"):
+        abort(403)
+    
+    recipe = Recipe.query.get_or_404(id)
+    db.session.delete(recipe)
+    db.session.commit()
+    return redirect("/guides")
+
+
+@app.route("/guides/add", methods=["GET","POST"])
+def add():
+    if request.method == "POST":
+        file = request.files["image"]
+        filename = secure_filename(file.filename)
+
+        # Klasör yoksa oluştur
+        upload_folder = app.config["UPLOAD_FOLDER_GUIDES"]
+        if not os.path.exists(upload_folder):
+            os.makedirs(upload_folder)
+
+        path = os.path.join(upload_folder, filename)
+        file.save(path)
+
+        # image_url başına / koyarak tarayıcıya doğru yol ver
+        r = Recipe(
+            title=request.form["title"],
+            image_url="/static/uploads/" + filename,
+            desc=request.form["desc"],
+            ingredients=request.form["ingredients"],
+            steps=request.form["steps"]
+        )
+        db.session.add(r)
+        db.session.commit()
+        return redirect("/guides")
+
+    return render_template("add_guide.html")
+
+
+# ZAMAN YOLCULUĞU BİLİMİ KURTAR
+@app.route("/bilim-oyunu")
+def bilim_game():
+    return render_template("biliminsanioyunu.html")
+# MEKAPUS
+@app.route("/mekapus")
+def home_mekapus():
+    return render_template("mekapus.html")
 # HATALAR
 @app.errorhandler(404)
 def page_not_found(e):

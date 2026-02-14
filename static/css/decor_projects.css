@@ -11,6 +11,18 @@ body {
     font-size: 50px;
     font-family: Arial, Helvetica, sans-serif;
 }
+.baslik {
+    font-size: clamp(24px, 5vw, 48px) !important;
+}
+
+.header__item {
+    font-size: clamp(28px, 6vw, 64px) !important;
+}
+
+.list__item span {
+    font-size: clamp(20px, 4vw, 32px) !important;
+}
+
 ul {
     list-style: none;
     margin: 0;
@@ -18,8 +30,11 @@ ul {
 }
 .list {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap; /* ALTIN KURAL */
 }
+
 .list__item a {
     text-decoration: none;
     display: flex;
@@ -47,17 +62,6 @@ ul {
 .header__item {
     font-size: 100px;
     text-align: center;
-}
-.header {
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: left;
-    background-color: #CCE59D;
-    padding: 10vh 30px;
-    margin-bottom: 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
 }
 .site-footer{
   margin-top: 80px;
@@ -177,4 +181,47 @@ ul {
         font-size: 2rem;
         width: 100%;
     }
+}
+@media (max-width: 768px) {
+
+    .baslik {
+        font-size: 28px;
+    }
+
+    .list {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .list__item a {
+        width: 90%;
+        padding: 16px;
+    }
+
+    .item__img {
+        width: 100px;
+    }
+
+    .list__item span {
+        font-size: 24px;
+    }
+}
+@media (max-width: 600px) {
+    .header {
+        align-items: stretch;
+    }
+
+    .btn-primary {
+        width: 100%;
+        margin-top: 16px;
+    }
+}
+.badge {
+    background-color: #ff9800 !important; /* turuncu dikkat çeken renk */
+    color: white !important;
+    font-size: 0.7em !important;
+    font-weight: bold !important;
+    padding: 2px 6px !important;
+    border-radius: 12px !important;
+    margin-left: 5px !important;
 }

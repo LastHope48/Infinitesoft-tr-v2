@@ -1,4 +1,4 @@
-/HF_API_APP
-/__pycache__
-/.venv
-/instances
+*.exe
+*.pkg
+build/
+dist/

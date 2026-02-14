@@ -117,14 +117,20 @@ main {
 
 
 .user input {
-    padding: 10px;
+    padding: 12px 14px;
     border: 1px solid #EB8028;
-    background: inherit;
-    border-radius: 5px;
+    background: rgba(0,0,0,0.6);   /* <-- asıl olay */
+    border-radius: 8px;
     font: inherit;
     width: 100%;
-    color: #EB8028;
+    color: #fff;                  /* yazı net olsun */
+    backdrop-filter: blur(4px);
 }
+
+.user input::placeholder {
+    color: #ccc;
+}
+
 
 .user input:focus,
 .user input:active {
@@ -248,4 +254,33 @@ label {
 }
 .btn_yellow:hover {
     background: #727002;
+}
+@media (max-width: 768px) {
+    .user {
+        flex-direction: column;
+        gap: 30px;
+        align-items: center;
+    }
+
+    .user-info,
+    .address-date {
+        width: 100%;
+    }
+
+    .button {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .baslik {
+        font-size: 36px;
+    }
+
+    .baslik_alt {
+        font-size: 22px;
+    }
+}
+.user input:focus {
+    border-color: #0EB07C;
+    box-shadow: 0 0 0 2px rgba(14,176,124,0.4);
 }

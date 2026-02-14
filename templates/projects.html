@@ -6,13 +6,23 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/decor_projects.css') }}">
 <link rel="stylesheet" href="../static/css/selection.css">
 {% endblock %}
+{% block head %}
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-4E0S2QW6KC');
+</script>
+{% endblock %}
 {% block content %}
 
 <main>
     <header class="header">
         <h3 class="header__item">
-            Infinitesoft-tr.com'un ürettiği projelere bakın!
+            🧪 Infinitesoft-tr.com'un ürettiği projelere bakın!
         </h3>
     <a href="{{ url_for('uygulama') }}" class="btn btn-primary">Uygulamayı İndir</a>
     </header>
@@ -41,7 +51,7 @@
                 <img class="item__img"
                      src="{{ url_for('static', filename='img/mouse_pushgame.png') }}"
                      alt="PUSHGAME">
-                <span>Push Game</span>
+                <span>Push Game <span class="badge">🚧</span></span>
             </a>
         </li>
                     <li class="list__item">
@@ -52,6 +62,12 @@
                 <span>AI Tools</span>
             </a>
         </li>
+    <li class="list__item">
+        <a href="/guides">
+            <img src="{{url_for('static',filename='img/guides.png')}}" alt="Tarifler" class="item__img">
+            <span>Tarifler</span>
+        </a>
+    </li>
     <li class="list__item">
         <a href="/cards">
             <img class="item__img"
@@ -66,13 +82,19 @@
             <span>Text Editor</span>
         </a>
     </li>
+    <li class="list__item">
+        <a href="/mekapus">
+            <img src="{{url_for('static',filename='img/mekapus.png')}}" alt="mekapus" class="item__img">
+            <span>Mekapus <span class="badge">🚧</span></span>
+        </a>
+    </li>
     </ul>
 </main>
 {% if not can_delete %}
 <a href="/admin" class="admin-btn">🔑</a>
 {% endif %}
 <footer class="site-footer">
-    <p>Versiyon: 4.8.0</p>
+    <p>Versiyon: 5.0.0</p>
 </footer>
 <footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
   © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.

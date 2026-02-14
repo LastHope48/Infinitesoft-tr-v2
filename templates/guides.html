@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Guides | Tarifler</title>
+    <link rel="stylesheet" href="../static/css/decor_guides.css">
+    <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+</head>
+<body>
+
+<header class="header">
+    <h1>📒 Tarifler</h1>
+</header>
+
+<main class="cards-container">
+  {% if recipes %}
+    {% for r in recipes %}
+      <div class="card-wrapper">
+        <a href="/recipes/{{ r.id }}" class="guide-card">
+          <img src="{{ r.image_url }}">
+          <h3>{{ r.title }}</h3>
+          <p>{{ r.desc }}</p>
+        </a>
+
+        {% if session.get("can_delete") %}
+        <form method="POST" action="/recipes/{{ r.id }}/delete" class="delete-form">
+          <button type="submit" class="admin-badge">Sil</button>
+        </form>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    </main> <!-- Grid’i kapat -->
+    <div class="no-recipes-wrapper">
+      <p class="no-recipes">📖 Henüz tarif yok. <a href="/guides/add">İlk tarifi ekleyen sen ol!</a></p>
+    </div>
+    <main class="cards-container"> <!-- gerekirse yeniden aç -->
+  {% endif %}
+
+
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tarifler | Ekle</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/decor_guides.css">
+    <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+</head>
+<body>
+<form method="POST" class="add-recipe" enctype="multipart/form-data">
+  <h2>Yeni Tarif</h2>
+  <label>Başlık</label>
+  <input name="title" placeholder="Başlık" required>
+  <label>Görsel</label>
+  <input type="file" name="image" required>
+  <label>Açıklama</label>
+  <textarea name="desc" placeholder="Açıklama"></textarea required>
+  <label>Malzemeler</label>
+  <textarea name="ingredients" placeholder="Malzemeler"></textarea required>
+  <label>Yapım Süreci</label>
+  <textarea name="steps" placeholder="Yapılış"></textarea required>
+
+  <button type="submit">Kaydet</button>
+</form>
+
+
+<div class="toast" id="toast">Tarif eklendi 🎉</div>
+
+<script>
+function saveRecipe() {
+  const title = document.getElementById("title").value;
+  const file = document.getElementById("image").files[0];
+  const desc = document.getElementById("desc").value;
+  const ingredients = document.getElementById("ingredients").value;
+  const steps = document.getElementById("steps").value;
+
+  if (!title || !file) {
+    alert("Başlık ve görsel zorunlu");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const recipes = JSON.parse(localStorage.getItem("recipes")) || [];
+
+    recipes.push({
+      title,
+      image: e.target.result, // BASE64
+      desc,
+      ingredients,
+      steps
+    });
+
+    localStorage.setItem("recipes", JSON.stringify(recipes));
+
+    showToast();
+    setTimeout(() => {
+      window.location.href = "/guides";
+    }, 1200);
+  };
+
+  reader.readAsDataURL(file);
+}
+
+function showToast() {
+  const t = document.getElementById("toast");
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 1000);
+}
+</script>
+
+
+</body>
+</html>

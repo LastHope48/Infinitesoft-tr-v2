@@ -6,25 +6,67 @@
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
     <link rel="stylesheet" href="../static/css/decor_reset-login.css">
     <link rel="stylesheet" href="../static/css/selection.css">
+    <link rel="stylesheet" href="../static/css/scroll_bar_remover.css">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-4E0S2QW6KC');
+</script>
 </head>
 <body>
-    <main class="reset-main">
-        <h2 class="reset-title">🔐 Admin olarak giriş yap</h2>
-    </main>
+    <div class="reset-wrapper">
+        <!-- SOL: Login -->
+        <div class="reset-left">
+            <main class="reset-main">
+                <h2 class="reset-title">🔐 Admin olarak giriş yap</h2>
+            </main>
 
-    <form class="reset-form" method="post">
-        <input type="password" name="password" placeholder="Admin şifresi" required>
-        <button type="submit" class="reset-form-button-blue">Giriş</button>
-        <button onclick="window.location.href='/'" class="reset-form-button-red">Geri Dön</button>
-    </form>
-    {% if msg %}
-        <p class="reset-msg">{{ msg }}</p>
-    {% endif %}
-<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
-  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
-</footer>
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
+            <form class="reset-form" method="post">
+                <input type="password" name="password" placeholder="Admin şifresi" required>
+                <button type="submit" class="reset-form-button-blue">Giriş</button>
+                <button onclick="window.location.href='/'" class="reset-form-button-red">Geri Dön</button>
+            </form>
+
+            {% if msg %}
+                <p class="reset-msg">{{ msg }}</p>
+            {% endif %}
+            <footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+      © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+    </footer>
+        </div>
+
+        <button class="admin-toggle" onclick="toggleAdminPanel()">
+            👑 Admin Yetkileri
+        </button>
+
+        <!-- SAĞ PANEL -->
+        <div class="reset-right" id="adminPanel">
+           <h3>👑 Admin Yetkileri</h3>
+           <div class="admin-list">
+            <ul>
+                <li>🗑️ Database Sıfırlama</li>
+                <li>💾 <a href="/infinitecloud">Infinitecloud</a>'da bütün dosya uzantıları kaydedebilme</li>
+                <li>✨ Yenilik ekleme</li>
+                <li>📢 Duyuru yapabilme</li>
+                <li>🎖️ <a href="/infinitecloud">Infinitecloud</a>'da dilerseniz admin özel çerçeveli görümesini sağlayabilirsinbiz kaydedeceğiniz dosyayı</li>
+            </ul>
+           </div>
+        </div>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+    <script>
+function toggleAdminPanel() {
+    const panel = document.getElementById("adminPanel");
+    panel.classList.toggle("active");
+}
 </script>
+
 </body>
+
 </html>

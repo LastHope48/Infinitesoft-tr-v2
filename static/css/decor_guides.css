@@ -1,0 +1,237 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f172a;
+    color: #e5e7eb;
+}
+
+.header {
+    text-align: center;
+    padding: 30px 10px;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+.header p {
+    color: #94a3b8;
+}
+
+/* GRID */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 110px);
+    gap: 16px;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* CARD */
+.guide-card {
+    width: 110px;
+    height: 220px;
+    background: #020617;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid #1e293b;
+    display: flex;
+    flex-direction: column;
+}
+
+/* IMAGE */
+.guide-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
+/* TEXT */
+.guide-card h3 {
+    font-size: 13px;
+    margin: 6px;
+}
+
+.guide-card p {
+    font-size: 11px;
+    margin: 0 6px;
+    color: #94a3b8;
+}
+
+/* HAFİF HOVER (abartısız) */
+.guide-card:hover {
+    border-color: #7fffd4;
+}
+/* Genel form kutusu */
+.add-recipe {
+  width: 100%;
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: Arial, sans-serif;
+}
+
+/* Başlık */
+.add-recipe h2 {
+  margin: 0 0 10px 0;
+  text-align: center;
+  font-size: 20px;
+  color: #333;
+}
+
+/* Input ve textarea */
+.add-recipe input,
+.add-recipe textarea {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+/* Focus efekti */
+.add-recipe input:focus,
+.add-recipe textarea:focus {
+  border-color: #6c8cff;
+  box-shadow: 0 0 0 2px rgba(108,140,255,0.15);
+}
+
+/* Textarea boyutu */
+.add-recipe textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+/* Dosya input */
+.add-recipe input[type="file"] {
+  border: none;
+  padding: 5px 0;
+}
+
+/* Buton */
+.add-recipe button {
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: #6c8cff;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-recipe button:hover {
+  background: #5874e5;
+  transform: translateY(-1px);
+}
+
+/* Küçük label görünümü */
+.add-recipe label {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #333;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 10px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.3s;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.guides-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 110px);
+  gap: 12px;
+}
+
+.guides-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 110px);
+  gap: 12px;
+  padding: 20px;
+}
+.admin-badge {
+    background: #ff3b3b;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: 0.2s;
+}
+
+.admin-badge:hover {
+    background: #ff0000;
+    transform: translateY(-1px);
+}
+.card-wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 10px; /* Kartlar arası boşluk */
+}
+
+/* Sil butonunu kartın sağ üstüne yapıştır */
+.delete-form {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.admin-badge {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.admin-badge:hover {
+    background: #e60000;
+}
+.no-recipes-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh; /* ekranın ortasına yaklaşacak */
+}
+
+.no-recipes {
+    grid-column: 1 / -1; /* Tüm grid sütunlarını kapsar */
+    text-align: center;
+    font-size: 22px;
+    color: #94a3b8;
+    background: #020617;
+    padding: 30px 40px;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    margin: 20px auto;
+}
