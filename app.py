@@ -374,11 +374,15 @@ def upload():
         else:
             r2_key = f"{uuid.uuid4()}_{stored_name}"
 
-            s3.put_object(
-                Bucket=R2_BUCKET,
-                Key=r2_key,
-                Body=file_bytes
-            )
+            try:
+                s3.put_object(
+                    Bucket=R2_BUCKET,
+                    Key=r2_key,
+                    Body=file_bytes
+                )
+            except Exception as e:
+                print("R2 UPLOAD HATA:", e)
+                return jsonify(success=False, message="R2 upload hatası")
         media = Media(
             original_name=original_name,
             stored_name=stored_name,
@@ -491,26 +495,25 @@ def files():
         session["uploader_id"] = str(uuid.uuid4())
     uploader_id = session.get("uploader_id")
     is_admin = session.get("can_delete", False)
-    if is_admin:
-        medias = Media.query.all()
-    else:
-        medias = Media.query.filter(Media.is_global == True).all()
-    print("SESSION uploader_id:", uploader_id)
-    print("DB owner_session:", [m.owner_session for m in Media.query.all()])
 
+    try:
+        if is_admin:
+            medias = Media.query.all()
+        else:
+            medias = Media.query.filter(Media.is_global == True).all()
+    except Exception as e:
+        print("DB HATA:", e)
+        return "DB hatası oluştu", 500
 
     files_count = len(medias)
-
     pa_files = []
+
     try:
-        r = requests.get(
-            os.getenv("PYANYWHERE_LIST_URL"),
-            headers={"X-SECRET": os.getenv("PYANYWHERE_SECRET")},
-            timeout=5
-        )
-        pa_files = r.json().get("files", [])
-    except:
-         pass
+        r = requests.get(PYANYWHERE_LIST_URL, headers={"X-SECRET": PYANYWHERE_SECRET}, timeout=5)
+        if r.status_code == 200:
+            pa_files = r.json().get("files", [])
+    except Exception as e:
+        print("PA LIST HATA:", e)
 
     return render_template(
         "files.html",
@@ -518,7 +521,7 @@ def files():
         files_count=files_count,
         can_reset=session.get("can_reset", False),
         can_delete=is_admin,
-        pa_files=pa_files,
+        pa_files=pa_files
     )
 
 
