@@ -33,6 +33,10 @@ HF_URL="https://wf5528-infinitesoft-tr.hf.space/remove-bg"
 PA_EXE_URL = "https://wf5529.pythonanywhere.com/static/uygulama/infinitesoft-tr.exe"
 UPLOAD_FOLDER_GUIDES = "static/uploads"
 app.config["UPLOAD_FOLDER_GUIDES"] = UPLOAD_FOLDER_GUIDES
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "pool_pre_ping": True,
+    "pool_recycle": 300,
+}
 if DATABASE_URL:
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
@@ -637,27 +641,19 @@ def admin_panel():
     )
 @app.context_processor
 def inject_broadcast():
-    now = datetime.utcnow()
+    try:
+        now = datetime.utcnow()
+        # Sadece aktif mesajı çek, silme işlemini buradan kaldır!
+        active = SiteMessage.query.filter(
+            SiteMessage.expires_at > now
+        ).order_by(SiteMessage.created_at.desc()).first()
 
-    # Süresi dolanları temizle
-    expired = SiteMessage.query.filter(
-        SiteMessage.expires_at < now
-    ).all()
-
-    for msg in expired:
-        db.session.delete(msg)
-
-    if expired:
-        db.session.commit()
-
-    # Aktif mesaj (en son girilen)
-    active = SiteMessage.query.filter(
-        SiteMessage.expires_at > now
-    ).order_by(SiteMessage.created_at.desc()).first()
-
-    return {
-        "broadcast_message": active.message if active else None
-    }
+        return {
+            "broadcast_message": active.message if active else None
+        }
+    except Exception as e:
+        print(f"Broadcast hatası (yoksayıldı): {e}")
+        return {"broadcast_message": None}
 
 @app.route("/admin/broadcast-panel")
 def broadcast_panel():
