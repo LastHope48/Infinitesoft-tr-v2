@@ -1,9 +1,10 @@
 import os,uuid
-from flask import Flask,render_template,render_template_string,request,send_from_directory,send_file,redirect,session,url_for,Response,abort,jsonify
+from flask import Flask,render_template,request,send_from_directory,send_file,redirect,session,url_for,Response,abort,jsonify
 import requests
 from werkzeug.security import check_password_hash,generate_password_hash
 from sqlalchemy import func,text
 import io,zipfile
+import boto3
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
@@ -13,6 +14,16 @@ load_dotenv()  # .env dosyasını yükler
 
 app=Flask(__name__)
 
+s3 = boto3.client(
+    service_name="s3",
+    endpoint_url=f"https://{os.getenv('ACCOUNT_ID')}.r2.cloudflarestorage.com",
+    aws_access_key_id=os.getenv("ACCESS_KEY"),
+    aws_secret_access_key=os.getenv("SECRET_KEY"),
+    region_name="auto"
+)
+
+R2_BUCKET = "infinitecloud"
+MAX_STORAGE = 10 * 1024 * 1024 * 1024
 DATABASE_URL = os.getenv("DATABASE_URL")
 PYANYWHERE_UPLOAD_URL = "https://wf5528.pythonanywhere.com/upload"
 PYANYWHERE_LIST_URL   = "https://wf5528.pythonanywhere.com/list"
@@ -52,6 +63,18 @@ app.config["UPLOAD_FOLDER"]="uploads"
 ALLOWED={"png","jpg","jpeg","mp4","mov","pdf","webp","mp3","pptx","zip"}
 app.config["MAX_CONTENT_LENGTH"]=50*1024*1024
 if DATABASE_URL:
+    class Project(db.Model):
+        __tablename__="project_details"
+        __table_args__={"schema":"details"}
+        id = db.Column(db.Integer, primary_key=True)
+        title = db.Column(db.String(100), nullable=False)
+        slug = db.Column(db.String(100), unique=True, nullable=False)
+        short_desc = db.Column(db.String(200))
+        description = db.Column(db.Text)
+        icon=db.Column(db.String(200))
+        tech = db.Column(db.String(200))  
+        github = db.Column(db.String(200))
+        live_url = db.Column(db.String(200))
     class Recipe(db.Model):
         __tablename__="recipes_table"
         __table_args__={"schema":"storage"}
@@ -81,12 +104,12 @@ if DATABASE_URL:
             return f"<Card {self.id}>"
     class Media(db.Model):
         __tablename__ = "medias_table"
-        __table_args__ = {"schema": "storage"}
 
         id = db.Column(db.Integer, primary_key=True)
         original_name = db.Column(db.String(200))
         stored_name = db.Column(db.String(200))
-        data = db.Column(db.LargeBinary)
+        r2_key = db.Column(db.String(300))
+        size = db.Column(db.BigInteger)
         created_at = db.Column(db.DateTime, default=datetime.utcnow)
         download_count = db.Column(db.Integer, default=0)
         is_global = db.Column(db.Boolean, default=False)
@@ -142,7 +165,8 @@ else:
         id = db.Column(db.Integer, primary_key=True)
         original_name = db.Column(db.String(200))
         stored_name = db.Column(db.String(200))
-        data = db.Column(db.LargeBinary)
+        r2_key = db.Column(db.String(300))
+        size = db.Column(db.BigInteger)
         created_at = db.Column(db.DateTime, default=datetime.utcnow)
         download_count = db.Column(db.Integer, default=0)
         is_global = db.Column(db.Boolean, default=False)
@@ -164,6 +188,17 @@ else:
         version = db.Column(db.String(20), nullable=False)
         content = db.Column(db.Text, nullable=False)
         created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    class Project(db.Model):
+        __tablename__="project_details"
+        id = db.Column(db.Integer, primary_key=True)
+        title = db.Column(db.String(100), nullable=False)
+        slug = db.Column(db.String(100), unique=True, nullable=False)
+        short_desc = db.Column(db.String(200))
+        description = db.Column(db.Text)
+        icon=db.Column(db.String(200))
+        tech = db.Column(db.String(200))  
+        github = db.Column(db.String(200))
+        live_url = db.Column(db.String(200))
 
 def send_to_pythonanywhere(filename, file_bytes):
     try:
@@ -178,12 +213,18 @@ def send_to_pythonanywhere(filename, file_bytes):
     except Exception as e:
         print("ERR:", e)
 
-
 def allowed(filename):
     return "." in filename and filename.rsplit(".",1)[1].lower() in ALLOWED
+@app.route("/projects/<slug>")
+def project_detail(slug):
+    project = Project.query.filter_by(slug=slug).first_or_404()
+    return render_template("project_detail.html", project=project)
+
+
 @app.route("/")
 def projects():
     return render_template("projects.html")
+
 @app.route("/maintanence")
 def maintanence():
     return render_template("maintanence.html")
@@ -318,11 +359,31 @@ def upload():
             session["uploader_id"] = str(uuid.uuid4())
 
         file_bytes = file.read()
+        file_size = len(file_bytes)
 
+        # mevcut kullanım
+        current_usage = db.session.query(
+            func.coalesce(func.sum(Media.size), 0)
+        ).scalar()
+
+        if current_usage + file_size > MAX_STORAGE:
+            return jsonify(
+                success=False,
+                message="❌ Üzgünüz, 10GB kota doldu."
+            )
+        else:
+            r2_key = f"{uuid.uuid4()}_{stored_name}"
+
+            s3.put_object(
+                Bucket=R2_BUCKET,
+                Key=r2_key,
+                Body=file_bytes
+            )
         media = Media(
             original_name=original_name,
             stored_name=stored_name,
-            data=file_bytes,
+            r2_key=r2_key,
+            size=file_size,
             is_global=is_global,
             high_lighted=high_lighted,
             owner_session=session["uploader_id"]
@@ -348,38 +409,57 @@ def download_file(media_id):
     media.download_count += 1
     db.session.commit()
 
-    return send_file(
-        io.BytesIO(media.data),
-        as_attachment=True,
-        download_name=media.original_name
+    obj = s3.get_object(
+        Bucket=R2_BUCKET,
+        Key=media.r2_key
+    )
+
+    return Response(
+        obj["Body"].read(),
+        headers={
+            "Content-Disposition": f'attachment; filename="{media.original_name}"',
+            "Content-Type": "application/octet-stream"
+        }
     )
 
 @app.route("/infinitecloud/files/<int:media_id>")
 def look(media_id):
     media = Media.query.get_or_404(media_id)
+
     if not media.is_global:
         if session.get("can_delete") is not True and media.owner_session != session.get("uploader_id"):
             abort(403)
-    return send_file(
-        io.BytesIO(media.data),
-        as_attachment=False,
-        download_name=media.original_name
+
+    obj = s3.get_object(
+        Bucket=R2_BUCKET,
+        Key=media.r2_key
     )
 
-@app.route("/infinitecloud/files/<int:media_id>/delete")
-def delete_file(media_id):
-    media = Media.query.get_or_404(media_id)
+    return Response(
+        obj["Body"].read(),
+        headers={
+            "Content-Type": "application/octet-stream"
+        }
+    )
 
-    is_admin = session.get("can_delete") is True
-    is_owner = media.owner_session == session.get("uploader_id")
+@app.route("/infinitecloud/delete/<int:file_id>", methods=["POST"])
+def delete_file(file_id):
+    media = Media.query.get_or_404(file_id)
 
-    if not (is_admin or is_owner):
+    if media.owner_session != session.get("uploader_id"):
         abort(403)
 
+    # R2’den sil
+    s3.delete_object(
+        Bucket=R2_BUCKET,
+        Key=media.r2_key
+    )
+
+    # DB’den sil
     db.session.delete(media)
     db.session.commit()
-    return redirect("/infinitecloud/files")
 
+    return redirect(url_for("myfiles"))
 @app.route("/admin", methods=["GET", "POST"])
 def reset_login():
     msg = ""
@@ -411,10 +491,10 @@ def files():
         session["uploader_id"] = str(uuid.uuid4())
     uploader_id = session.get("uploader_id")
     is_admin = session.get("can_delete", False)
-    if not is_admin:
-        medias = Media.query.filter(Media.is_global== True).all()
-    elif is_admin:
+    if is_admin:
         medias = Media.query.all()
+    else:
+        medias = Media.query.filter(Media.is_global == True).all()
     print("SESSION uploader_id:", uploader_id)
     print("DB owner_session:", [m.owner_session for m in Media.query.all()])
 
@@ -451,7 +531,12 @@ def download_all():
     zip_buffer = io.BytesIO()
     with zipfile.ZipFile(zip_buffer, "w") as zip_file:
         for media in medias:
-            zip_file.writestr(media.original_name, media.data)
+            obj = s3.get_object(
+            Bucket=R2_BUCKET,
+            Key=media.r2_key
+        )
+
+            zip_file.writestr(media.original_name, obj["Body"].read())
 
     zip_buffer.seek(0)
 
@@ -523,7 +608,34 @@ def admin_broadcast():
 def admin_panel():
     if not session.get("can_delete"):
         abort(403)
-    return render_template("admins.html")
+
+    current_usage = db.session.query(
+        func.coalesce(func.sum(Media.size), 0)
+    ).scalar()
+
+
+    total_bytes = 10 * 1024 * 1024 * 1024
+
+    used_bytes = db.session.query(
+        func.coalesce(func.sum(Media.size), 0)
+    ).scalar()
+
+    percent = int((used_bytes / total_bytes) * 100) if total_bytes else 0
+    used_gb = round(used_bytes / (1024**3), 2)
+
+    if percent > 85:
+        color = "red"
+    elif percent > 60:
+        color = "orange"
+    else:
+        color = "green"
+
+    return render_template(
+        "admins.html",
+        used_gb=used_gb,
+        percent=percent,
+        color=color
+    )
 @app.context_processor
 def inject_broadcast():
     now = datetime.utcnow()
@@ -555,14 +667,17 @@ def broadcast_panel():
     return render_template("admin_broadcast.html")
 @app.route("/infinitecloud/myfiles")
 def myfiles():
-    uploader_id=session.get("uploader_id")
     if "uploader_id" not in session:
-        session["uploader_id"] = str(uuid.uuid4())
-    medias=Media.query.filter(
-        (Media.is_global==False) &
-        (Media.owner_session==uploader_id)
-    ).all()
-    return render_template("myfiles.html",files=medias)
+        return redirect(url_for("files"))
+
+    uploader_id = session.get("uploader_id")
+
+    medias = Media.query.filter_by(owner_session=uploader_id).all()
+
+    return render_template(
+        "myfiles.html",
+        files=medias
+    )
 @app.route("/infinitecloud/myfiles/<int:media_id>/delete")
 def delete_myfile(media_id):
     media=Media.query.get_or_404(media_id)
@@ -572,33 +687,40 @@ def delete_myfile(media_id):
     db.session.delete(media)
     db.session.commit()
     return redirect("/infinitecloud/myfiles")
-@app.route("/infinitecloud/myfiles/<int:media_id>")
-def lookmy(media_id):
-    media = Media.query.get_or_404(media_id)
-    if not media.is_global:
-        if session.get("can_delete") is not True and media.owner_session != session.get("uploader_id"):
-            abort(403)
-    return send_file(
-        io.BytesIO(media.data),
-        as_attachment=False,
-        download_name=media.original_name
+@app.route("/infinitecloud/lookmy/<int:file_id>")
+def lookmy(file_id):
+    media = Media.query.get_or_404(file_id)
+
+    if media.owner_session != session.get("uploader_id"):
+        abort(403)
+
+    obj = s3.get_object(
+        Bucket=R2_BUCKET,
+        Key=media.r2_key
     )
-@app.route("/infinitecloud/myfiles/<int:media_id>/download")
-def download_myfile(media_id):
-    media = Media.query.get_or_404(media_id)
 
-    if not media.is_global:
-        if session.get("can_delete") is not True and media.owner_session != session.get("uploader_id"):
-            return "❌ Bu dosya gizli", 403
+    return Response(
+        obj["Body"].read(),
+        mimetype=media.mimetype
+    )
+@app.route("/infinitecloud/download/<int:file_id>")
+def download(file_id):
+    media = Media.query.get_or_404(file_id)
 
-    media.download_count += 1
-    db.session.commit()
+    if media.owner_session != session.get("uploader_id"):
+        abort(403)
 
-    return send_file(
-        io.BytesIO(media.data),
-        as_attachment=True,
-        download_name=media.original_name,
-        files_count=media.download_count
+    obj = s3.get_object(
+        Bucket=R2_BUCKET,
+        Key=media.r2_key
+    )
+
+    return Response(
+        obj["Body"].read(),
+        headers={
+            "Content-Disposition": f'attachment; filename="{media.original_name}"'
+        },
+        mimetype=media.mimetype
     )
 # PUSH GAME
 @app.route("/pushgame")

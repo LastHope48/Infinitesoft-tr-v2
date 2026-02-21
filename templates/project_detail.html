@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} | Infinitesoft{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static',filename='css/decor_any_background.css')}}">
+<style>
+body {
+    overflow: hidden;
+}
+.project-detail {
+    max-width: 900px;
+    margin: 60px auto;
+    background: #111;
+    padding: 40px;
+    border-radius: 20px;
+    color: white;
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+}
+
+.project-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.project-header img {
+    width: 80px;
+}
+
+.project-header h1 {
+    font-size: 42px;
+    color: aquamarine;
+}
+
+.project-short {
+    margin: 20px 0;
+    font-size: 20px;
+    color: #ccc;
+}
+
+.project-long {
+    margin-top: 30px;
+    line-height: 1.7;
+    font-size: 18px;
+}
+
+.project-tech {
+    margin-top: 30px;
+    font-size: 16px;
+    color: #47b5ff;
+}
+
+.project-links {
+    margin-top: 40px;
+    display: flex;
+    gap: 20px;
+}
+
+.project-links a {
+    padding: 14px 24px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #ff7f50, #ff6347);
+    transition: 0.2s;
+}
+
+.project-links a:hover {
+    transform: scale(1.05);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="project-detail">
+
+    <div class="project-header">
+        {% if project.icon %}
+            <img src="{{ url_for('static', filename='img/' + project.icon) }}">
+        {% endif %}
+        <h1>{{ project.title }}</h1>
+    </div>
+
+    <div class="project-short">
+        {{ project.short_desc }}
+    </div>
+
+    <div class="project-long">
+        {{ project.description }}
+    </div>
+
+    {% if project.tech %}
+    <div class="project-tech">
+        <strong>Teknolojiler:</strong> {{ project.tech }}
+    </div>
+    {% endif %}
+
+    <div class="project-links">
+        {% if project.live_url %}
+            <a href="{{ project.live_url }}" target="_blank">Canlı Demo</a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

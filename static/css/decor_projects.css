@@ -43,16 +43,19 @@ ul {
     color: inherit;
     gap: 20px;
     padding: 20px;
-    border-radius: 24px;
-    border: 1px solid #EB8028;
-    transition: 0.2s;
+
+    border-radius: 22px;
+    border: 1px solid transparent;
+    background:
+      linear-gradient(#000, #000) padding-box,
+      linear-gradient(135deg, #EB8028, #47b5ff) border-box;
+
+    transition: all 0.25s ease;
 }
+
 .item__img {
     object-fit: contain;
     width: 150px;
-}
-.list__item a:hover {
-    box-shadow: 1px 1px 4px 4px greenyellow;
 }
 .list__item span {
     color: aquamarine;
@@ -224,4 +227,94 @@ ul {
     padding: 2px 6px !important;
     border-radius: 12px !important;
     margin-left: 5px !important;
+}
+.list__item {
+  position: relative !important;
+}
+
+.detail-btn {
+  position: absolute !important;
+  top: 10px !important;
+  right: 12px !important;
+  font-size: 14px !important;
+  color: #47b5ff !important;
+  text-decoration: none !important;
+  opacity: 0.85 !important;
+  z-index: 2 !important;
+}
+
+.detail-btn:hover {
+  opacity: 1 !important;
+}
+
+.list__item a {
+    backdrop-filter: blur(4px);
+}
+.list__item a:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 
+      0 0 20px rgba(235,128,40,0.6),
+      0 0 40px rgba(71,181,255,0.4);
+}
+.list__item .detail-btn {
+  display: none;
+}
+
+.show-details .list__item .detail-btn {
+  display: inline-block;
+}
+.toggle-details-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: linear-gradient(135deg, #47b5ff, #6a5cff);
+  color: white;
+  padding: 14px 22px;
+  border-radius: 999px; /* tamamen yuvarlak */
+
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+
+  box-shadow: 0 8px 25px rgba(71,181,255,0.45);
+  transition: all 0.25s ease;
+}
+
+
+.toggle-details-btn:hover {
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 12px 35px rgba(71,181,255,0.8);
+}
+
+
+/* Açıkken farklı renk */
+.show-details .toggle-details-btn {
+  background: linear-gradient(135deg, #ff6b6b, #ff9800);
+  box-shadow: 0 8px 25px rgba(255,152,0,0.6);
+}
+@media (max-width: 600px) {
+  .toggle-details-btn .text {
+    display: none;
+  }
+
+  .toggle-details-btn {
+    padding: 14px;
+    border-radius: 50%;
+  }
+}
+
+.toggle-details-btn {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(71,181,255,0.6); }
+  70% { box-shadow: 0 0 0 12px rgba(71,181,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(71,181,255,0); }
 }

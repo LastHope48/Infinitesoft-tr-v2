@@ -24,18 +24,32 @@
         <h3 class="header__item">
             🧪 Infinitesoft-tr.com'un ürettiği projelere bakın!
         </h3>
+<a href="#" class="toggle-details-btn" onclick="toggleAllDetails(event)">
+  <span class="icon">ⓘ</span>
+  <span class="text">Detayları aç</span>
+</a>
+
+
+
     <a href="{{ url_for('uygulama') }}" class="btn btn-primary">Uygulamayı İndir</a>
     </header>
 
     <ul class="list">
-        <li class="list__item">
-            <a href="/infinitecloud">
-                <img class="item__img"
-                     src="{{ url_for('static', filename='img/upload-icon-4.png') }}"
-                     alt="bulut">
-                <span>Infinitecloud</span>
-            </a>
-        </li>
+<li class="list__item">
+    <a href="/infinitecloud" class="card-main">
+        <img class="item__img"
+             src="{{ url_for('static', filename='img/upload-icon-4.png') }}">
+        <span>Infinitecloud</span>
+    </a>
+
+    <a href="{{ url_for('project_detail', slug='infinitecloud') }}" 
+       class="detail-btn">
+       ⓘ Detay →
+    </a>
+</li>
+
+
+
 
         <li class="list__item">
             <a href="/camsepeti">
@@ -44,6 +58,10 @@
                      alt="camsepeti">
                 <span>Çamsepeti</span>
             </a>
+                <a href="{{ url_for('project_detail', slug='camsepeti') }}" 
+       class="detail-btn">
+       ⓘ Detay →
+    </a>
         </li>
 
                 <li class="list__item">
@@ -53,6 +71,10 @@
                      alt="PUSHGAME">
                 <span>Push Game <span class="badge">🚧</span></span>
             </a>
+                <a href="{{ url_for('project_detail', slug='pushgame') }}" 
+       class="detail-btn">
+       ⓘ Detay →
+    </a>
         </li>
                     <li class="list__item">
             <a href="/ai_tools">
@@ -61,12 +83,20 @@
                      alt="AI_tools">
                 <span>AI Tools</span>
             </a>
+                <a href="{{ url_for('project_detail', slug='aitools') }}" 
+       class="detail-btn">
+       ⓘ Detay →
+    </a>
         </li>
     <li class="list__item">
         <a href="/guides">
             <img src="{{url_for('static',filename='img/guides.png')}}" alt="Tarifler" class="item__img">
             <span>Tarifler</span>
         </a>
+            <a href="{{ url_for('project_detail', slug='guides') }}" 
+       class="detail-btn">
+       ⓘ Detay →
+    </a>
     </li>
     <li class="list__item">
         <a href="/cards">
@@ -75,18 +105,30 @@
              alt="Cards">
             <span>Notes</span>
         </a>
+            <a href="{{ url_for('project_detail', slug='notes') }}" 
+       class="detail-btn">
+       ⓘ Detay →
+    </a>
     </li>
     <li class="list__item">
         <a href="/text_editor">
             <img src="{{url_for('static',filename='img/note.png')}}" alt="text_editor" class="item__img">
             <span>Text Editor</span>
         </a>
+            <a href="{{ url_for('project_detail', slug='texteditor') }}" 
+       class="detail-btn">
+       ⓘ Detay →
+    </a>
     </li>
     <li class="list__item">
         <a href="/mekapus">
             <img src="{{url_for('static',filename='img/mekapus.png')}}" alt="mekapus" class="item__img">
             <span>Mekapus <span class="badge">🚧</span></span>
         </a>
+            <a href="{{ url_for('project_detail', slug='mekapus') }}" 
+       class="detail-btn">
+       ⓘ Detay →
+    </a>
     </li>
     </ul>
 </main>
@@ -94,7 +136,7 @@
 <a href="/admin" class="admin-btn">🔑</a>
 {% endif %}
 <footer class="site-footer">
-    <p>Versiyon: 5.0.0</p>
+    <p>Versiyon: 5.1.0</p>
 </footer>
 <footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
   © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
@@ -106,5 +148,26 @@
     <span class="icon">⬆️</span>
     <span class="text">Ürün Güncelleştirmeleri</span>
 </a>
+<script>
+function toggleAllDetails(e) {
+  e.preventDefault();
+  document.body.classList.toggle("show-details");
+
+  const btn = e.currentTarget;
+  const text = btn.querySelector(".text");
+  const icon = btn.querySelector(".icon");
+
+  if (document.body.classList.contains("show-details")) {
+    text.innerText = "Detayları gizle";
+    icon.innerText = "❌";
+  } else {
+    text.innerText = "Detayları aç";
+    icon.innerText = "ⓘ";
+  }
+}
+
+
+</script>
+
 
 {% endblock %}
