@@ -26,7 +26,7 @@
 .progress-bar {
     height: 25px;
     text-align: center;
-    color: white;
+    color: black;
     font-weight: bold;
     line-height: 25px;
     border-radius: 8px;
@@ -69,25 +69,13 @@
     </div>
 
 <h3>Depolama Kullanımı</h3>
-
-<p>{{ used_gb }} GB / 10 GB kullanıldı</p>
+<p><strong>{{ display_usage }}</strong> / 10 GB kullanıldı</p>
 
 <div class="progress-container">
     <div class="progress-bar {{ bar_class }}" 
-         style="width: {{ percent }}%;">
-        {{ percent }}%
+         style="width: {{ percent if percent > 1 else 1 }}%;"> 
+         {{ percent }}%
     </div>
-</div>
-
-{% if percent and percent >= 100 %}
-<p style="color:red; font-weight:bold;">
-⚠ Kota doldu! Yeni yükleme yapılamaz.
-</p>
-{% endif %}
-
-{% if percent >= 100 %}
-<p style="color:red; font-weight:bold;">⚠ Kota doldu! Yeni yükleme yapılamaz.</p>
-{% endif %}
 </div>
 <footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
   © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.

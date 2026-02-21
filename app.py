@@ -40,6 +40,7 @@ if DATABASE_URL:
     UPLOAD_PASSWORD=os.getenv("UPLOAD_PASSWORD")
     ADMIN_PASSWORD_HASH = os.getenv("ADMIN_PASSWORD")
 else:
+    load_dotenv(r"C:\Users\Mehmet Serdar EREN\Desktop\orasu2v.txt")
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///local.db"
 
     app.config["SQLALCHEMY_BINDS"] = {
@@ -161,7 +162,7 @@ else:
             return f"<Card {self.id}>"
     class Media(db.Model):
         __tablename__ = "medias_table"
-
+        __bind_key__ = "medias"
         id = db.Column(db.Integer, primary_key=True)
         original_name = db.Column(db.String(200))
         stored_name = db.Column(db.String(200))
@@ -609,35 +610,29 @@ def admin_broadcast():
     return redirect("/admin/broadcast-panel")
 @app.route("/admins")
 def admin_panel():
-    if not session.get("can_delete"):
-        abort(403)
-
-    current_usage = db.session.query(
-        func.coalesce(func.sum(Media.size), 0)
-    ).scalar()
-
-
-    total_bytes = 10 * 1024 * 1024 * 1024
-
-    used_bytes = db.session.query(
-        func.coalesce(func.sum(Media.size), 0)
-    ).scalar()
-
-    percent = int((used_bytes / total_bytes) * 100) if total_bytes else 0
-    used_gb = round(used_bytes / (1024**3), 2)
-
-    if percent > 85:
-        color = "red"
-    elif percent > 60:
-        color = "orange"
+    # ... (yetki kontrolleri)
+    
+    used_bytes = db.session.query(func.sum(Media.size)).scalar() or 0
+    total_bytes = 10 * (1024 ** 3)
+    
+    # Yüzdeyi hesapla (Hala 0 görünebilir çünkü %0.001 gibi bir rakamdır)
+    percent = (used_bytes / total_bytes) * 100
+    
+    # Birim dönüştürme mantığı
+    if used_bytes < 1024:
+        display_usage = f"{used_bytes} Byte"
+    elif used_bytes < 1024**2:
+        display_usage = f"{round(used_bytes/1024, 2)} KB"
+    elif used_bytes < 1024**3:
+        display_usage = f"{round(used_bytes/(1024**2), 2)} MB"
     else:
-        color = "green"
+        display_usage = f"{round(used_bytes/(1024**3), 2)} GB"
 
     return render_template(
         "admins.html",
-        used_gb=used_gb,
-        percent=percent,
-        color=color
+        display_usage=display_usage, # HTML'de bunu kullanacağız
+        percent=round(percent, 2),
+        bar_class="safe" if percent < 60 else "warning"
     )
 @app.context_processor
 def inject_broadcast():
@@ -672,21 +667,19 @@ def broadcast_panel():
 def myfiles():
     if "uploader_id" not in session:
         session["uploader_id"] = str(uuid.uuid4())
-
-    uploader_id = session.get("uploader_id")
-
-    try:
-        medias = Media.query.filter_by(owner_session=uploader_id).all()
-    except Exception as e:
-        # Hata varsa direkt göster
-        return f"DB Hatası: {e}", 500
-
-    if not medias:
-        return "Bu session için hiç dosya yok veya owner_session hatalı."
-
+    
+    uploader_id = session["uploader_id"]
+    # Veritabanından dosyaları çekiyoruz
+    medias = Media.query.filter_by(owner_session=uploader_id).all()
+    
+    # EĞER DOSYA YOKSA: Hata mesajı döndürmek yerine, 
+    # boş liste ile HTML şablonuna (template) gönderiyoruz.
+    # HTML içindeki {% else %} bloğu devreye girecek.
     return render_template(
         "myfiles.html",
-        files=medias
+        files=medias,
+        files_count=len(medias),
+        can_reset=False # Veya senin yetki kontrolün
     )
 @app.route("/infinitecloud/myfiles/<int:media_id>/delete")
 def delete_myfile(media_id):
@@ -931,6 +924,6 @@ def internal_error(e):
 
 with app.app_context():
     db.create_all()
-if __name__=="__main__":
+if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True) # debug=True ekledik

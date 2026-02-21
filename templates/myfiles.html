@@ -36,21 +36,21 @@
 
     <img src="../static/img/files.webp" class="cloud-img">
 
-    <ul class="file-list">
-        {% for media in files %}
-<li class="
-    file-item
-    {% if media.high_lighted %} admin-featured {% endif %}
-">
-            <span>{{media.original_name}}</span>
-            <a href="{{url_for ('delete_myfile',media_id=media.id)}}">Sil</a>
-            <a target="_blank"href="{{url_for ('lookmy',media_id=media.id)}}">Ön izle</a>
-            <a href="{{ url_for('download_myfile', media_id=media.id) }}">İndir</a>
-        </li>
-        {% else %}
-        <li>Hiç dosya yok.</li>
-        {% endfor %}
-    </ul>
+<ul class="file-list">
+    {% for media in files %}
+    <li class="file-item {% if media.high_lighted %} admin-featured {% endif %}">
+        <span>{{media.original_name}}</span>
+        
+        <a href="{{ url_for('delete_myfile', media_id=media.id) }}">Sil</a>
+        
+        <a target="_blank" href="{{ url_for('lookmy', file_id=media.id) }}">Ön izle</a>
+        
+        <a href="{{ url_for('download', file_id=media.id) }}">İndir</a>
+    </li>
+    {% else %}
+    <li>Hiç dosya yok.</li>
+    {% endfor %}
+</ul>
 
     <div class="counter">
         📁 {{ files_count }} dosya
