@@ -671,11 +671,18 @@ def broadcast_panel():
 @app.route("/infinitecloud/myfiles")
 def myfiles():
     if "uploader_id" not in session:
-        return redirect(url_for("files"))
+        session["uploader_id"] = str(uuid.uuid4())
 
     uploader_id = session.get("uploader_id")
 
-    medias = Media.query.filter_by(owner_session=uploader_id).all()
+    try:
+        medias = Media.query.filter_by(owner_session=uploader_id).all()
+    except Exception as e:
+        # Hata varsa direkt göster
+        return f"DB Hatası: {e}", 500
+
+    if not medias:
+        return "Bu session için hiç dosya yok veya owner_session hatalı."
 
     return render_template(
         "myfiles.html",
