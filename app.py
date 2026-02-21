@@ -104,7 +104,7 @@ if DATABASE_URL:
             return f"<Card {self.id}>"
     class Media(db.Model):
         __tablename__ = "medias_table"
-
+        __table_args__={"schema":"storage"}
         id = db.Column(db.Integer, primary_key=True)
         original_name = db.Column(db.String(200))
         stored_name = db.Column(db.String(200))
@@ -923,4 +923,4 @@ with app.app_context():
     db.create_all()
 if __name__=="__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port,debug=True)
+    app.run(host="0.0.0.0", port=port)
