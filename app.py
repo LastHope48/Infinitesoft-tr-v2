@@ -337,6 +337,7 @@ def logout():
     return redirect("/camsepeti")
 @app.route("/infinitecloud/upload", methods=["GET","POST"])
 def upload():
+    can_delete=session.get("can_delete")
     if request.method=="POST":
         if UPLOAD_PASSWORD != request.form.get("password"):
             return jsonify(success=False, message="❌ Şifre yanlış")
@@ -400,7 +401,7 @@ def upload():
         print("UPLOAD OK:", original_name)
         return jsonify(success=True, message="✅ Dosya yüklendi")
 
-    return render_template("upload.html")
+    return render_template("upload.html",can_delete=can_delete)
 
 
 @app.route("/infinitecloud/files/<int:media_id>/download")
