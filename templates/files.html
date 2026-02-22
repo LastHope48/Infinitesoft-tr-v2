@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="../static/css/decor_files.css">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
     <link rel="stylesheet" href="../static/css/selection.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/main_layout_infinitecloud.css')}}">
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -16,96 +17,82 @@
 </script>
 </head>
 <body class="files-page">
-    <div class="nav">
-    <a class="btn" href="/infinitecloud">
-        <i class="fa-solid fa-house"></i> Ana Sayfa
-    </a>
-    <a href="/infinitecloud/upload" class="btn_yellow">
-        <i class="fa-solid fa-cloud"></i> Yükle
-    </a>
-    <a href="/admin" class="btn_red">
-        <i class="fa-solid fa-user"></i> Admin Giriş
-    </a>
-    <a href="/" class="btn_blue">
-        <i class="fa-brands fa-squarespace"></i> Projeler
-    </a>
-    </div>
-    <main>
-    <h1>Yüklenen Global Dosyalar</h1>
+<div class="dashboard-container">
+        <aside class="sidebar">
+        <div class="logo">InfiniteCloud</div>
+        <nav>
+            <a href="/infinitecloud" class="nav-item">
+                <i class="fa-solid fa-house"></i> Ana Sayfa
+            </a>
+            <a href="/infinitecloud/upload" class="nav-item">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Yükle
+            </a>
+            <a href="/infinitecloud/files" class="nav-item active">
+                <i class="fa-solid fa-globe"></i> Global Dosyalar
+            </a>
+            <a href="{{ url_for('myfiles') }}" class="nav-item">
+                <i class="fa-solid fa-file"></i> Benim Dosyalarım
+            </a>
+            <hr class="sidebar-divider">
+            <a href="/" class="nav-item">
+                <i class="fa-brands fa-squarespace"></i> Projeler
+            </a>
+            <a href="/admin" class="nav-item admin">
+                <i class="fa-solid fa-user-shield"></i> Admin
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="content-header">
+            <img src="../static/img/files.webp" class="header-icon">
+            <h1 class="page-title">Yüklenen Global Dosyalar</h1>
+            <div class="counter-badge">📁 {{ files_count }} dosya mevcut</div>
+        </div>
+
+        <div class="files-wrapper">
+            <ul class="file-list">
+                {% for media in files %}
+                <li class="file-card {% if media.high_lighted %} admin-featured {% endif %}">
+                    <div class="file-info-group">
+                        {% if media.high_lighted %}<span class="admin-badge">ADMIN</span>{% endif %}
+                        <span class="download-stats">⬇️ {{ media.download_count }} indirme</span>
+                        <span class="file-name">{{ media.original_name }}</span>
+                    </div>
+
+                    <div class="file-actions">
+                        <a target="_blank" href="{{url_for('look', media_id=media.id)}}" class="btn-preview">Ön izle</a>
+                        <a href="{{ url_for('download_file', media_id=media.id) }}" class="btn-download">İndir</a>
+                        {% if can_delete or media.owner_session == session.uploader_id %}
+                        <form action="{{ url_for('delete_file', file_id=media.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn-delete">Sil</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </li>
+                {% else %}
+                <li class="empty-state">Hiç dosya yok.</li>
+                {% endfor %}
+            </ul>
+
+
+        <div class="action-bar">
+            <a href="{{ url_for('download_all') }}" class="btn-bulk-download">⬇️ Tümünü İndir</a>
+            {% if can_reset %}
+            <form action="{{ url_for('reset_files') }}" method="post" onsubmit="return confirm('SİLİNSİN Mİ?')">
+                <button type="submit" class="btn-bulk-delete">🚨 Tümünü Sil</button>
+            </form>
+            {% endif %}
+        </div>
+
     </main>
-
-    <img src="../static/img/files.webp" class="cloud-img">
-
-    <ul class="file-list">
-        {% for media in files %}
-<li class="
-    file-item
-    {% if media.high_lighted %} admin-featured {% endif %}
-">
-            {% if media.high_lighted %}
-            <span class="admin-badge">ADMIN</span>
-            {% endif %}
-            <span>⬇️ {{ media.download_count }} indirme</span>
-            <span>{{media.original_name}}</span>
-            {% if can_delete or media.owner_session == session.uploader_id %}
-                <form action="{{ url_for('delete_file', file_id=media.id) }}" method="POST">
-                    <button type="submit">Sil</button>
-                </form>
-            {% endif %}
-
-            <a target="_blank"href="{{url_for ('look',media_id=media.id)}}">Ön izle</a>
-            <a href="{{ url_for('download_file', media_id=media.id) }}">İndir</a>
-        </li>
-        {% else %}
-        <li>Hiç dosya yok.</li>
-        {% endfor %}
-    </ul>
-
-    <div class="counter">
-        📁 {{ files_count }} dosya
-    </div>
-
-<h2>🗄️ PythonAnywhere Arşivi</h2>
-<div class="file-list-wrapper">
-<ul class="file-list">
-{% for f in pa_files %}
-<li>
-    <span>📦 PythonAnywhere</span>
-    <span>{{ f }}</span>
-
-    <a href="/infinitecloud/files/pa/download/{{ f }}">İndir</a>
-    {% if can_delete %}
-    <a href="/infinitecloud/files/pa/delete/{{ f }}" onclick="return confirm('Silinsin mi?')">Sil</a>
-    {% endif %}
-</li>
-{% else %}
-<li>PythonAnywhere’de dosya yok.</li>
-{% endfor %}
-
-</ul>
 </div>
-
-<br>
-<pre>{{ pa_files }}</pre>
-
-<div class="action-bar">
-    <a href="{{ url_for('download_all') }}" class="download-btn">
-        ⬇️ InfiniteCloud Tümünü İndir
-    </a>
-
-    {% if can_reset %}
-    <form action="{{ url_for('reset_files') }}" method="post"
-          onsubmit="return confirm('EMİN MİSİN? TÜM DOSYALAR SİLİNECEK!')">
-        <button type="submit" class="danger-btn">
-            🚨 InfiniteCloud Tümünü Sil
-        </button>
-    </form>
-    {% endif %}
-</div>
-</div>
-<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
-  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
-</footer>
+        <footer class="footer-text">
+            © <span id="year"></span> infinitesoft-tr • Tüm hakları saklıdır.
+            <div class="footer-links">
+                <a href="#">Gizlilik Politikası</a> • <a href="#">Kullanım Şartları</a> • <a href="#">Destek</a>
+            </div>
+        </footer>
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 </script>

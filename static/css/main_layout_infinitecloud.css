@@ -1,0 +1,167 @@
+/* Yazı tipi ve Arka Plan */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f3f4f6 !important; 
+    color: #1f2937;
+    -webkit-font-smoothing: antialiased;
+    scrollbar-width: none !important; /* Scrollbar gizleme */
+}
+
+/* Tüm tarayıcılar için scrollbar gizleme */
+*::-webkit-scrollbar { display: none !important; }
+
+/* Ana Konteyner */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+/* Sidebar Sabit Alanı */
+.sidebar {
+    width: 260px;
+    background: #ffffff !important;
+    border-right: 1px solid #e5e7eb !important;
+    padding: 24px;
+    position: fixed; /* Sayfa kaysa da menü sabit kalır */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+/* Ortak Logo Stili */
+.logo {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0563d2; /* Cloudflare Mavisi */
+    margin-bottom: 30px;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    display: block;
+}
+
+/* Menü Elemanları */
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    color: #475569;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+/* Aktif Sayfa ve Üzerine Gelme */
+.nav-item:hover, .nav-item.active {
+    background: #eff6ff !important;
+    color: #2563eb !important;
+}
+
+.sidebar-divider {
+    border: 0;
+    border-top: 1px solid #e5e7eb;
+    margin: 15px 0;
+}
+/* İçeriğin Sidebar'ın üzerine binmemesi için sol boşluk */
+.main-content {
+    flex: 1;
+    margin-left: 260px; 
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* İçeriği dikey ve yatayda tam ortalamak için (Upload veya Login gibi sayfalar için) */
+.center-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+footer.footer-text {
+    margin-top: auto !important; /* Üstteki tüm içeriği yukarı iter, footer aşağıda kalır */
+    padding: 40px 0 20px 0 !important;
+    border-top: 1px solid #e5e7eb !important;
+    font-size: 13px !important;
+    color: #6b7280 !important;
+    text-align: left !important;
+    width: 100% !important;
+    position: relative !important; /* Fixed veya Absolute olmamalı! */
+}
+
+.footer-link {
+    color: #6b7280 !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+}
+
+.footer-link:hover {
+    color: #0563d2 !important;
+    text-decoration: underline !important;
+}
+.footer-links-container {
+    margin-top: 5px;
+    display: flex;
+    gap: 10px;
+}
+footer.footer-text {
+    /* Diğer ayarlar aynı kalıyor... */
+    padding-left: 100px !important; /* Bu değeri artırdıkça yazı sağa gider */
+    text-align: left !important;
+}
+.footer-link {
+    color: #6b7280 !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+}
+
+.footer-link:hover {
+    color: #0563d2 !important;
+    text-decoration: underline !important;
+}
+/* Sidebar genişliğini hesaba katarak tüm içeriği sağa iten ana kapsayıcı */
+.main-content {
+    margin-left: 260px !important; /* Sidebar genişliği */
+    width: calc(100% - 260px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important; /* İçeriği (başlık, kutular) ortalar */
+    min-height: 100vh !important;
+    background: #f4f7fa !important; /* Arka planı beyaza zorlar */
+}
+
+/* Başlık ve İkonu Merkeze Zorla */
+.content-header {
+    text-align: center !important;
+    margin-top: 50px !important;
+    width: 100% !important;
+}
+
+.header-icon, .cloud-img {
+    display: block !important;
+    margin: 0 auto 20px auto !important;
+}
+
+/* Footer'ı Sol Alta Sabitle ama Sidebar'ın Dışında Tut */
+footer.footer-text, .site-footer {
+    position: relative !important;
+    text-align: left !important;
+    padding: 30px 50px !important; /* Sol kenardan boşluk */
+    margin-top: auto !important; /* Sayfanın en altına iter */
+    width: 100% !important;
+    border-top: 1px solid #e5e7eb !important;
+    color: #94a3b8 !important;
+    background: transparent !important;
+    box-sizing: border-box !important;
+    display: block !important;
+}
+

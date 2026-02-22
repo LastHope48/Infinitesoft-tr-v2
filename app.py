@@ -1,6 +1,7 @@
 import os,uuid
 from flask import Flask,render_template,request,send_from_directory,send_file,redirect,session,url_for,Response,abort,jsonify
 import requests
+from botocore.config import Config
 from werkzeug.security import check_password_hash,generate_password_hash
 from sqlalchemy import func,text
 import io,zipfile
@@ -217,7 +218,25 @@ def send_to_pythonanywhere(filename, file_bytes):
         print("TEXT:", r.text)
     except Exception as e:
         print("ERR:", e)
-
+def get_total_files_from_r2():
+    # R2 için S3 istemcisi oluşturma
+    s3 = boto3.client(
+        service_name='s3',
+        endpoint_url=f'https://{os.getenv("ACCOUNT_ID")}.r2.cloudflarestorage.com',
+        aws_access_key_id=os.getenv("ACCESS_KEY"),
+        aws_secret_access_key=os.getenv("SECRET_KEY"),
+        config=Config(signature_version='s3v4'),
+        region_name='auto' # Cloudflare R2 için 'auto' kullanılır
+    )
+    
+    try:
+        # Bucket içindeki nesneleri listele
+        response = s3.list_objects_v2(Bucket=R2_BUCKET)
+        # Eğer bucket boşsa 'Contents' anahtarı olmaz, bu yüzden 0 döneriz
+        return response.get('KeyCount', 0)
+    except Exception as e:
+        print(f"Hata oluştu: {e}")
+        return 0
 def allowed(filename):
     return "." in filename and filename.rsplit(".",1)[1].lower() in ALLOWED
 @app.route("/projects/<slug>")
@@ -235,7 +254,8 @@ def maintanence():
     return render_template("maintanence.html")
 @app.route("/infinitecloud")
 def cloud():
-    return render_template("home_cloud.html")
+    total_files=get_total_files_from_r2()
+    return render_template("home_cloud.html",total_files=total_files)
 @app.route("/__reset_db__")
 def reset_db():
     if not session.get("can_delete"):

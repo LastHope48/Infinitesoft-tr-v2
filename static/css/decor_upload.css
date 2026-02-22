@@ -1,158 +1,394 @@
-@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css);
-body {
+/* Ana Ayarlar - İlk Sayfanın Rengi */
+body, html {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    color: white;
-    background: #0f172a;
-
-    display: flex;
-    flex-direction: column;  /* dikey sıralama */
-    min-height: 100vh;       /* ekran yüksekliği kadar */
-    overflow: hidden;
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6 !important; /* İlk yaptığımız açık gri */
+    color: #1f2937;
+    -webkit-font-smoothing: antialiased;
 }
 
-main {
-    flex: 1;                 /* kalan alanı kapla */
+.dashboard-container {
     display: flex;
-    justify-content: center;  /* yatay ortala */
-    align-items: center;      /* dikey ortala */
+    height: 100vh;
 }
 
+/* Sidebar - İlk Tasarımdaki Beyaz Yapı */
+.sidebar {
+    width: 260px;
+    background: #ffffff !important;
+    border-right: 1px solid #e5e7eb !important;
+    padding: 24px;
+    position: fixed;
+    height: 100vh;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0563d2; /* Cloudflare Mavisi */
+    margin-bottom: 30px;
+    letter-spacing: -0.03em;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    color: #475569;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.nav-item:hover, .nav-item.active {
+    background: #eff6ff !important;
+    color: #2563eb !important;
+}
+
+/* Orta Alan Hizalaması */
+.main-content {
+    flex: 1;
+    margin-left: 260px;
+    display: flex;
+    flex-direction: column;
+}
+
+.center-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Upload Kutusu - İlk Sayfadaki content-card Stili */
 .upload-box {
-    width: 360px;
-    max-width: 90%;
-    padding: 30px;
-    background: #020617;
+    width: 400px;
+    background: #ffffff; /* Beyaz kutu */
+    border: 1px solid #e2e8f0;
+    padding: 40px;
     border-radius: 12px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.box-title {
+    color: #111827;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 25px;
+}
+
+/* Inputlar - Profesyonel Gri */
+input[type="password"], input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    color: #111827;
+    margin-bottom: 15px;
+}
+
+/* Buton - Cloudflare Mavisi */
+
+/* Footer (Açık Renk) */
+/* Kutuyu Büyütelim */
+.upload-box {
+    width: 550px; /* Genişliği 400px'den 550px'e çıkardık */
+    max-width: 90%; /* Mobil cihazlarda ekrandan taşmaması için */
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    
+    /* İçeriğin taşmasını engellemek için */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Görselin Taşmasını Engelleyelim */
+.upload-icon {
+    width: 100%;       /* Kutunun genişliğine göre yayılır */
+    max-width: 350px;  /* Ama çok devasa olup her yeri kaplamasın */
+    height: auto;      /* Oranını bozmaz */
+    margin-bottom: 30px;
+    display: block;
+}
+
+/* Formu Kutunun İçinde Hizalayalım */
+#uploadForm {
+    width: 100%; /* Form elemanları kutunun yeni genişliğine uyum sağlar */
+}
+
+/* Buton ve Giriş Alanları */
+input[type="password"], 
+.file-input-wrapper input {
+    width: 100%;
+    margin-bottom: 20px;
+}
+/* Kutuyu Büyütüyoruz ve İçeriği Hizalıyoruz */
+.upload-box {
+    width: 600px; /* Kutuyu daha ferah yaptık */
+    max-width: 95%;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 50px 40px; /* Üst-alt boşluğu artırdık */
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    
+    /* İçindeki her şeyi dikeyde diz ve ortala */
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    margin: 0 auto; /* Kutunun kendisini sayfada ortalar */
+}
+
+/* Görselin Taşmasını Engelleme */
+.upload-icon {
+    width: 100%;
+    max-width: 400px; /* Görsel kutunun içinde güvenli boyutta kalır */
+    height: auto;
+    margin-bottom: 30px;
+}
+
+/* Form Genişliği */
+#uploadForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Form içindeki elemanları ortalar */
+}
+
+/* Butonun Ortalanması */
+.button-container {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Butonu sağ-sol olarak ortalar */
+    margin-top: 20px;
+}
+
+.submit {
+    display: inline-block;
+    width: 80%; /* Buton kutunun tamamını kaplamasın, daha şık durur */
+    padding: 16px 32px;
+    background: linear-gradient(90deg, #ff9a8b 0%, #ff6a88 55%, #ff99ac 100%); /* Görseldeki gradyan tonu */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 18px;
+    border-radius: 50px; /* Yuvarlak köşeler */
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(255, 106, 136, 0.4);
+}
+/* Hata/Bilgi Mesajı Stili */
+.msg {
+    margin-top: 40px; /* Buton ile arasına mesafe koyar */
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 24px; /* Mesaj yokken kutunun boyutu oynamasın diye */
     text-align: center;
 }
 
-.upload-box img {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 20px;
+/* Şifre yanlış gibi hata durumları için ikonlu ve ortalı yapı */
+#msg {
+    transition: all 0.3s ease;
 }
 
-.upload-box input,
-.upload-box button {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
+/* Eğer hata yazısı butonun çok altında kalsın isterseniz */
+.upload-box {
+    padding-bottom: 30px; /* Kutunun en altında biraz nefes payı */
 }
-
-.upload-box button {
-    background: #2563eb;
-    color: white;
-    cursor: pointer;
-}
-
-.msg {
-    margin-top: 15px;
-    font-weight: bold;
-}
-
-.site-footer {
-    width: 100%;             /* tam genişlik */
-    text-align: center;      /* yazıyı ortala */
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.6);
-    color: #f5deb3;
-    font-size: 16px;
-    font-family: Arial, Helvetica, sans-serif;
-}
-.btn{
-  display: inline-block;
-  padding: 24px 48px;
-  background: #2e8b57;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: bold;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 20px;
-}
-.btn_red {
-  display: inline-block;
-  padding: 24px 48px;
-  background: #eb0606;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: bold;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 20px;
-}
-.btn_red:hover {
-    background: #6b0000;
-}
-.btn_blue {
-  display: inline-block;
-  padding: 24px 48px;
-  background: #06a3eb;
-  color: rgb(255, 255, 255);
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: bold;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 20px;
-}
-.btn_blue:hover {
-    background: rgb(6, 65, 228);
-}
-.btn_yellow {
-  display: inline-block;
-  padding: 24px 48px;
-  background: #bebb06;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: bold;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 20px;
-}
-.btn_yellow:hover {
-    background: #727002;
-}
-.btn:hover{
-  background: #246b45;
-}
-.nav {
-    display: flex;
-    gap: 10px;
-    align-self: center; /* 🔥 stretch’i kırar */
-}
+/* Şifre Kapsayıcısı */
 .password-wrapper {
-    position: relative;
+    position: relative; /* Göz ikonunu buna göre konumlandıracağız */
     width: 100%;
+    margin-bottom: 20px;
     display: flex;
-    align-items: center;   /* 🔥 DİKEY ORTA */
-    margin-top: 12px;
+    align-items: center;
 }
 
-.password-wrapper input {
+/* Şifre Giriş Kutusu */
+#passwordInput {
     width: 100%;
-    box-sizing: border-box;
-    padding-right: 48px;   /* emoji alanı */
+    padding: 12px 45px 12px 15px; /* Sağ taraftan göz ikonuna yer açtık (45px) */
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    color: #111827;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    box-sizing: border-box; /* Padding'in genişliği etkilemesini engeller */
 }
 
+/* Tıklayınca (Focus) Stil Bozulmasını Engelleyen Kısım */
+#passwordInput:focus {
+    outline: none !important; /* Mavi dış çizgiyi kaldırır */
+    border-color: #2563eb; /* Onun yerine zarif bir mavi kenarlık ekler */
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); /* Hafif bir parlama */
+}
+
+/* Göz İkonu (Kutunun İçine Sabitlendi) */
 .toggle-password {
     position: absolute;
-    right: 12px;           /* yatay sağ */
-    display: flex;
-    align-items: center;   /* dikey orta */
-    height: 100%;
+    right: 15px; /* Kutunun iç sağ kenarından boşluk */
     cursor: pointer;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10; /* Üstte durmasını sağlar */
     user-select: none;
-    opacity: 0.85;
-    font-size: 18px;
-        color: #475569; /* koyu gri – net görünür */
-    filter: grayscale(20%);
+    height: 100%; /* Kapsayıcının yüksekliğine uyum sağlar */
 }
 
 .toggle-password:hover {
-    opacity: 1;
-    filter: none;
+    color: #2563eb;
+}
+
+/* Göz ikonuna tıklandığında focus stilini de temizleyelim */
+.toggle-password:focus, 
+.toggle-password i:focus {
+    outline: none !important;
+}
+/* Şifre Kapsayıcısı - Genişliği eski haline getiriyoruz */
+.password-wrapper {
+    position: relative;
+    width: 100%; /* Kutunun genişliği dış kapsayıcıya (upload-box) bağlı kalır */
+    max-width: 360px; /* Eski uzunluk tercihin buysa burayı değiştirebilirsin */
+    margin: 12px auto 20px auto; /* Yukarı/aşağı boşluk ve sağ/sol otomatik ortalama */
+    display: flex;
+    align-items: center;
+}
+
+/* Şifre Giriş Kutusu */
+#passwordInput {
+    width: 100%;
+    padding: 12px 40px 12px 15px; /* Sağ tarafa ikon için 40px boşluk bıraktık */
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    color: #111827;
+    font-size: 15px;
+    box-sizing: border-box; /* Padding'in kutuyu büyütmesini engeller */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Üzerine basınca (Focus) stilin bozulmasını engelleyen altın kural */
+#passwordInput:focus {
+    outline: none !important; /* Tarayıcının çirkin çerçevesini siler */
+    border-color: #2563eb; /* Cloudflare mavisi kenarlık */
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); /* Hafif modern bir parlama */
+}
+
+/* Göz İkonu - Dikeyde tam ortalama */
+.toggle-password {
+    position: absolute;
+    right: 12px; /* Sağ kenardan boşluk */
+    top: 50%; /* Üstten %50 aşağı indirir */
+    transform: translateY(-50%); /* Kendi yüksekliğinin yarısı kadar yukarı çekerek tam merkezler */
+    cursor: pointer;
+    color: #64748b;
+    font-size: 16px;
+}
+/* Göz İkonu Kapsayıcısı */
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%); /* Dikeyde tam merkezi yakalar */
+    
+    /* İkon değişse de konumun bozulmaması için sabit alan: */
+    width: 24px; 
+    height: 24px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    cursor: pointer;
+    color: #64748b;
+    font-size: 16px;
+    z-index: 10;
+    user-select: none;
+    transition: color 0.2s ease;
+}
+
+/* İkonun kendi içindeki kaymaları engellemek için */
+.toggle-password i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.toggle-password:hover {
+    color: #2563eb;
+}
+/* Footer Alanı - Taşmayı Engelleyen Versiyon */
+footer.footer-text {
+    margin-top: auto !important;
+    /* Sidebar genişliğini (260px) hesaba katarak içerden boşluk veriyoruz */
+    padding: 30px 40px !important; 
+    border-top: 1px solid #e5e7eb !important;
+    font-size: 13px !important;
+    color: #6b7280 !important;
+    text-align: left !important;
+    
+    /* Taşmayı engelleyen kritik ayarlar */
+    width: auto !important; 
+    display: block !important;
+    box-sizing: border-box !important;
+}
+
+/* Sayfa içeriğinin Footer'a çok yapışmaması için */
+.main-content {
+    flex: 1;
+    margin-left: 260px; /* Sidebar alanı */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* Sağdan taşmayı engellemek için genişliği kısıtlıyoruz */
+    width: calc(100% - 260px); 
+}
+
+/* Footer içindeki linklerin alt alta gelmemesi için yan yana dizelim */
+.footer-links-container {
+    margin-top: 5px;
+    display: flex;
+    gap: 10px;
+}
+footer.footer-text {
+    /* Diğer ayarlar aynı kalıyor... */
+    padding-left: 100px !important; /* Bu değeri artırdıkça yazı sağa gider */
+    text-align: left !important;
+}
+.footer-link {
+    color: #6b7280 !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+}
+
+.footer-link:hover {
+    color: #0563d2 !important;
+    text-decoration: underline !important;
 }

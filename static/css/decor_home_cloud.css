@@ -1,93 +1,128 @@
-@import url("scroll_bar_remover.css");
-body {
-    min-height: 100vh;
-    margin: 0;
-    background: radial-gradient(circle at top, #0f2027, #000);
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    overflow-y: scroll;
+/* 1. Temel Sıfırlama ve Font */
+* {
+    box-sizing: border-box;
 }
 
-/* başlık */
-.sirketbaslik {
-    text-align: center;
-    color: #7fffd4;
-    margin-top: 60px;
-    margin-bottom: 50px;
-    letter-spacing: 1px;
-}
-.sirketbaslik {
-    font-size: clamp(22px, 5vw, 42px);
-    padding: 0 16px;
+body, html {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 100%;
+    font-family: 'Inter', sans-serif !important;
+    background-color: #f3f4f6 !important; /* Cloudflare Açık Gri Arka Plan */
+    color: #1f2937;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* liste */
-.list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 24px;
-    padding: 0 20px 80px;
-    list-style: none;
-}
-
-
-/* kart */
-.list__item a {
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    text-decoration: none;
-    color: aquamarine;
-
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-
-    border-radius: 28px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-
-    box-shadow: 0 0 30px rgba(0, 255, 180, 0.12);
-    transition: 0.3s ease;
-}
-.list__item a {
+/* 2. Ana Layout (Flex Yapısı) */
+.dashboard-container {
+    display: flex !important;
+    min-height: 100vh !important;
     width: 100% !important;
-    height: 260px !important;
 }
 
-/* hover efekti */
-.list__item a:hover {
-    transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 0 45px rgba(0, 255, 180, 0.5);
+/* 3. Sabit Sol Menü (Sidebar) */
+.sidebar {
+    width: 260px !important;
+    background: #ffffff !important;
+    border-right: 1px solid #e5e7eb !important;
+    height: 100vh !important;
+    position: fixed !important;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    padding: 24px !important;
 }
 
-/* ikon */
-.item__img {
-    width: 130px;
-    margin-bottom: 25px;
-    filter: drop-shadow(0 0 10px rgba(0,255,200,0.5));
-}
-/* yazı */
-.list__item span {
-    font-size: 36px;
-    font-weight: 600;
-    letter-spacing: 1px;
-}
-
-/* seçim */
-::selection {
-    background: aquamarine;
-    color: black;
-}
-/* Admin özel stil */
-.admin-item a {
-    border: 2px solid gold;
-    border-radius: 12px;
-    background: rgba(255, 215, 0, 0.05);
+.nav-item {
+    display: block !important;
+    padding: 12px !important;
+    color: #475569 !important;
+    text-decoration: none !important;
+    border-radius: 8px !important;
+    margin-bottom: 5px !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    transition: all 0.2s;
 }
 
-.admin-item span {
-    color: gold;
-    font-weight: bold;
+.nav-item:hover, .nav-item.active {
+    background: #eff6ff !important;
+    color: #2563eb !important;
+}
+
+/* 4. Sağ Taraf (Ana İçerik) */
+.main-content {
+    flex: 1 !important;
+    margin-left: 260px !important; /* Sidebar genişliği kadar boşluk */
+    display: flex !important;
+    flex-direction: column !important; /* Footer'ı aşağı itmek için kritik */
+    min-height: 100vh !important;
+    padding: 40px !important;
+}
+
+.top-bar {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 {
+    font-weight: 700 !important;
+    letter-spacing: -0.03em !important;
+    color: #111827 !important;
+    margin: 0;
+}
+
+/* İçerik Kartı */
+.content-card {
+    background: white !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 30px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+}
+
+/* 5. Footer (İşte Çözüm Burası) */
+footer.footer-text {
+    margin-top: auto !important; /* Üstteki tüm içeriği yukarı iter, footer aşağıda kalır */
+    padding: 40px 0 20px 0 !important;
+    border-top: 1px solid #e5e7eb !important;
+    font-size: 13px !important;
+    color: #6b7280 !important;
+    text-align: left !important;
+    width: 100% !important;
+    position: relative !important; /* Fixed veya Absolute olmamalı! */
+}
+
+.footer-link {
+    color: #6b7280 !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+}
+
+.footer-link:hover {
+    color: #0563d2 !important;
+    text-decoration: underline !important;
+}
+/* TÜM TARAYICILARDA SCROLLBAR'I ZORLA GİZLE */
+* {
+    -ms-overflow-style: none !important;  /* IE ve Edge */
+    scrollbar-width: none !important;     /* Firefox */
+}
+
+*::-webkit-scrollbar {
+    display: none !important;             /* Chrome, Safari, Opera */
+    width: 0 !important;
+    height: 0 !important;
+}
+.logo {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0563d2; /* Cloudflare Mavisi */
+    margin-bottom: 30px;
+    letter-spacing: -0.03em;
+}
+.p-1 {
+    font-size: 20px;
 }

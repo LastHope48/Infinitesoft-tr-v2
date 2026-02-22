@@ -3,9 +3,19 @@
 <head>
     <title>InfiniteCloud</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/css/main_layout_infinitecloud.css">
     <link rel="stylesheet" href="../static/css/decor_home_cloud.css">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
     <link rel="stylesheet" href="../static/css/selection.css">
+    <link rel="stylesheet" href="../static/css/scroll_bar_remover.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -17,53 +27,57 @@
 </script>
 </head>
 <body>
-<main>
-    <h1 class="sirketbaslik">
-        Infinitesoft-tr'nin yapmış olduğu Infinitecloud uygulamasına göz atın!
-    </h1>
-</main>
-    <div class="scroll_wrapper">
-    <ul class="list">
-        <!-- YÜKLE -->
-        <li class="list__item">
-            <a href="{{ url_for('upload') }}">
-                <img class="item__img" src="../static/img/upload-icon-4.png" alt="yükle">
-                <span>Yükle</span>
+<div class="dashboard-container">
+        <aside class="sidebar">
+        <div class="logo">InfiniteCloud</div>
+        <nav>
+            <a href="/infinitecloud" class="nav-item active">
+                <i class="fa-solid fa-house"></i> Ana Sayfa
             </a>
-        </li>
+            <a href="/infinitecloud/upload" class="nav-item">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Yükle
+            </a>
+            <a href="/infinitecloud/files" class="nav-item">
+                <i class="fa-solid fa-globe"></i> Global Dosyalar
+            </a>
+            <a href="{{ url_for('myfiles') }}" class="nav-item">
+                <i class="fa-solid fa-file"></i> Benim Dosyalarım
+            </a>
+            <hr class="sidebar-divider">
+            <a href="/" class="nav-item">
+                <i class="fa-brands fa-squarespace"></i> Projeler
+            </a>
+            <a href="/admin" class="nav-item admin">
+                <i class="fa-solid fa-user-shield"></i> Admin
+            </a>
+        </nav>
+    </aside>
 
-        <!-- DOSYALAR -->
-        <li class="list__item">
-            <a href="{{ url_for('files') }}">
-                <img class="item__img" src="../static/img/global.png" alt="dosyalar">
-                <span>Global Dosyalar</span>
-            </a>
-        </li>
-        <!-- Benim Dosyalarım -->
-        <li class="list__item">
-            <a href="{{ url_for('myfiles') }}">
-                <img class="item__img" src="../static/img/files.webp" alt="dosyalar">
-                <span>Benim Dosyalarım</span>
-            </a>
-        </li>
-        <!-- ADMIN -->
-        <li class="list__item admin-item">
-            <a href="{{ url_for('reset_login') }}">
-                <img class="item__img" src="../static/img/admin.png" alt="admin">
-                <span>Admin</span>
-            </a>
-        </li>
-        <li class="list__item">
-            <a href="{{ url_for('projects') }}">
-                <img class="item__img" src="../static/img/return.png" alt="return">
-                <span>Projeler</span>
-            </a>
-        </li>
-    </ul>
+    <main class="main-content">
+        <header class="top-bar">
+            <h1>Hoş Geldiniz</h1>
+            <div class="user-profile"></div>
+        </header>
+
+        <section class="content-card">
+            <h2>Hızlı İşlemler</h2>
+            <p>Dosyalarınızı yönetmek ve yeni projeler başlatmak için aşağıdaki paneli kullanın.</p>
+            
+            <div class="grid-stats">
+                <div class="stat-box"><p class="p-1">Toplam Dosya</p><h3>{{total_files}}</h3></div>
+            </div>
+        </section>
+
+<footer class="footer-text">
+    <div>© 2026 infinitesoft-tr. Tüm hakları saklıdır.</div>
+    <div class="footer-links-container">
+        <a href="#" class="footer-link">Gizlilik Politikası</a> • 
+        <a href="#" class="footer-link">Kullanım Şartları</a> • 
+        <a href="#" class="footer-link">Destek</a>
     </div>
-<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
-  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
 </footer>
+    </main>
+</div>
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 </script>
