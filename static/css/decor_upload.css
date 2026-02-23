@@ -392,3 +392,84 @@ footer.footer-text {
     color: #0563d2 !important;
     text-decoration: underline !important;
 }
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.file-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.custom-file-btn {
+    background: linear-gradient(135deg, #6a5cff, #8f7cff);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.custom-file-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(106, 92, 255, 0.3);
+}
+
+#file-name {
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+.upload-box.dragover {
+    background: #f0edff;
+    border-color: #5a4bff;
+    transform: scale(1.02);
+}
+
+.upload-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+#select-btn {
+    margin-top: 10px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #6a5cff, #8f7cff);
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#select-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(106, 92, 255, 0.3);
+}
+
+#file-name {
+    display: block;
+    margin-top: 12px;
+    font-size: 14px;
+    opacity: 0.7;
+}
+.drop-area {
+    border: 2px dashed #7c6cff;
+    border-radius: 18px;
+    padding: 30px;
+    text-align: center;
+    transition: 0.3s;
+    background: #faf9ff;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.drop-area.dragover {
+    background: #f0edff;
+    border-color: #5a4bff;
+    transform: scale(1.02);
+}

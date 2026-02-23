@@ -12,7 +12,11 @@ from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 from sqlalchemy.exc import IntegrityError
 load_dotenv()  # .env dosyasını yükler
-
+try:
+    load_dotenv(r"C:\Users\Mehmet Serdar EREN\Desktop\orasu2v.txt")
+    print("LOCAL MODE: ENVIRONMENT SUCCESS")
+except:
+    pass
 app=Flask(__name__)
 
 s3 = boto3.client(
@@ -24,6 +28,11 @@ s3 = boto3.client(
 )
 
 R2_BUCKET = "infinitecloud"
+response = s3.list_objects_v2(Bucket=R2_BUCKET)
+
+for obj in response.get("Contents", []):
+    print("KEY:", obj["Key"])
+    print("SIZE:", obj["Size"])
 MAX_STORAGE = 10 * 1024 * 1024 * 1024
 DATABASE_URL = os.getenv("DATABASE_URL")
 PYANYWHERE_UPLOAD_URL = "https://wf5528.pythonanywhere.com/upload"
@@ -476,20 +485,22 @@ def look(media_id):
 def delete_file(file_id):
     media = Media.query.get_or_404(file_id)
 
-    if media.owner_session != session.get("uploader_id"):
+    if media.owner_session != session.get("uploader_id") and not session.get("can_delete"):
         abort(403)
 
     # R2’den sil
-    s3.delete_object(
+    response = s3.delete_object(
         Bucket=R2_BUCKET,
         Key=media.r2_key
     )
 
+
     # DB’den sil
     db.session.delete(media)
     db.session.commit()
-
-    return redirect(url_for("myfiles"))
+    print("SİLİNEN KEY:", media.r2_key)
+    print("DELETE RESPONSE:", response)
+    return redirect(url_for("files"))
 @app.route("/admin", methods=["GET", "POST"])
 def reset_login():
     msg = ""
@@ -506,15 +517,48 @@ def reset_login():
 def reset_files():
     if not session.get("can_reset"):
         return redirect("/infinitecloud/reset-login")
+    try:
+        print("BEFORE DELETE COUNT:",
+            s3.list_objects_v2(Bucket=R2_BUCKET).get("KeyCount"))
+        continuation_token = None
 
-    medias = Media.query.all()
-    for media in medias:
-        db.session.delete(media)
-    db.session.commit()
+        while True:
+            if continuation_token:
+                objects = s3.list_objects_v2(
+                    Bucket=R2_BUCKET,
+                    ContinuationToken=continuation_token
+                )
+            else:
+                objects = s3.list_objects_v2(Bucket=R2_BUCKET)
 
-    session.pop("can_reset")
-    return "✅ Tüm dosyalar silindi."
+            if "Contents" in objects:
 
+                s3.delete_objects(
+                    Bucket=R2_BUCKET,
+                    Delete={
+                        "Objects": [
+                            {"Key": obj["Key"]} for obj in objects["Contents"]
+                        ]
+                    }
+                )
+
+            if objects.get("IsTruncated"):
+                continuation_token = objects.get("NextContinuationToken")
+            else:
+                break
+        medias = Media.query.all()
+        for media in medias:
+
+            db.session.delete(media)
+
+        db.session.commit()
+
+        print("AFTER DELETE COUNT:",
+            s3.list_objects_v2(Bucket=R2_BUCKET).get("KeyCount"))
+        return redirect("/infinitecloud/files")
+    except Exception as e:
+        print(f"ERROR DELETE ALL: {e}")
+        return "Bir hata oluştu"
 @app.route("/infinitecloud/files")
 def files():
     if "uploader_id" not in session:
@@ -703,7 +747,11 @@ def delete_myfile(media_id):
     media=Media.query.get_or_404(media_id)
     if session.get("can_delete") is not True and media.owner_session != session.get("uploader_id"):
         abort(403)
-
+    response = s3.delete_object(
+        Bucket=R2_BUCKET,
+        Key=media.r2_key
+        )
+    print(response)
     db.session.delete(media)
     db.session.commit()
     return redirect("/infinitecloud/myfiles")

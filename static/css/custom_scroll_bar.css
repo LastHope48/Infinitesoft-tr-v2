@@ -1,0 +1,27 @@
+/* Scrollbar her zaman alan ayırsın */
+html {
+  overflow-y: scroll;
+}
+
+/* ===== Chrome, Edge, Safari ===== */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 10px;
+
+  opacity: 0;                     /* Başta görünmez */
+  transition: opacity 0.4s ease;  /* Yumuşak geçiş */
+}
+
+/* Hover olunca görünür */
+html:hover::-webkit-scrollbar-thumb {
+  opacity: 1;
+}

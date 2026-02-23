@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{url_for('static',filename='css/decor_submit.css')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/decor_upload.css') }}">
     <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
+    <link rel="stylesheet" href="../static/css/custom_scroll_bar.css">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
@@ -63,15 +64,31 @@
                         </span>
                     </div>
 
-                    <div class="file-input-wrapper">
-                        <input type="file" name="file" id="file" required>
-                    </div>
+<div class="drop-area" id="upload-box">
+    <input type="file" name="file" id="file" hidden required>
 
+    <div class="upload-content">
+        <div class="upload-icon">☁️</div>
+        <p><strong>Dosyanı buraya bırak</strong></p>
+        <p>veya</p>
+        <button type="button" id="select-btn">📁 Dosya Seç</button>
+        <span id="file-name">Henüz dosya seçilmedi</span>
+    </div>
+</div>
                     <div class="checkbox-group">
+
                         <label class="custom-checkbox">
                             <input type="checkbox" name="is_global">
                             <span>🌍 Küresel olsun</span>
                         </label>
+
+                        {% if can_delete %}
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="high_lighted">
+                            <span>⭐ Admin özel çerçeve</span>
+                        </label>
+                        {% endif %}
+
                     </div>
 
                     <div class="button-container">
@@ -165,7 +182,49 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
+    const uploadBox = document.getElementById("upload-box");
+    const fileInput = document.getElementById("file");
+    const selectBtn = document.getElementById("select-btn");
+    const fileName = document.getElementById("file-name");
 
+    selectBtn.addEventListener("click", () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener("change", () => {
+        if (fileInput.files.length > 0) {
+            fileName.textContent = fileInput.files[0].name;
+        }
+    });
+
+    uploadBox.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadBox.classList.add("dragover");
+    });
+
+    uploadBox.addEventListener("dragleave", () => {
+        uploadBox.classList.remove("dragover");
+    });
+
+uploadBox.addEventListener("drop", (e) => {
+    e.preventDefault();
+    uploadBox.classList.remove("dragover");
+
+    const files = e.dataTransfer.files;
+
+    if (files.length > 0) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(files[0]);
+        fileInput.files = dataTransfer.files;
+
+        fileName.textContent = files[0].name;
+    }
+});
+
+});
+</script>
 </body>
 </html>
