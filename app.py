@@ -479,7 +479,7 @@ def look(media_id):
     media = Media.query.get_or_404(media_id)
 
     if not media.is_global:
-        if session.get("can_delete") is not True and media.owner_session != session.get("uploader_id"):
+        if session.get("can_delete") is not True and media.owner_id != current_user.id:
             abort(403)
 
     obj = s3.get_object(
