@@ -273,18 +273,15 @@ def cloud():
 
     total_files=get_total_files_from_r2()
     return render_template("home_cloud.html",total_files=total_files)
-@app.route("/__reset_db__")
+@app.route("/__reset_db__", methods=["POST"])
 def reset_db():
+
     if not session.get("can_delete"):
         abort(403)
-    
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
-        db.create_all(bind_key="accounts")
-        db.create_all(bind_key="cards")
-        db.create_all(bind_key="medias")
-    
+
+    db.drop_all()
+    db.create_all()
+
     return "DB sıfırlandı ✅"
 
 @app.route("/camsepeti/home")
@@ -1046,4 +1043,4 @@ def internal_error(e):
 #     db.create_all()
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port,debug=True) # debug=True ekledik
+    app.run(host="0.0.0.0", port=port) # debug=True ekledik
