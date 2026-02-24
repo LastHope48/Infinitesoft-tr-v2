@@ -134,7 +134,7 @@ if DATABASE_URL:
 
         owner_id = db.Column(
             db.String(36),
-            db.ForeignKey("accounts_table.id", ondelete="CASCADE"),
+            db.ForeignKey("auth.accounts_table.id", ondelete="CASCADE"),
             nullable=False
         )
     class SiteMessage(db.Model):
@@ -273,7 +273,7 @@ def cloud():
 
     total_files=get_total_files_from_r2()
     return render_template("home_cloud.html",total_files=total_files)
-@app.route("/__reset_db__", methods=["POST"])
+@app.route("/__reset_db__", methods=["GET"])
 def reset_db():
 
     if not session.get("can_delete"):
@@ -373,6 +373,11 @@ def login():
 def logout():
     session.clear()
     return redirect("/camsepeti")
+@app.route("/create_db")
+def create_db():
+    if not session.get("can_delete"):
+        abort(403)
+    db.create_all()
 @app.route("/infinitecloud/upload", methods=["GET","POST"])
 @login_required
 def upload():
