@@ -121,7 +121,7 @@ if DATABASE_URL:
             return f"<Card {self.id}>"
     class Media(db.Model):
         __tablename__ = "medias_table"
-
+        __table_args__ = {"schema": "storage"}
         id = db.Column(db.Integer, primary_key=True)
         original_name = db.Column(db.String(200))
         stored_name = db.Column(db.String(200))
