@@ -1,6 +1,7 @@
 import os,uuid
 from flask import Flask,render_template,request,send_from_directory,send_file,redirect,session,url_for,Response,abort,jsonify
 import requests
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user,UserMixin
 from botocore.config import Config
 from werkzeug.security import check_password_hash,generate_password_hash
 from sqlalchemy import func,text
@@ -18,7 +19,9 @@ try:
 except:
     pass
 app=Flask(__name__)
-
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
 s3 = boto3.client(
     service_name="s3",
     endpoint_url=f"https://{os.getenv('ACCOUNT_ID')}.r2.cloudflarestorage.com",
@@ -100,13 +103,12 @@ if DATABASE_URL:
         ingredients = db.Column(db.Text)
         steps = db.Column(db.Text)
         created_at = db.Column(db.DateTime, server_default=db.func.now())
-    class Account(db.Model):
+    class Account(UserMixin,db.Model):
         __tablename__ = "accounts_table"
-        __table_args__ = {"schema": "auth"}
-
-        id = db.Column(db.Integer, primary_key=True)
+        __table_args__={"schema":"auth"}
         name = db.Column(db.String(20), nullable=False, unique=True)
-        password = db.Column(db.String(100), nullable=False)
+        password = db.Column(db.String(300), nullable=False)
+        id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
 
     class Card(db.Model):
         __table_args__={"schema":"system"}
@@ -119,7 +121,7 @@ if DATABASE_URL:
             return f"<Card {self.id}>"
     class Media(db.Model):
         __tablename__ = "medias_table"
-        __table_args__={"schema":"storage"}
+
         id = db.Column(db.Integer, primary_key=True)
         original_name = db.Column(db.String(200))
         stored_name = db.Column(db.String(200))
@@ -129,8 +131,12 @@ if DATABASE_URL:
         download_count = db.Column(db.Integer, default=0)
         is_global = db.Column(db.Boolean, default=False)
         high_lighted = db.Column(db.Boolean, default=False)
-        owner_session = db.Column(db.String(100))
 
+        owner_id = db.Column(
+            db.String(36),
+            db.ForeignKey("accounts_table.id", ondelete="CASCADE"),
+            nullable=False
+        )
     class SiteMessage(db.Model):
         __tablename__ = "sitemessage_table"
         __table_args__ = {"schema": "system"}
@@ -159,13 +165,12 @@ else:
         ingredients = db.Column(db.Text)
         steps = db.Column(db.Text)
         created_at = db.Column(db.DateTime, server_default=db.func.now())
-    class Account(db.Model):
+    class Account(UserMixin,db.Model):
         __tablename__ = "accounts_table"
 
-        id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(20), nullable=False, unique=True)
         password = db.Column(db.String(300), nullable=False)
-
+        id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     class Card(db.Model):
         __tablename__="card_table"
         title=db.Column(db.String(100),nullable=False)
@@ -176,7 +181,6 @@ else:
             return f"<Card {self.id}>"
     class Media(db.Model):
         __tablename__ = "medias_table"
-        __bind_key__ = "medias"
         id = db.Column(db.Integer, primary_key=True)
         original_name = db.Column(db.String(200))
         stored_name = db.Column(db.String(200))
@@ -186,7 +190,7 @@ else:
         download_count = db.Column(db.Integer, default=0)
         is_global = db.Column(db.Boolean, default=False)
         high_lighted = db.Column(db.Boolean, default=False)
-        owner_session = db.Column(db.String(100))
+        owner_id=db.Column(db.String(36),db.ForeignKey('accounts_table.id'))
 
     class SiteMessage(db.Model):
         __tablename__ = "sitemessage_table"
@@ -227,6 +231,9 @@ def send_to_pythonanywhere(filename, file_bytes):
         print("TEXT:", r.text)
     except Exception as e:
         print("ERR:", e)
+@login_manager.user_loader
+def load_user(user_id):
+    return Account.query.get(user_id)
 def get_total_files_from_r2():
     # R2 için S3 istemcisi oluşturma
     s3 = boto3.client(
@@ -263,6 +270,7 @@ def maintanence():
     return render_template("maintanence.html")
 @app.route("/infinitecloud")
 def cloud():
+
     total_files=get_total_files_from_r2()
     return render_template("home_cloud.html",total_files=total_files)
 @app.route("/__reset_db__")
@@ -369,7 +377,10 @@ def logout():
     session.clear()
     return redirect("/camsepeti")
 @app.route("/infinitecloud/upload", methods=["GET","POST"])
+@login_required
 def upload():
+    if not session.get("logged_in"):
+        return redirect("/infinitecloud/login")
     can_delete=session.get("can_delete")
     if request.method=="POST":
         if UPLOAD_PASSWORD != request.form.get("password"):
@@ -425,7 +436,7 @@ def upload():
             size=file_size,
             is_global=is_global,
             high_lighted=high_lighted,
-            owner_session=session["uploader_id"]
+            owner_id=current_user.id   # 🔥 burası değişti
         )
 
         db.session.add(media)
@@ -482,10 +493,11 @@ def look(media_id):
     )
 
 @app.route("/infinitecloud/delete/<int:file_id>", methods=["POST"])
+@login_required
 def delete_file(file_id):
     media = Media.query.get_or_404(file_id)
 
-    if media.owner_session != session.get("uploader_id") and not session.get("can_delete"):
+    if Media.owner_id != current_user.id and not session.get("can_delete"):
         abort(403)
 
     # R2’den sil
@@ -512,7 +524,45 @@ def reset_login():
         else:
             msg = "❌ Admin şifre yanlış"
     return render_template("reset_login.html", msg=msg)
+@app.route("/infinitecloud/login", methods=["GET", "POST"])
+def login_ic():
+    if request.method == "POST":
+        name = request.form.get("username")
+        password = request.form.get("password")
 
+        user = Account.query.filter_by(name=name).first()
+
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            session["logged_in"]=True
+            return redirect("/infinitecloud")
+
+        return "Kullanıcı adı veya şifre yanlış"
+
+    return render_template("login_ic.html")
+@app.route("/infinitecloud/register", methods=["GET", "POST"])
+def register_ic():
+    if request.method == "POST":
+        name = request.form.get("username")
+        password = request.form.get("password")
+
+        # Kullanıcı var mı kontrol
+        existing = Account.query.filter_by(name=name).first()
+        if existing:
+            return "Bu kullanıcı adı zaten var"
+
+        new_user = Account(
+            id=str(uuid.uuid4()),
+            name=name,
+            password=generate_password_hash(password)
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        return redirect("/infinitecloud/login")
+
+    return render_template("register_ic.html")
 @app.route("/infinitecloud/reset", methods=["POST"])
 def reset_files():
     if not session.get("can_reset"):
@@ -561,6 +611,8 @@ def reset_files():
         return "Bir hata oluştu"
 @app.route("/infinitecloud/files")
 def files():
+    if not session.get("logged_in"):
+        return redirect("/infinitecloud/login")
     if "uploader_id" not in session:
         session["uploader_id"] = str(uuid.uuid4())
     uploader_id = session.get("uploader_id")
@@ -726,12 +778,15 @@ def broadcast_panel():
     return render_template("admin_broadcast.html")
 @app.route("/infinitecloud/myfiles")
 def myfiles():
-    if "uploader_id" not in session:
-        session["uploader_id"] = str(uuid.uuid4())
+    if not session.get("logged_in"):
+        return redirect("/infinitecloud/login")
     
     uploader_id = session["uploader_id"]
     # Veritabanından dosyaları çekiyoruz
-    medias = Media.query.filter_by(owner_session=uploader_id).all()
+
+    medias = Media.query.filter_by(owner_id=current_user.id)\
+                        .order_by(Media.created_at.desc())\
+                        .all()
     
     # EĞER DOSYA YOKSA: Hata mesajı döndürmek yerine, 
     # boş liste ile HTML şablonuna (template) gönderiyoruz.
@@ -968,7 +1023,7 @@ def add():
 # ZAMAN YOLCULUĞU BİLİMİ KURTAR
 @app.route("/bilim-oyunu")
 def bilim_game():
-    return render_template("biliminsanioyunu.html")
+    return render_template("bilimgame.html")
 # MEKAPUS
 @app.route("/mekapus")
 def home_mekapus():
@@ -991,4 +1046,4 @@ def internal_error(e):
 #     db.create_all()
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port) # debug=True ekledik
+    app.run(host="0.0.0.0", port=port,debug=True) # debug=True ekledik

@@ -8,6 +8,7 @@
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
     <link rel="stylesheet" href="../static/css/selection.css">
     <link rel="stylesheet" href="../static/css/custom_scroll_bar_white.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_login_ic.css')}}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -28,46 +29,41 @@
 </head>
 <body>
 <div class="dashboard-container">
-        <aside class="sidebar">
-        <div class="logo">InfiniteCloud</div>
-        <nav>
-            <a href="/infinitecloud" class="nav-item active">
-                <i class="fa-solid fa-house"></i> Ana Sayfa
-            </a>
-            <a href="/infinitecloud/upload" class="nav-item">
-                <i class="fa-solid fa-cloud-arrow-up"></i> Yükle
-            </a>
-            <a href="/infinitecloud/files" class="nav-item">
-                <i class="fa-solid fa-globe"></i> Global Dosyalar
-            </a>
-            <a href="{{ url_for('myfiles') }}" class="nav-item">
-                <i class="fa-solid fa-file"></i> Benim Dosyalarım
-            </a>
-            <hr class="sidebar-divider">
-            <a href="/" class="nav-item">
-                <i class="fa-brands fa-squarespace"></i> Projeler
-            </a>
-            <a href="/admin" class="nav-item admin">
-                <i class="fa-solid fa-user-shield"></i> Admin
-            </a>
-        </nav>
-    </aside>
 
-    <main class="main-content">
-        <header class="top-bar">
-            <h1>Hoş Geldiniz</h1>
-            <div class="user-profile"></div>
-        </header>
+    <div class="sidebar">
+        <a href="/" class="logo">InfiniteCloud</a>
 
-        <section class="content-card">
-            <h2>Hızlı İşlemler</h2>
-            <p>Dosyalarınızı yönetmek ve yeni projeler başlatmak için aşağıdaki paneli kullanın.</p>
-            
-            <div class="grid-stats">
-                <div class="stat-box"><p class="p-1">Toplam Dosya</p><h3>{{total_files}}</h3></div>
+        <a href="/" class="nav-item">
+            <i class="fa-brands fa-squarespace"></i> Projeler
+        </a>
+
+        <a href="/infinitecloud/login" class="nav-item">
+            <i class="fa-solid fa-right-to-bracket"></i> Giriş Yap
+        </a>
+    </div>
+
+    <div class="main-content">
+        <div class="center-wrapper">
+
+            <div class="auth-card">
+                <h2>Hesap Oluştur</h2>
+
+                <form method="POST">
+                    <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+                    <input type="password" name="password" placeholder="Şifre" required>
+
+                    <button type="submit">Hesap Oluştur</button>
+                </form>
+
+                <p class="auth-switch">
+                    Zaten hesabın var mı?
+                    <a href="/infinitecloud/login">Giriş Yap</a>
+                </p>
             </div>
-        </section>
 
+        </div>
+    </div>
+</div>
 <footer class="footer-text">
     <div>© 2026 infinitesoft-tr. Tüm hakları saklıdır.</div>
     <div class="footer-links-container">
@@ -76,11 +72,9 @@
         <a href="#" class="footer-link">Destek</a>
     </div>
 </footer>
-    </main>
 </div>
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 </script>
-
 </body>
 </html>

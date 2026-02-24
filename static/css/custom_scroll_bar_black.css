@@ -1,0 +1,37 @@
+/* Scrollbar her zaman alan ayırsın */
+html {
+  overflow-y: scroll;
+  scrollbar-color: #3a3a3a #111; /* Firefox */
+  scrollbar-width: thin;
+}
+
+/* ===== Chrome, Edge, Safari ===== */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111; /* arka planla uyumlu */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2f2f2f;
+  border-radius: 10px;
+  border: 2px solid #111; /* iç boşluk efekti */
+
+  opacity: 0;
+  transition: 
+    opacity 0.35s ease,
+    background 0.25s ease;
+}
+
+/* Sayfa hover olunca görünür */
+html:hover::-webkit-scrollbar-thumb {
+  opacity: 1;
+}
+
+/* Üzerine gelince hafif açılır */
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
