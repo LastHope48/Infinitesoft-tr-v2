@@ -271,9 +271,6 @@ def project_detail(slug):
 def projects():
     return render_template("projects.html")
 
-@app.route("/maintanence")
-def maintanence():
-    return render_template("maintanence.html")
 @app.route("/infinitecloud")
 @login_required
 def cloud():
@@ -1064,4 +1061,4 @@ def internal_error(e):
 #     db.create_all()
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port) # debug=True ekledik
+    app.run(host="0.0.0.0", port=port,debug=True) # debug=True ekledik

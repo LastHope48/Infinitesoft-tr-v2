@@ -40,6 +40,9 @@
             <a href="{{ url_for('myfiles') }}" class="nav-item">
                 <i class="fa-solid fa-file"></i> Benim Dosyalarım
             </a>
+            <a href="{{url_for('logout_ic')}}" class="nav-item">
+                <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+            </a>
             <hr class="sidebar-divider">
             <a href="/" class="nav-item">
                 <i class="fa-brands fa-squarespace"></i> Projeler
@@ -49,7 +52,6 @@
             </a>
         </nav>
     </aside>
-
     <main class="main-content">
         <div class="center-wrapper">
             <div class="upload-box">

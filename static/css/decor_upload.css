@@ -22,8 +22,12 @@ body, html {
     padding: 24px;
     position: fixed;
     height: 100vh;
+    margin-right: 50px;
 }
-
+.main-content {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+}
 .logo {
     font-size: 20px;
     font-weight: 800;
