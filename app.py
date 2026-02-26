@@ -234,6 +234,12 @@ def send_to_pythonanywhere(filename, file_bytes):
 @login_manager.user_loader
 def load_user(user_id):
     return Account.query.get(user_id)
+@login_manager.unauthorized_handler
+def unauthorized():
+    if request.path.startswith("/infinitecloud"):
+        return redirect(url_for("login_ic", next=request.path))
+    elif request.path.startswith("/camsepeti"):
+        return redirect(url_for("login", next=request.path))
 def get_total_files_from_r2():
     # R2 için S3 istemcisi oluşturma
     s3 = boto3.client(
@@ -269,8 +275,8 @@ def projects():
 def maintanence():
     return render_template("maintanence.html")
 @app.route("/infinitecloud")
+@login_required
 def cloud():
-
     total_files=get_total_files_from_r2()
     return render_template("home_cloud.html",total_files=total_files)
 @app.route("/__reset_db__", methods=["GET"])
@@ -285,14 +291,12 @@ def reset_db():
     return "DB sıfırlandı ✅"
 
 @app.route("/camsepeti/home")
+@login_required
 def home_shop():
-    if "user_id" not in session:
-        return redirect("/camsepeti")
     return render_template("home.html")
 @app.route("/camsepeti/sepete_ekle",methods=["POST"])
+@login_required
 def sepete_ekle():
-    if "user_id" not in session:
-        return redirect("/camsepeti")
     urun={
         "ad": request.form["ad"],
         "fiyat": request.form["fiyat"],
@@ -305,9 +309,8 @@ def sepete_ekle():
     session["sepet"]=sepet
     return redirect("/camsepeti/home")
 @app.route("/camsepeti/sepet_sil", methods=["POST"])
+@login_required
 def sepet_sil():
-    if "user_id" not in session:
-        return redirect("/camsepeti")
     index = int(request.form["index"])
 
     sepet = session.get("sepet", [])
@@ -318,19 +321,16 @@ def sepet_sil():
 
     return redirect("/camsepeti/sepet")
 @app.route("/camsepeti/buy_success",methods=["POST"])
+@login_required
 def buy_success():
-    if "user_id" not in session:
-        return redirect("/camsepeti")
     return render_template("buy_success.html")
 @app.route("/camsepeti/sepet")
+@login_required
 def sepet():
-    if "user_id" not in session:
-        return redirect("/camsepeti")
     return render_template("sepet.html",sepet=session.get("sepet"))
 @app.route("/camsepeti/buy")
+@login_required
 def buy():
-    if "user_id" not in session:
-        return redirect("camsepeti")
     return render_template("buy.html")
 
 @app.route("/camsepeti/register",methods=["GET","POST"])
@@ -365,13 +365,19 @@ def login():
         user=Account.query.filter_by(name=name).first()
         if user and check_password_hash(user.password,password):
             session["user_id"]=user.id
-            return redirect("/camsepeti/home")
+            next_page = request.args.get("next")
+
+            if next_page:
+                return redirect(next_page)
+
+            return redirect(url_for("home_shop"))
         else:
             return "Hatalı giriş❌"
     return render_template("login.html")
 @app.route("/camsepeti/logout")
+@login_required
 def logout():
-    session.clear()
+    logout_user()
     return redirect("/camsepeti")
 @app.route("/create_db")
 def create_db():
@@ -381,8 +387,6 @@ def create_db():
 @app.route("/infinitecloud/upload", methods=["GET","POST"])
 @login_required
 def upload():
-    if not session.get("logged_in"):
-        return redirect("/infinitecloud/login")
     can_delete=session.get("can_delete")
     if request.method=="POST":
         if UPLOAD_PASSWORD != request.form.get("password"):
@@ -451,6 +455,7 @@ def upload():
 
 
 @app.route("/infinitecloud/files/<int:media_id>/download")
+@login_required
 def download_file(media_id):
     media = Media.query.get_or_404(media_id)
 
@@ -499,7 +504,7 @@ def look(media_id):
 def delete_file(file_id):
     media = Media.query.get_or_404(file_id)
 
-    if Media.owner_id != current_user.id and not session.get("can_delete"):
+    if media.owner_id != current_user.id and not session.get("can_delete"):
         abort(403)
 
     # R2’den sil
@@ -526,6 +531,11 @@ def reset_login():
         else:
             msg = "❌ Admin şifre yanlış"
     return render_template("reset_login.html", msg=msg)
+@app.route("/infinitecloud/logout")
+@login_required
+def logout_ic():
+    logout_user()
+    return redirect(url_for("login_ic"))
 @app.route("/infinitecloud/login", methods=["GET", "POST"])
 def login_ic():
     if request.method == "POST":
@@ -536,8 +546,12 @@ def login_ic():
 
         if user and check_password_hash(user.password, password):
             login_user(user)
-            session["logged_in"]=True
-            return redirect("/infinitecloud")
+            next_page = request.args.get("next")
+
+            if next_page:
+                return redirect(next_page)
+
+            return redirect(url_for("cloud"))  # varsayılan
 
         return "Kullanıcı adı veya şifre yanlış"
 
@@ -612,9 +626,8 @@ def reset_files():
         print(f"ERROR DELETE ALL: {e}")
         return "Bir hata oluştu"
 @app.route("/infinitecloud/files")
+@login_required
 def files():
-    if not session.get("logged_in"):
-        return redirect("/infinitecloud/login")
     if "uploader_id" not in session:
         session["uploader_id"] = str(uuid.uuid4())
     uploader_id = session.get("uploader_id")
@@ -650,6 +663,7 @@ def files():
 
 
 @app.route("/infinitecloud/files/download_all")
+@login_required
 def download_all():
     medias = Media.query.all()
     if not medias:
@@ -779,9 +793,8 @@ def broadcast_panel():
         return "Yetkisiz", 403
     return render_template("admin_broadcast.html")
 @app.route("/infinitecloud/myfiles")
+@login_required
 def myfiles():
-    if not session.get("logged_in"):
-        return redirect("/infinitecloud/login")
     
     uploader_id = session["uploader_id"]
     # Veritabanından dosyaları çekiyoruz
@@ -800,6 +813,7 @@ def myfiles():
         can_reset=False # Veya senin yetki kontrolün
     )
 @app.route("/infinitecloud/myfiles/<int:media_id>/delete")
+@login_required
 def delete_myfile(media_id):
     media=Media.query.get_or_404(media_id)
     if session.get("can_delete") is not True and media.owner_session != session.get("uploader_id"):
@@ -813,6 +827,7 @@ def delete_myfile(media_id):
     db.session.commit()
     return redirect("/infinitecloud/myfiles")
 @app.route("/infinitecloud/lookmy/<int:file_id>")
+@login_required
 def lookmy(file_id):
     media = Media.query.get_or_404(file_id)
 
@@ -829,6 +844,7 @@ def lookmy(file_id):
         mimetype=media.mimetype
     )
 @app.route("/infinitecloud/download/<int:file_id>")
+@login_required
 def download(file_id):
     media = Media.query.get_or_404(file_id)
 

@@ -43,6 +43,9 @@
             <a href="{{ url_for('myfiles') }}" class="nav-item">
                 <i class="fa-solid fa-file"></i> Benim Dosyalarım
             </a>
+            <a href="{{url_for('logout_ic')}}" class="nav-item">
+                <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+            </a>
             <hr class="sidebar-divider">
             <a href="/" class="nav-item">
                 <i class="fa-brands fa-squarespace"></i> Projeler
@@ -55,7 +58,13 @@
 
     <main class="main-content">
         <header class="top-bar">
-            <h1>Hoş Geldiniz</h1>
+            {% if current_user.is_authenticated %}
+            <span class="welcome-text">
+                Merhaba, {{ current_user.name.split(' ')[0] }} 👋
+            </span>
+            {% else %}
+                <span>Merhaba</span>
+            {% endif %}
             <div class="user-profile"></div>
         </header>
 

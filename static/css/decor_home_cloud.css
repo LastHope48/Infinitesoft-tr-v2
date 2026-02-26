@@ -126,3 +126,11 @@ footer.footer-text {
 .p-1 {
     font-size: 20px;
 }
+/* CSS */
+.welcome-text {
+    float: left;            /* Sola yasla */
+    font-size: 1.5rem;      /* Yazıyı büyüt */
+    font-weight: 600;       /* Kalınlaştır */
+    color: #333;            /* Renk seçimi */
+    margin-left: 20px;      /* Biraz boşluk */
+}
