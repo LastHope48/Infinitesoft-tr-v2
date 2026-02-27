@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 from app import db
 from sqlalchemy import text, inspect
 from sqlalchemy.exc import IntegrityError
+from middleware import maintenance_mode
 load_dotenv()  # .env dosyasını yükler
 try:
     load_dotenv(r"C:\Users\Mehmet Serdar EREN\Desktop\orasu2v.txt")
@@ -81,6 +82,12 @@ app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret")
 UPLOAD_FOLDER = "/home/wf5528/infinitecloud_api/uploads"
 app.config["UPLOAD_FOLDER"]="uploads"
 ALLOWED={"png","jpg","jpeg","mp4","mov","pdf","webp","mp3","pptx","zip"}
+maintenance_mode(app)
+
+# aktif etmek için
+MAINTANENCE=os.getenv("MAINTENANCE")
+if MAINTANENCE=="True":
+    app.config["MAINTENANCE"] = True
 app.config["MAX_CONTENT_LENGTH"]=50*1024*1024
 if DATABASE_URL:
     class Project(db.Model):
