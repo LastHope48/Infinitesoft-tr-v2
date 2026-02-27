@@ -11,6 +11,8 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
+from app import db
+from sqlalchemy import text, inspect
 from sqlalchemy.exc import IntegrityError
 load_dotenv()  # .env dosyasını yükler
 try:
@@ -1059,6 +1061,23 @@ def internal_error(e):
 
 # with app.app_context():
 #     db.create_all()
+# app_db_init.py veya app.py içinde deploy sırasında çalıştır
+
+with app.app_context():
+    # 1️⃣ Schemaları oluştur
+    for schema_name in ["system", "storage", "auth", "details"]:
+        db.session.execute(text(f"CREATE SCHEMA IF NOT EXISTS {schema_name}"))
+    db.session.commit()
+
+    # 2️⃣ Tabloları oluştur (model class'larından alır)
+    # Eğer modeller başka dosyada, örn: app/models.py → import et
+
+    db.create_all()
+
+    # 3️⃣ Kontrol (opsiyonel, loglara düşer)
+    insp = inspect(db.engine)
+    for schema_name in ["system", "storage", "auth", "details"]:
+        print(f"Tables in schema '{schema_name}':", insp.get_table_names(schema=schema_name))
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port,debug=True) # debug=True ekledik
+    app.run(host="0.0.0.0", port=port) # debug=True ekledik
