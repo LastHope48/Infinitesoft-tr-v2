@@ -11,7 +11,6 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
-from app import db
 from sqlalchemy import text, inspect
 from sqlalchemy.exc import IntegrityError
 from middleware import maintenance_mode
