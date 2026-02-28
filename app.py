@@ -369,6 +369,7 @@ def login():
         password=request.form["password"]
         user=Account.query.filter_by(name=name).first()
         if user and check_password_hash(user.password,password):
+            login_user(user)
             session["user_id"]=user.id
             next_page = request.args.get("next")
 
@@ -1069,21 +1070,22 @@ def internal_error(e):
 #     db.create_all()
 # app_db_init.py veya app.py içinde deploy sırasında çalıştır
 
-with app.app_context():
-    # 1️⃣ Schemaları oluştur
-    for schema_name in ["system", "storage", "auth", "details"]:
-        db.session.execute(text(f"CREATE SCHEMA IF NOT EXISTS {schema_name}"))
-    db.session.commit()
+# POSTGRESQL DEĞİŞTİĞİ ZAMAN:
+# with app.app_context():
+#     # 1️⃣ Schemaları oluştur
+#     for schema_name in ["system", "storage", "auth", "details"]:
+#         db.session.execute(text(f"CREATE SCHEMA IF NOT EXISTS {schema_name}"))
+#     db.session.commit()
 
-    # 2️⃣ Tabloları oluştur (model class'larından alır)
-    # Eğer modeller başka dosyada, örn: app/models.py → import et
+#     # 2️⃣ Tabloları oluştur (model class'larından alır)
+#     # Eğer modeller başka dosyada, örn: app/models.py → import et
 
-    db.create_all()
+#     db.create_all()
 
-    # 3️⃣ Kontrol (opsiyonel, loglara düşer)
-    insp = inspect(db.engine)
-    for schema_name in ["system", "storage", "auth", "details"]:
-        print(f"Tables in schema '{schema_name}':", insp.get_table_names(schema=schema_name))
+#     # 3️⃣ Kontrol (opsiyonel, loglara düşer)
+#     insp = inspect(db.engine)
+#     for schema_name in ["system", "storage", "auth", "details"]:
+#         print(f"Tables in schema '{schema_name}':", insp.get_table_names(schema=schema_name))
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port) # debug=True ekledik

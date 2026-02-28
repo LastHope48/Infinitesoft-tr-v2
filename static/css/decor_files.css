@@ -157,7 +157,6 @@ footer.footer-text {
     margin-right: auto !important;
     transition: all 0.25s ease !important;
 }
-
 /* Hover Efekti */
 .file-list li.file-item:hover {
     transform: translateY(-4px) !important;
@@ -369,7 +368,7 @@ footer.footer-text {
     box-shadow: 0 2px 10px rgba(5, 99, 210, 0.3);
 }
 /* --- Sil Butonu (Modern Kırmızı Versiyon) --- */
-.btn-delete {
+/* .btn-delete {
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -401,4 +400,113 @@ footer.footer-text {
 .btn-delete:active {
     transform: translateY(1px);
     box-shadow: 0 2px 10px rgba(220, 38, 38, 0.3);
+} */
+.chevron {
+    transition: transform 0.25s ease;
+    opacity: 0.7;
 }
+
+.file-card.open .chevron {
+    transform: rotate(90deg);
+    opacity: 1;
+}
+
+.file-actions .btn-delete {
+    padding: 8px 12px;       /* Küçük ve kompakt */
+    font-size: 14px;          /* Diğer linklerle uyumlu */
+    border-radius: 6px;       /* Hafif yuvarlak köşe */
+    background: #ef4444;      /* Koyu kırmızı */
+    color: white;
+    border: none;
+    width: auto;              /* Tam genişlik değil */
+    display: inline-block;    
+    text-align: center;
+    transition: all 0.25s ease;
+}
+
+.file-actions .btn-delete:hover {
+    background: #dc2626;
+    transform: translateX(2px);  /* Hafif sağa kayma hover ile */
+}
+.file-card.open .file-actions {
+    max-height: 300px;
+    padding-bottom: 12px;
+}
+
+.file-actions a::before,
+.file-actions button::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;                 /* kutunun en üstünden başla */
+    height: 100%;           /* kutu boyu kadar */
+    width: 3px;
+    background: transparent;
+    border-radius: 3px;
+    transition: background 0.25s ease;
+}
+
+.file-actions a:hover::before,
+.file-actions button:hover::before {
+    background: #0563d2;    /* mavi accent */
+}
+/* Accordion düzeltme override */
+.file-list li.file-card {
+    display: block !important;   /* Flex'i öldürüyoruz */
+    padding: 0 !important;       /* İç padding'i header'a bırakıyoruz */
+}
+.file-card {
+  display: block !important;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  overflow: hidden; /* Taşmaları önler */
+}
+
+.file-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  cursor: pointer;
+  background: white;
+  transition: background 0.2s ease;
+}
+
+.file-header:hover {
+  background: #f1f5f9;
+}
+
+.file-actions {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 20px;
+}
+
+.file-card.open .file-actions {
+  max-height: 400px; /* yeterince büyük */
+  padding-bottom: 12px;
+}
+
+.file-actions a, .file-actions button {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  text-align: left;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.file-actions a:hover, .file-actions button:hover {
+  background: #e0f2ff;
+  border-left: 3px solid #0563d2; /* hover çizgisi */
+}
+
