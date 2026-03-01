@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infinitesoft-tr | Bakım Modu</title>
+<link rel="stylesheet" href="{{url_for('static',filename='favicon.ico')}}">
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #0f172a;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+/* Progress Bar */
+.progress-container {
+    width: 320px;
+    height: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 30px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #38bdf8, #6366f1);
+    border-radius: 20px;
+    transition: width 0.2s linear;
+}
+
+/* Mesajlar */
+.message {
+    opacity: 0;
+    margin-top: 15px;
+    transition: opacity 0.6s ease;
+    color: #cbd5e1;
+}
+
+.message.show {
+    opacity: 1;
+}
+body {
+    margin: 0;
+    padding: 0;
+    background: #0f172a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    position: relative;
+    width: 400px;
+    height: 300px;
+    background: #1e293b;
+    border: 2px solid #ffffff44;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: crosshair;
+}
+
+.ball {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+}
+
+.particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #38bdf8;
+    opacity: 0.8;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Bakım Yapılıyor, Lütfen Bekleyin</h1>
+
+<div class="progress-container">
+    <div class="progress-bar" id="bar"></div>
+</div>
+
+<p class="message" id="m1">☁️ Bulutları yeniden hizalıyoruz...</p>
+<p class="message" id="m2">🧹 Veri merkezini cilalıyoruz...</p>
+<p class="message" id="m3">🚀 Son dokunuşlar yapılıyor...</p>
+<p class="message" id="m4">☕ Sunucular kahve molasında...</p>
+<div class="container" id="container"></div>
+
+<script>
+let progress = 0;
+const bar = document.getElementById("bar");
+
+const m1 = document.getElementById("m1");
+const m2 = document.getElementById("m2");
+const m3 = document.getElementById("m3");
+const m4 = document.getElementById("m4");
+
+function updateProgress() {
+    if (progress < 91) {
+        progress += Math.random() * 1.5; // hafif rastgele artış
+    }
+
+    if (progress >= 20) m1.classList.add("show");
+    if (progress >= 40) m2.classList.add("show");
+    if (progress >= 65) m3.classList.add("show");
+    if (progress >= 85) m4.classList.add("show");
+
+    bar.style.width = progress + "%";
+
+    // %91'de takılı kalma efekti
+    if (progress < 91) {
+        setTimeout(updateProgress, 120);
+    }
+}
+
+updateProgress(); // fonksiyonu çağır
+</script>
+
+<script>
+const container = document.getElementById('container');
+let ball = null;
+
+// Fare ile top oluşturma (önceki top silinir)
+container.addEventListener('mousedown', e => {
+    if(ball) ball.remove(); // Önceki topu kaldır
+    createBall(e.offsetX, e.offsetY);
+});
+
+function createBall(x, y) {
+    ball = document.createElement('div');
+    ball.classList.add('ball');
+    container.appendChild(ball);
+
+    // Rastgele hız ve yön
+    const speed = 3; // sabit hız
+    const angle = Math.random() * 2 * Math.PI;
+    ball.state = {
+        x: x - 10,
+        y: y - 10,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed
+    };
+
+    ball.style.left = ball.state.x + 'px';
+    ball.style.top = ball.state.y + 'px';
+}
+
+function spawnParticles(x, y) {
+    for(let i=0;i<2;i++){
+        const p = document.createElement('div');
+        p.classList.add('particle');
+        p.style.left = x + 'px';
+        p.style.top = y + 'px';
+        container.appendChild(p);
+
+        const angle = Math.random()*Math.PI*2;
+        const speed = Math.random()*1 + 0.2;
+        const vx = Math.cos(angle)*speed;
+        const vy = Math.sin(angle)*speed;
+
+        let lifetime = 15;
+        const interval = setInterval(() => {
+            p.style.left = parseFloat(p.style.left) + vx + 'px';
+            p.style.top = parseFloat(p.style.top) + vy + 'px';
+            lifetime--;
+            if(lifetime <= 0){
+                clearInterval(interval);
+                p.remove();
+            }
+        }, 16);
+    }
+}
+
+// Physics Loop - sabit hız, sonsuz sekme
+function update() {
+    if(ball){
+        const s = ball.state;
+
+        s.x += s.vx;
+        s.y += s.vy;
+
+        // Alt ve üst taban
+        if(s.y < 0){
+            s.y = 0;
+            s.vy *= -1;
+            spawnParticles(s.x+10, s.y);
+        }
+        if(s.y + 20 > container.clientHeight){
+            s.y = container.clientHeight - 20;
+            s.vy *= -1;
+            spawnParticles(s.x+10, s.y+20);
+        }
+
+        // Sol ve sağ duvar
+        if(s.x < 0){
+            s.x = 0;
+            s.vx *= -1;
+            spawnParticles(s.x, s.y+10);
+        }
+        if(s.x + 20 > container.clientWidth){
+            s.x = container.clientWidth - 20;
+            s.vx *= -1;
+            spawnParticles(s.x+20, s.y+10);
+        }
+
+        ball.style.left = s.x + 'px';
+        ball.style.top = s.y + 'px';
+    }
+
+    requestAnimationFrame(update);
+}
+
+update();
+</script>
+
+</body>
+</html>
