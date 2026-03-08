@@ -35,7 +35,6 @@ s3 = boto3.client(
 )
 DATABASE_URL = os.environ.get("DATABASE_URL")
 if DATABASE_URL:
-    current_app.config["SERVER_NAME"] = "infinitesoft-tr.com"
     UPLOAD_PASSWORD=os.getenv("UPLOAD_PASSWORD")
     ADMIN_PASSWORD_HASH=os.getenv("ADMIN_PASSWORD")
     @app.route("/projects/<slug>")

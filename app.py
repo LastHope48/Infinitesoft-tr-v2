@@ -70,6 +70,7 @@ PYANYWHERE_UPLOAD_URL = "https://wf5528.pythonanywhere.com/upload"
 PYANYWHERE_LIST_URL   = "https://wf5528.pythonanywhere.com/list"
 PYANYWHERE_SECRET   = os.getenv("PYANYWHERE_SECRET")
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "dev-token")  # 'dev-token' lokal için
+app.config["SERVER_NAME"] = "infinitesoft-tr.com"
 HF_URL="https://wf5528-infinitesoft-tr.hf.space/remove-bg"
 PA_EXE_URL = "https://wf5529.pythonanywhere.com/static/uygulama/infinitesoft-tr.exe"
 UPLOAD_FOLDER_GUIDES = "static/uploads"
