@@ -20,17 +20,17 @@
 </head>
 <body>
     <header class="header">
-        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo" width="30" height="30">
+    <a href="{{url_for('app.index')}}">
+            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo" width="30" height="30">
+    </a>
         <ul class="main-list">
             <li class="list__item">
-              <a href="">
-                <img src="{{ url_for('static', filename='img/login.svg') }}" alt="login" width="20" height="20">
-              </a>
+          <a href="/"><i class="fa-brands fa-squarespace"></i> Projeler</a>
         </ul>
       </header>
       <main>
         {% block content %}
-        <form action="{{ url_for('form_create') }}" method="post" class="creat-form">
+        <form action="{{ url_for('app.form_create') }}" method="post" class="creat-form">
             <div class="form__card">
                 <img class="card__img" src="{{ url_for('static', filename='img/post_icon.png') }}" width="250" height="250" alt="post_icon">
                 <div class="form__inputs">

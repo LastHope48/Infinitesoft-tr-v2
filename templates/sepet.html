@@ -16,13 +16,13 @@
 </script>
 </head>
 <body>
-    <a class="btn" href="/camsepeti/home">
+    <a class="btn" href="{{url_for('app.home_shop')}}">
         <i class="fa-solid fa-house"></i> Ana Sayfa
     </a>
-    <a href="/camsepeti/logout" class="btn_red">
+    <a href="{{url_for('app.logout')}}" class="btn_red">
         <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
     </a>
-    <a href="/camsepeti/sepet" class="btn_yellow">
+    <a href="{{url_for('app.sepet')}}" class="btn_yellow">
         <i class="fa-solid fa-basket-shopping"></i> Sepetim
     </a>
     <div class="snow"></div>
@@ -31,7 +31,7 @@
     </header>
     <h1 class="baslik">ÇAMSEPETİ</h1>
         <div class="buy">
-        <a href="/camsepeti/buy">
+        <a href="{{url_for('app.buy')}}">
             <span>Satın Al</span>
         </a>
     </div>
@@ -46,7 +46,7 @@
             <div>
                 <strong>{{ urun.ad }}</strong><br>
                 {{ urun.fiyat }} ₺
-                <form action="/camsepeti/sepet_sil" method="POST">
+                <form action="{{url_for('app.sepet_sil')}}" method="POST">
                 <input type="hidden" name="index" value="{{ loop.index0 }}">
                 <button type="submit">❌</button>
             </form>

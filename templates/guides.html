@@ -5,13 +5,15 @@
     <title>Guides | Tarifler</title>
     <link rel="stylesheet" href="../static/css/decor_guides.css">
     <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-
+    <a href="{{url_for('app.add')}}" class="add">
+      <i class="fa-solid fa-plus"></i>
+    </a>
 <header class="header">
     <h1>📒 Tarifler</h1>
 </header>
-
 <main class="cards-container">
   {% if recipes %}
     {% for r in recipes %}
@@ -23,7 +25,7 @@
         </a>
 
         {% if session.get("can_delete") %}
-        <form method="POST" action="/recipes/{{ r.id }}/delete" class="delete-form">
+        <form method="POST" action="{{url_for('app.delete_recipe',id=r.id)}}" class="delete-form">
           <button type="submit" class="admin-badge">Sil</button>
         </form>
         {% endif %}
@@ -32,7 +34,7 @@
   {% else %}
     </main> <!-- Grid’i kapat -->
     <div class="no-recipes-wrapper">
-      <p class="no-recipes">📖 Henüz tarif yok. <a href="/guides/add">İlk tarifi ekleyen sen ol!</a></p>
+      <p class="no-recipes">📖 Henüz tarif yok. <a href="{{url_for('app.add')}}">İlk tarifi ekleyen sen ol!</a></p>
     </div>
     <main class="cards-container"> <!-- gerekirse yeniden aç -->
   {% endif %}

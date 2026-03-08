@@ -16,13 +16,13 @@
 </script>
 </head>
 <body>
-        <a class="btn" href="/camsepeti/home">
+        <a class="btn" href="{{url_for('app.home_shop')}}">
         <i class="fa-solid fa-house"></i> Ana Sayfa
     </a>
-    <a href="/camsepeti/logout" class="btn_red">
+    <a href="{{url_for('app.logout')}}" class="btn_red">
         <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
     </a>
-    <a href="/camsepeti/sepet" class="btn_yellow">
+    <a href="{{url_for('app.sepet')}}" class="btn_yellow">
         <i class="fa-solid fa-basket-shopping"></i> Sepetim
     </a>
     <div class="snow"></div>

@@ -32,13 +32,13 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <a href="/" class="logo">InfiniteCloud</a>
+        <a href="{{url_for('app.cloud')}}" class="logo">InfiniteCloud</a>
 
         <a href="/" class="nav-item">
             <i class="fa-brands fa-squarespace"></i> Projeler
         </a>
 
-        <a href="/infinitecloud/register" class="nav-item">
+        <a href="{{url_for('app.register_ic')}}" class="nav-item">
             <i class="fa-solid fa-user-plus"></i> Hesap Oluştur
         </a>
     </div>
@@ -59,7 +59,7 @@
 
                 <p class="auth-switch">
                     Hesabın yok mu?
-                    <a href="/infinitecloud/register">Hesap Oluştur</a>
+                    <a href="{{url_for('app.register_ic')}}">Hesap Oluştur</a>
                 </p>
             </div>
 

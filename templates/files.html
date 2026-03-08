@@ -22,26 +22,26 @@
         <aside class="sidebar">
         <div class="logo">InfiniteCloud</div>
         <nav>
-            <a href="/infinitecloud" class="nav-item">
+            <a href="{{url_for('app.cloud')}}" class="nav-item">
                 <i class="fa-solid fa-house"></i> Ana Sayfa
             </a>
-            <a href="/infinitecloud/upload" class="nav-item">
+            <a href="{{url_for('app.upload')}}" class="nav-item">
                 <i class="fa-solid fa-cloud-arrow-up"></i> Yükle
             </a>
-            <a href="/infinitecloud/files" class="nav-item active">
+            <a href="{{url_for('app.files')}}" class="nav-item active">
                 <i class="fa-solid fa-globe"></i> Global Dosyalar
             </a>
-            <a href="{{ url_for('myfiles') }}" class="nav-item">
+            <a href="{{ url_for('app.myfiles') }}" class="nav-item">
                 <i class="fa-solid fa-file"></i> Benim Dosyalarım
             </a>
-            <a href="{{url_for('logout_ic')}}" class="nav-item">
+            <a href="{{url_for('app.logout_ic')}}" class="nav-item">
                 <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
             </a>
             <hr class="sidebar-divider">
-            <a href="/" class="nav-item">
+            <a href="{{url_for('app.projects')}}" class="nav-item">
                 <i class="fa-brands fa-squarespace"></i> Projeler
             </a>
-            <a href="/admin" class="nav-item admin">
+            <a href="{{url_for('app.reset_login')}}" class="nav-item admin">
                 <i class="fa-solid fa-user-shield"></i> Admin
             </a>
         </nav>
@@ -75,11 +75,11 @@
                     </div>
 
                     <div class="file-actions">
-                        <a target="_blank" href="{{url_for('look', media_id=media.id)}}" class="btn-preview">Ön izle</a>
-                        <a href="{{ url_for('download_file', media_id=media.id) }}" class="btn-download">İndir</a>
+                        <a target="_blank" href="{{url_for('app.look', media_id=media.id)}}" class="btn-preview">Ön izle</a>
+                        <a href="{{ url_for('app.download_file', media_id=media.id) }}" class="btn-download">İndir</a>
 
                         {% if current_user.is_authenticated and (can_delete or media.owner_id == current_user.id) %}
-                        <form action="{{ url_for('delete_file', file_id=media.id) }}" method="POST">
+                        <form action="{{ url_for('app.delete_file', file_id=media.id) }}" method="POST">
                             <button type="submit" class="btn-delete">Sil</button>
                         </form>
                         {% endif %}
@@ -93,9 +93,9 @@
 
 
         <div class="action-bar">
-            <a href="{{ url_for('download_all') }}" class="btn-bulk-download">⬇️ Tümünü İndir</a>
+            <a href="{{ url_for('app.download_all') }}" class="btn-bulk-download">⬇️ Tümünü İndir</a>
             {% if can_reset %}
-            <form action="{{ url_for('reset_files') }}" method="post" onsubmit="return confirm('SİLİNSİN Mİ?')">
+            <form action="{{ url_for('app.reset_files') }}" method="post" onsubmit="return confirm('SİLİNSİN Mİ?')">
                 <button type="submit" class="btn-bulk-delete">🚨 Tümünü Sil</button>
             </form>
             {% endif %}

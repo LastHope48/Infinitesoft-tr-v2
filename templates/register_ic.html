@@ -31,13 +31,13 @@
 <div class="dashboard-container">
 
     <div class="sidebar">
-        <a href="/" class="logo">InfiniteCloud</a>
+        <a href="{{url_for('app.cloud')}}" class="logo">InfiniteCloud</a>
 
-        <a href="/" class="nav-item">
+        <a href="{{url_for('app.projects')}}" class="nav-item">
             <i class="fa-brands fa-squarespace"></i> Projeler
         </a>
 
-        <a href="/infinitecloud/login" class="nav-item">
+        <a href="{{url_for('app.login_ic')}}" class="nav-item">
             <i class="fa-solid fa-right-to-bracket"></i> Giriş Yap
         </a>
     </div>
@@ -57,7 +57,7 @@
 
                 <p class="auth-switch">
                     Zaten hesabın var mı?
-                    <a href="/infinitecloud/login">Giriş Yap</a>
+                    <a href="{{url_for('app.login_ic')}}">Giriş Yap</a>
                 </p>
             </div>
 

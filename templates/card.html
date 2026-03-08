@@ -23,12 +23,12 @@
 </head>
 <body>
   <header class="header">
-    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo" width="30" height="30">
+    <a href="{{url_for('app.index')}}">
+            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo" width="30" height="30">
+    </a>
     <ul class="main-list">
         <li class="list__item">
-          <a href="">
-            <img src="{{ url_for('static', filename='img/login.svg') }}" alt="login" width="20" height="20">
-          </a>
+          <a href="{{url_for('app.projects')}}"><i class="fa-brands fa-squarespace"></i> Projeler</a>
     </ul>
   </header>
   <main class="main">
@@ -42,7 +42,7 @@
       <div class="main__text">
       {{card.text}}
       </div>
-      <a class="main__link" href="/cards">Kayıtlara geri dön</a>
+      <a class="main__link" href="{{url_for('app.index')}}">Kayıtlara geri dön</a>
     </div>
   </main>
   {% endblock %}

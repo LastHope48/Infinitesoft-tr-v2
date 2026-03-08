@@ -19,12 +19,12 @@
 </head>
 <body>
   <header class="header">
-    <a href="/"><i class="fa-brands fa-squarespace"></i> Projeler</a>
+    <a href="{{url_for('app.index')}}">
+            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo" width="30" height="30">
+    </a>
     <ul class="main-list">
         <li class="list__item">
-          <a href="">
-            <img src="../static/img/login.svg" alt="login" width="20" height="20">
-          </a>
+      <a href="{{url_for('app.projects')}}"><i class="fa-brands fa-squarespace"></i> Projeler</a>
     </ul>
   </header>
   <main>
@@ -33,7 +33,7 @@
     <ul class="cards-list">
       {% for el in cards%}
       <li class="card">
-        <a class="card__link" href="/cards/card/{{el.id}}">
+        <a class="card__link" href="{{url_for('card',id='el.id')}}">
           <img class="card__img" src="../static/img/post_icon.png" width="250" height="250" alt="post_icon">
           <div class="card__text">
             <h2 class="card__title">{{el.title}}</h2>
@@ -43,7 +43,7 @@
       </li>
       {% endfor %}
       <li class="card card--creat">
-          <a class="creat__link" href="{{url_for('create')}}"></a>
+          <a class="creat__link" href="{{url_for('app.create')}}"></a>
       </li>
     </ul>
     {% endblock %}

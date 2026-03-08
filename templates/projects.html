@@ -31,18 +31,18 @@
 
 
 
-    <a href="{{ url_for('uygulama') }}" class="btn btn-primary">Uygulamayı İndir</a>
+    <a href="{{ url_for('app.uygulama') }}" class="btn btn-primary">Uygulamayı İndir</a>
     </header>
 
     <ul class="list">
 <li class="list__item">
-    <a href="/infinitecloud" class="card-main">
+    <a href="{{url_for('app.cloud', _external=True)}}" class="card-main">
         <img class="item__img"
              src="{{ url_for('static', filename='img/upload-icon-4.png') }}">
         <span>Infinitecloud</span>
     </a>
 
-    <a href="{{ url_for('project_detail', slug='infinitecloud') }}" 
+    <a href="{{ url_for('app.project_detail', slug='infinitecloud') }}" 
        class="detail-btn">
        ⓘ Detay →
     </a>
@@ -52,80 +52,80 @@
 
 
         <li class="list__item">
-            <a href="/camsepeti">
+            <a href="{{url_for('app.home_shop', _external=True)}}">
                 <img class="item__img"
                      src="{{ url_for('static', filename='img/camsepeti.png') }}"
                      alt="camsepeti">
                 <span>Çamsepeti</span>
             </a>
-                <a href="{{ url_for('project_detail', slug='camsepeti') }}" 
+                <a href="{{ url_for('app.project_detail', slug='camsepeti') }}" 
        class="detail-btn">
        ⓘ Detay →
     </a>
         </li>
 
                 <li class="list__item">
-            <a href="#">
+            <a href="{{url_for('app.game', _external=True)}}">
                 <img class="item__img"
                      src="{{ url_for('static', filename='img/mouse_pushgame.png') }}"
                      alt="PUSHGAME">
                 <span>Push Game <span class="badge">🚧</span></span>
             </a>
-                <a href="{{ url_for('project_detail', slug='pushgame') }}" 
+                <a href="{{ url_for('app.project_detail', slug='pushgame') }}" 
        class="detail-btn">
        ⓘ Detay →
     </a>
         </li>
                     <li class="list__item">
-            <a href="/ai_tools">
+            <a href="{{url_for('app.tools', _external=True)}}">
                 <img class="item__img"
                      src="{{ url_for('static', filename='img/AI_tools.png') }}"
                      alt="AI_tools">
                 <span>AI Tools</span>
             </a>
-                <a href="{{ url_for('project_detail', slug='aitools') }}" 
+                <a href="{{ url_for('app.project_detail', slug='aitools') }}" 
        class="detail-btn">
        ⓘ Detay →
     </a>
         </li>
     <li class="list__item">
-        <a href="/guides">
+        <a href="{{url_for('app.guides_home', _external=True)}}">
             <img src="{{url_for('static',filename='img/guides.png')}}" alt="Tarifler" class="item__img">
             <span>Tarifler</span>
         </a>
-            <a href="{{ url_for('project_detail', slug='guides') }}" 
+            <a href="{{ url_for('app.project_detail', slug='guides') }}" 
        class="detail-btn">
        ⓘ Detay →
     </a>
     </li>
     <li class="list__item">
-        <a href="/cards">
+        <a href="{{url_for('app.index', _external=True)}}">
             <img class="item__img"
              src="{{url_for('static',filename='img/post_icon.png')}}"
              alt="Cards">
             <span>Notes</span>
         </a>
-            <a href="{{ url_for('project_detail', slug='notes') }}" 
+            <a href="{{ url_for('app.project_detail', slug='notes') }}" 
        class="detail-btn">
        ⓘ Detay →
     </a>
     </li>
     <li class="list__item">
-        <a href="/text_editor">
+        <a href="{{url_for('app.editor', _external=True)}}">
             <img src="{{url_for('static',filename='img/note.png')}}" alt="text_editor" class="item__img">
             <span>Text Editor</span>
         </a>
-            <a href="{{ url_for('project_detail', slug='texteditor') }}" 
+            <a href="{{ url_for('app.project_detail', slug='texteditor') }}" 
        class="detail-btn">
        ⓘ Detay →
     </a>
     </li>
     <li class="list__item">
-        <a href="/mekapus">
+        <a href="{{url_for('app.home_mekapus', _external=True)}}">
             <img src="{{url_for('static',filename='img/mekapus.png')}}" alt="mekapus" class="item__img">
             <span>Mekapus <span class="badge">🚧</span></span>
         </a>
-            <a href="{{ url_for('project_detail', slug='mekapus') }}" 
+            <a href="{{ url_for('app.project_detail', slug='mekapus') }}" 
        class="detail-btn">
        ⓘ Detay →
     </a>
@@ -136,13 +136,19 @@
             <span>ZAMAN YOLCULUĞU BİLİMİ KURTAR <span class="badge">🚧</span></span>
         </a>
     </li>
+    <li class="list__item">
+        <a href="/dijital_oyku">
+            <img src="" alt="" class="item__img">
+            <span>Dijital Öykü</span>
+        </a>
+    </li>
     </ul>
 </main>
 {% if not can_delete %}
 <a href="/admin" class="admin-btn">🔑</a>
 {% endif %}
 <footer class="site-footer">
-    <p>Versiyon: 5.4.0</p>
+    <p>Versiyon: 5.5.0</p>
 </footer>
 <footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
   © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.

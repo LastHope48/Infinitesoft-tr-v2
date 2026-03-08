@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>En Güçlü Kule</title>
+    <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+    <link rel="stylesheet" href="../static/css/decor_dijital_oyku.css">
+</head>
+<body>
+    <div id="container">
+
+        <!-- Başlangıç Seçim Modu -->
+        <div id="mode-select">
+            <h2>Mod Seç</h2>
+            <button id="story-btn">Hikaye Modu</button>
+            <button id="game-btn">Oyun Modu</button>
+        </div>
+
+        <!-- Hikaye Modu -->
+        <div id="story-mode" style="display:none;">
+            <div id="story-text"></div>
+            <button id="start-game-btn">Oyun Moduna Geç</button>
+        </div>
+
+        <!-- Oyun Modu -->
+<div id="game-mode" style="display:none;">
+    <h2>Kuleyi Kur!</h2>
+    <div id="game-area"></div>
+
+    <div id="pieces">
+        <div class="piece" data-type="kutu"></div>
+        <div class="piece" data-type="ucgen"></div>
+    </div>
+
+    <button id="restart-btn">Tekrar Oyna</button>
+</div>
+
+    </div>
+    <script src="../static/js/script_do.js"></script>
+</body>
+</html>

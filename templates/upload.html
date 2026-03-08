@@ -25,29 +25,29 @@
 </head>
 <body>
 <div class="dashboard-container">
-    <aside class="sidebar">
+        <aside class="sidebar">
         <div class="logo">InfiniteCloud</div>
         <nav>
-            <a href="/infinitecloud" class="nav-item">
+            <a href="{{url_for('app.cloud')}}" class="nav-item">
                 <i class="fa-solid fa-house"></i> Ana Sayfa
             </a>
-            <a href="/infinitecloud/upload" class="nav-item active">
+            <a href="{{url_for('app.upload')}}" class="nav-item">
                 <i class="fa-solid fa-cloud-arrow-up"></i> Yükle
             </a>
-            <a href="/infinitecloud/files" class="nav-item">
+            <a href="{{url_for('app.files')}}" class="nav-item">
                 <i class="fa-solid fa-globe"></i> Global Dosyalar
             </a>
-            <a href="{{ url_for('myfiles') }}" class="nav-item">
+            <a href="{{ url_for('app.myfiles') }}" class="nav-item active">
                 <i class="fa-solid fa-file"></i> Benim Dosyalarım
             </a>
-            <a href="{{url_for('logout_ic')}}" class="nav-item">
+            <a href="{{url_for('app.logout_ic')}}" class="nav-item">
                 <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
             </a>
             <hr class="sidebar-divider">
-            <a href="/" class="nav-item">
+            <a href="{{url_for('app.projects')}}" class="nav-item">
                 <i class="fa-brands fa-squarespace"></i> Projeler
             </a>
-            <a href="/admin" class="nav-item admin">
+            <a href="{{url_for('app.reset_login')}}" class="nav-item admin">
                 <i class="fa-solid fa-user-shield"></i> Admin
             </a>
         </nav>
