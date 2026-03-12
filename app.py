@@ -87,20 +87,20 @@ UPLOAD_FOLDER = "/home/wf5528/infinitecloud_api/uploads"
 app.config["UPLOAD_FOLDER"]="uploads"
 ALLOWED={"png","jpg","jpeg","mp4","mov","pdf","webp","mp3","pptx","zip"}
 maintenance_mode(app)
-if DATABASE_URL:
-    with app.app_context():
-        # Schemaları oluştur
-        for schema_name in ["system", "storage", "auth", "details"]:
-            db.session.execute(text(f"CREATE SCHEMA IF NOT EXISTS {schema_name}"))
-        db.session.commit()
+# if DATABASE_URL:
+#     with app.app_context():
+#         # Schemaları oluştur
+#         for schema_name in ["system", "storage", "auth", "details"]:
+#             db.session.execute(text(f"CREATE SCHEMA IF NOT EXISTS {schema_name}"))
+#         db.session.commit()
 
-        # Tabloları oluştur
-        db.create_all()
+#         # Tabloları oluştur
+#         db.create_all()
 
-        # Kontrol (opsiyonel)
-        insp = inspect(db.engine)
-        for schema_name in ["system", "storage", "auth", "details"]:
-            print(f"Tables in schema '{schema_name}':", insp.get_table_names(schema=schema_name))
+#         # Kontrol (opsiyonel)
+#         insp = inspect(db.engine)
+#         for schema_name in ["system", "storage", "auth", "details"]:
+#             print(f"Tables in schema '{schema_name}':", insp.get_table_names(schema=schema_name))
 # aktif etmek için
 MAINTANENCE=os.getenv("MAINTENANCE")
 if MAINTANENCE=="True":

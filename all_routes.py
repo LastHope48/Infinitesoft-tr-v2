@@ -832,7 +832,7 @@ if SUBDOMAIN:
     @bp.route("/dijital_oyku",subdomain=None)
     def dijital_oyku():
         return render_template("dijital_oyku.html")
-    @bp.route("/admin/update-version",subdomain=None)
+    @bp.route("/admin/update-version",subdomain=None, endpoint="bp_update_version")
     def update_version():
         if not session.get("can_delete"):
             abort(403)
