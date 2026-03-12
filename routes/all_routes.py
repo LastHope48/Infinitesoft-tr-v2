@@ -17,7 +17,6 @@ from all_classes import db
 app = Blueprint('app', __name__)
 R2_BUCKET="infinitecloud"
 MAX_STORAGE = 10 * 1024 * 1024 * 1024
-DATABASE_URL = os.getenv("DATABASE_URL")
 PYANYWHERE_UPLOAD_URL = "https://wf5528.pythonanywhere.com/upload"
 ALLOWED={"png","jpg","jpeg","mp4","mov","pdf","webp","mp3","pptx","zip"}
 PYANYWHERE_LIST_URL   = "https://wf5528.pythonanywhere.com/list"
@@ -33,8 +32,8 @@ s3 = boto3.client(
     aws_secret_access_key=os.getenv("SECRET_KEY"),
     region_name="auto"
 )
-DATABASE_URL = os.environ.get("DATABASE_URL")
-if DATABASE_URL:
+SUBDOMAIN = os.getenv("SUBDOMAIN")
+if SUBDOMAIN:
     UPLOAD_PASSWORD=os.getenv("UPLOAD_PASSWORD")
     ADMIN_PASSWORD_HASH=os.getenv("ADMIN_PASSWORD")
     @app.route("/projects/<slug>")
