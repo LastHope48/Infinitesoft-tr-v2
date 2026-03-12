@@ -6,7 +6,7 @@ from botocore.config import Config
 from sqlalchemy import func,text
 import io,zipfile
 import boto3
-from routes import app as app_bp
+from all_routes import bp
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect
 from datetime import datetime, timedelta
@@ -35,6 +35,7 @@ s3 = boto3.client(
 )
 DATABASE_URL=os.getenv("DATABASE_URL")
 if DATABASE_URL:
+    app.config["SERVER_NAME"] = ".infinitesoft-tr.com"
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
     app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
@@ -70,7 +71,6 @@ PYANYWHERE_UPLOAD_URL = "https://wf5528.pythonanywhere.com/upload"
 PYANYWHERE_LIST_URL   = "https://wf5528.pythonanywhere.com/list"
 PYANYWHERE_SECRET   = os.getenv("PYANYWHERE_SECRET")
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "dev-token")  # 'dev-token' lokal için
-app.config["SERVER_NAME"] = "infinitesoft-tr.com"
 HF_URL="https://wf5528-infinitesoft-tr.hf.space/remove-bg"
 PA_EXE_URL = "https://wf5529.pythonanywhere.com/static/uygulama/infinitesoft-tr.exe"
 UPLOAD_FOLDER_GUIDES = "static/uploads"
@@ -79,7 +79,7 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_pre_ping": True,
     "pool_recycle": 300,
 }
-app.register_blueprint(app_bp)
+app.register_blueprint(bp)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret")

@@ -4,7 +4,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from botocore.client import Config
 from werkzeug.security import check_password_hash,generate_password_hash
 from flask import current_app
-from all_classes import Project,Account,Media,SiteMessage,SiteUpdate,Card,Recipe
+from all_classes import Project,Account,Media,SiteMessage,SiteUpdate,Card,Recipe,Version
 from flask_sqlalchemy import SQLAlchemy
 import boto3
 import requests
@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 import io,zipfile
 from sqlalchemy import func,text
 from all_classes import db
-app = Blueprint('app', __name__)
+bp = Blueprint('app', __name__)
 R2_BUCKET="infinitecloud"
 MAX_STORAGE = 10 * 1024 * 1024 * 1024
 PYANYWHERE_UPLOAD_URL = "https://wf5528.pythonanywhere.com/upload"
@@ -32,26 +32,35 @@ s3 = boto3.client(
     aws_secret_access_key=os.getenv("SECRET_KEY"),
     region_name="auto"
 )
-SUBDOMAIN = os.getenv("SUBDOMAIN")
+try:
+    SUBDOMAIN = os.getenv("SUBDOMAIN")
+except:
+    print("Bulunamadı")
 if SUBDOMAIN:
     UPLOAD_PASSWORD=os.getenv("UPLOAD_PASSWORD")
     ADMIN_PASSWORD_HASH=os.getenv("ADMIN_PASSWORD")
-    @app.route("/projects/<slug>")
+    @bp.route("/projects/<slug>",subdomain=None)
     def project_detail(slug):
         project = Project.query.filter_by(slug=slug).first_or_404()
         return render_template("project_detail.html", project=project)
 
 
-    @app.route("/")
+    @bp.route("/",subdomain=None)
     def projects():
-        return render_template("projects.html")
+        version=Version.query.get(1)
+        try:
+            if not version.version!=None:
+                return render_template("projects.html")
+        except:
+            return render_template("projects.html")
+        return render_template("projects.html",version=version.version)
 
-    @app.route("/",subdomain="infinitecloud")
+    @bp.route("/",subdomain="infinitecloud")
     @login_required
     def cloud():
         total_files=get_total_files_from_r2()
         return render_template("home_cloud.html",total_files=total_files)
-    @app.route("/__reset_db__", methods=["GET"])
+    @bp.route("/__reset_db__", methods=["GET"],subdomain=None)
     def reset_db():
         if not session.get("can_delete"):
             abort(403)
@@ -62,11 +71,11 @@ if SUBDOMAIN:
             return redirect(url_for("app.projects"))
         except:
             abort(403)
-    @app.route("/home",subdomain="camsepeti")
+    @bp.route("/home",subdomain="camsepeti")
     @login_required
     def home_shop():
         return render_template("home.html")
-    @app.route("/sepete_ekle",methods=["POST"],subdomain="camsepeti")
+    @bp.route("/sepete_ekle",methods=["POST"],subdomain="camsepeti")
     @login_required
     def sepete_ekle():
         urun={
@@ -80,7 +89,7 @@ if SUBDOMAIN:
         sepet.append(urun)
         session["sepet"]=sepet
         return redirect(url_for("app.home_shop"))
-    @app.route("/sepet_sil", methods=["POST"],subdomain="camsepeti")
+    @bp.route("/sepet_sil", methods=["POST"],subdomain="camsepeti")
     @login_required
     def sepet_sil():
         index = int(request.form["index"])
@@ -92,20 +101,20 @@ if SUBDOMAIN:
             session["sepet"] = sepet
 
         return redirect(url_for("app.sepet"))
-    @app.route("/buy_success",methods=["POST"],subdomain="camsepeti")
+    @bp.route("/buy_success",methods=["POST"],subdomain="camsepeti")
     @login_required
     def buy_success():
         return render_template("buy_success.html")
-    @app.route("/sepet",subdomain="camsepeti")
+    @bp.route("/sepet",subdomain="camsepeti")
     @login_required
     def sepet():
         return render_template("sepet.html",sepet=session.get("sepet"))
-    @app.route("/buy",subdomain="camsepeti")
+    @bp.route("/buy",subdomain="camsepeti")
     @login_required
     def buy():
         return render_template("buy.html")
 
-    @app.route("/register",methods=["GET","POST"],subdomain="camsepeti")
+    @bp.route("/register",methods=["GET","POST"],subdomain="camsepeti")
     def register():
         if request.method=="POST":
             name=request.form["name"]
@@ -129,7 +138,7 @@ if SUBDOMAIN:
             return redirect(url_for("app.login"))
         return render_template("register.html")
 
-    @app.route("/",methods=["GET","POST"],subdomain="camsepeti")
+    @bp.route("/",methods=["GET","POST"],subdomain="camsepeti")
     def login():
         if request.method=="POST":
             name=request.form["name"]
@@ -147,18 +156,18 @@ if SUBDOMAIN:
             else:
                 return "Hatalı giriş❌"
         return render_template("login.html")
-    @app.route("/logout",subdomain="camsepeti")
+    @bp.route("/logout",subdomain="camsepeti")
     @login_required
     def logout():
         logout_user()
         return redirect(url_for("app.login"))
-    @app.route("/create_db")
+    @bp.route("/create_db")
     def create_db():
         if not session.get("can_delete"):
             abort(403)
         db.create_all()
         return redirect(url_for("app.projects"))
-    @app.route("/upload", methods=["GET","POST"],subdomain="infinitecloud")
+    @bp.route("/upload", methods=["GET","POST"],subdomain="infinitecloud")
     @login_required
     def upload():
         can_delete=session.get("can_delete")
@@ -228,7 +237,7 @@ if SUBDOMAIN:
         return render_template("upload.html",can_delete=can_delete)
 
 
-    @app.route("/files/<int:media_id>/download",subdomain="infinitecloud")
+    @bp.route("/files/<int:media_id>/download",subdomain="infinitecloud")
     @login_required
     def download_file(media_id):
         media = Media.query.get_or_404(media_id)
@@ -253,7 +262,7 @@ if SUBDOMAIN:
             }
         )
 
-    @app.route("/files/<int:media_id>",subdomain="infinitecloud")
+    @bp.route("/files/<int:media_id>",subdomain="infinitecloud")
     def look(media_id):
         media = Media.query.get_or_404(media_id)
 
@@ -273,7 +282,7 @@ if SUBDOMAIN:
             }
         )
 
-    @app.route("/delete/<int:file_id>", methods=["POST"],subdomain="infinitecloud")
+    @bp.route("/delete/<int:file_id>", methods=["POST"],subdomain="infinitecloud")
     @login_required
     def delete_file(file_id):
         media = Media.query.get_or_404(file_id)
@@ -294,7 +303,7 @@ if SUBDOMAIN:
         print("SİLİNEN KEY:", media.r2_key)
         print("DELETE RESPONSE:", response)
         return redirect(url_for("app.files"))
-    @app.route("/admin", methods=["GET", "POST"])
+    @bp.route("/admin", methods=["GET", "POST"],subdomain=None)
     def reset_login():
         msg = ""
         if request.method == "POST":
@@ -305,12 +314,12 @@ if SUBDOMAIN:
             else:
                 msg = "❌ Admin şifre yanlış"
         return render_template("reset_login.html", msg=msg)
-    @app.route("/logout",subdomain="infinitecloud")
+    @bp.route("/logout",subdomain="infinitecloud")
     @login_required
     def logout_ic():
         logout_user()
         return redirect(url_for("app.login_ic"))
-    @app.route("/login", methods=["GET", "POST"],subdomain="infinitecloud")
+    @bp.route("/login", methods=["GET", "POST"],subdomain="infinitecloud")
     def login_ic():
         if request.method == "POST":
             name = request.form.get("username")
@@ -330,7 +339,7 @@ if SUBDOMAIN:
             return "Kullanıcı adı veya şifre yanlış"
 
         return render_template("login_ic.html")
-    @app.route("/register", methods=["GET", "POST"],subdomain="infinitecloud")
+    @bp.route("/register", methods=["GET", "POST"],subdomain="infinitecloud")
     def register_ic():
         if request.method == "POST":
             name = request.form.get("username")
@@ -353,7 +362,7 @@ if SUBDOMAIN:
             return redirect(url_for("app.login_ic"))
 
         return render_template("register_ic.html")
-    @app.route("/reset", methods=["POST"],subdomain="infinitecloud")
+    @bp.route("/reset", methods=["POST"],subdomain="infinitecloud")
     def reset_files():
         if not session.get("can_reset"):
             return redirect("/infinitecloud/reset-login")
@@ -399,7 +408,7 @@ if SUBDOMAIN:
         except Exception as e:
             print(f"ERROR DELETE ALL: {e}")
             return "Bir hata oluştu"
-    @app.route("/files",subdomain="infinitecloud")
+    @bp.route("/files",subdomain="infinitecloud")
     @login_required
     def files():
         if "uploader_id" not in session:
@@ -436,7 +445,7 @@ if SUBDOMAIN:
         )
 
 
-    @app.route("/files/download_all",subdomain="infinitecloud")
+    @bp.route("/files/download_all",subdomain="infinitecloud")
     @login_required
     def download_all():
         medias = Media.query.all()
@@ -462,7 +471,7 @@ if SUBDOMAIN:
             mimetype="application/zip"
         )
     # Sistemler
-    @app.route('/sitemap.xml', methods=['GET'])
+    @bp.route('/sitemap.xml', methods=['GET'])
     def sitemap():
         sitemap_xml = """<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -472,7 +481,7 @@ if SUBDOMAIN:
     </urlset>
     """
         return Response(sitemap_xml, mimetype='application/xml')
-    @app.route("/infinitecloud/files/pa/download/<filename>")
+    @bp.route("/infinitecloud/files/pa/download/<filename>")
     def pa_download(filename):
         r = requests.get(
             f"https://wf5528.pythonanywhere.com/download/{filename}",
@@ -489,7 +498,7 @@ if SUBDOMAIN:
                 "Content-Disposition": f'attachment; filename="{filename}"'
             }
         )
-    @app.route("/infinitecloud/pa/delete/<filename>", methods=["POST"])
+    @bp.route("/infinitecloud/pa/delete/<filename>", methods=["POST"])
     def pa_delete(filename):
         r = requests.post(
             f"https://wf5528.pythonanywhere.com/delete/{filename}",
@@ -500,7 +509,7 @@ if SUBDOMAIN:
         if r.status_code == 200:
             return redirect("/infinitecloud/files")
         return "Silinemedi", 400
-    @app.route("/admin/broadcast", methods=["POST"])
+    @bp.route("/admin/broadcast", methods=["POST"])
     def admin_broadcast():
         if not session.get("can_delete"):
             abort(403)
@@ -519,7 +528,7 @@ if SUBDOMAIN:
         db.session.commit()
 
         return redirect(url_for("app.broadcast_panel"))
-    @app.route("/admins")
+    @bp.route("/admins",subdomain=None)
     def admin_panel():
         # ... (yetki kontrolleri)
         
@@ -545,7 +554,7 @@ if SUBDOMAIN:
             percent=round(percent, 2),
             bar_class="safe" if percent < 60 else "warning"
         )
-    @app.context_processor
+    @bp.context_processor
     def inject_broadcast():
         try:
             now = datetime.utcnow()
@@ -561,12 +570,12 @@ if SUBDOMAIN:
             print(f"Broadcast hatası (yoksayıldı): {e}")
             return {"broadcast_message": None}
 
-    @app.route("/admin/broadcast-panel")
+    @bp.route("/admin/broadcast-panel",subdomain=None)
     def broadcast_panel():
         if not session.get("can_delete"):
             return "Yetkisiz", 403
         return render_template("admin_broadcast.html")
-    @app.route("/myfiles",subdomain="infinitecloud")
+    @bp.route("/myfiles",subdomain="infinitecloud")
     @login_required
     def myfiles():
         
@@ -586,7 +595,7 @@ if SUBDOMAIN:
             files_count=len(medias),
             can_reset=False # Veya senin yetki kontrolün
         )
-    @app.route("/myfiles/<int:media_id>/delete",subdomain="infinitecloud")
+    @bp.route("/myfiles/<int:media_id>/delete",subdomain="infinitecloud")
     @login_required
     def delete_myfile(media_id):
         media=Media.query.get_or_404(media_id)
@@ -600,7 +609,7 @@ if SUBDOMAIN:
         db.session.delete(media)
         db.session.commit()
         return redirect(url_for("app.myfiles"))
-    @app.route("/lookmy/<int:file_id>",subdomain="infinitecloud")
+    @bp.route("/lookmy/<int:file_id>",subdomain="infinitecloud")
     @login_required
     def lookmy(file_id):
         media = Media.query.get_or_404(file_id)
@@ -617,7 +626,7 @@ if SUBDOMAIN:
             obj["Body"].read(),
             mimetype=media.mimetype
         )
-    @app.route("/download/<int:file_id>",subdomain="infinitecloud")
+    @bp.route("/download/<int:file_id>",subdomain="infinitecloud")
     @login_required
     def download(file_id):
         media = Media.query.get_or_404(file_id)
@@ -638,21 +647,21 @@ if SUBDOMAIN:
             mimetype=media.mimetype
         )
     # PUSH GAME
-    @app.route("/",subdomain="pushgame")
+    @bp.route("/",subdomain="pushgame")
     def gamestart():
         return render_template("pushgame.html")
-    @app.route("/game", methods=["POST"],subdomain="pushgame")
+    @bp.route("/game", methods=["POST"],subdomain="pushgame")
     def game():
         return render_template("pushgame_game.html")
     # YENİLİKLER
-    @app.route("/news")
+    @bp.route("/news",subdomain=None)
     def news():
         updates = SiteUpdate.query.order_by(
             SiteUpdate.created_at.desc()
         ).all()
         return render_template("last_updates.html", updates=updates)
 
-    @app.route("/admin/news", methods=["GET", "POST"])
+    @bp.route("/admin/news", methods=["GET", "POST"],subdomain=None)
     def admin_news():
         if not session.get("can_delete"):
             abort(403)
@@ -673,10 +682,10 @@ if SUBDOMAIN:
 
         return render_template("make_update.html")
     # UYGULAMAMIZ
-    @app.route("/indir")
+    @bp.route("/indir",subdomain=None)
     def uygulama():
         return render_template("indir.html")
-    @app.route("/infinitesoft-tr.exe")
+    @bp.route("/infinitesoft-tr.exe")
     def indir():
         r = requests.get(PA_EXE_URL, stream=True)
         if r.status_code != 200:
@@ -691,13 +700,13 @@ if SUBDOMAIN:
         )
 
     # AI_TOOLS
-    @app.route("/",subdomain="aitools")
+    @bp.route("/",subdomain="aitools")
     def tools():
         return render_template("ai_tools.html")
-    @app.route("/images",subdomain="aitools")
+    @bp.route("/images",subdomain="aitools")
     def images():
         return render_template("images.html")
-    @app.route("/api/delete/<filename>")
+    @bp.route("/api/delete/<filename>",subdomain=None)
     def api_delete(filename):
         token = request.headers.get("X-SECRET")
         if token != os.environ.get("ADMIN_TOKEN"):
@@ -709,10 +718,10 @@ if SUBDOMAIN:
             return jsonify({"ok": True})
         except Exception as e:
             return jsonify({"ok": False, "error": str(e)}), 500
-    @app.route("/backdeleter",methods=["GET","POST"],subdomain="aitools")
+    @bp.route("/backdeleter",methods=["GET","POST"],subdomain="aitools")
     def back_delete():
         return render_template("background_remover.html")
-    @app.route("/backdeleter/remove", methods=["POST"],subdomain="aitools")
+    @bp.route("/backdeleter/remove", methods=["POST"],subdomain="aitools")
     def delete_back():
         file = request.files["image"]
 
@@ -728,7 +737,7 @@ if SUBDOMAIN:
         )
 
     # KART
-    @app.route('/',subdomain="cards")
+    @bp.route('/',subdomain="cards")
     def index():
         cards=Card.query.order_by(Card.id).all()
 
@@ -736,16 +745,16 @@ if SUBDOMAIN:
                             #kartlar = kartlar
                                 cards=cards,
                             )
-    @app.route('/card/<int:id>',subdomain="cards")
+    @bp.route('/card/<int:id>',subdomain="cards")
     def card(id):
         # Görev #2. Id'ye göre doğru kartı görüntüleme
         card=Card.query.get(id)
 
         return render_template('card.html', card=card)
-    @app.route('/create',subdomain="cards")
+    @bp.route('/create',subdomain="cards")
     def create():
         return render_template('create_card.html')
-    @app.route('/form_create', methods=['GET','POST'],subdomain="cards")
+    @bp.route('/form_create', methods=['GET','POST'],subdomain="cards")
     def form_create():
         if request.method == 'POST':
             title =  request.form['title']
@@ -760,19 +769,19 @@ if SUBDOMAIN:
         else:
             return render_template('create_card.html')
     # TEXT EDITOR
-    @app.route("/text_editor")
+    @bp.route("/text_editor",subdomain=None)
     def editor():
         return render_template("text_editor.html")
     # GUIDES
-    @app.route("/",subdomain="guides")
+    @bp.route("/",subdomain="guides")
     def guides_home():
         recipes=Recipe.query.all()
         return render_template("guides.html",recipes=recipes)
-    @app.route("/recipes/<int:id>",subdomain="guides")
+    @bp.route("/recipes/<int:id>",subdomain="guides")
     def recipe_detail(id):
         recipe = Recipe.query.get_or_404(id)
         return render_template("recipe.html", recipe=recipe)
-    @app.route("/recipes/<int:id>/delete", methods=["POST"],subdomain="guides")
+    @bp.route("/recipes/<int:id>/delete", methods=["POST"],subdomain="guides")
     def delete_recipe(id):
         if not session.get("can_delete"):
             abort(403)
@@ -783,14 +792,14 @@ if SUBDOMAIN:
         return redirect(url_for("app.guides_home"))
 
 
-    @app.route("/add", methods=["GET","POST"],subdomain="guides")
+    @bp.route("/add", methods=["GET","POST"],subdomain="guides")
     def add():
         if request.method == "POST":
             file = request.files["image"]
             filename = secure_filename(file.filename)
 
             # Klasör yoksa oluştur
-            upload_folder = app.config["UPLOAD_FOLDER_GUIDES"]
+            upload_folder = current_app.config["UPLOAD_FOLDER_GUIDES"]
             if not os.path.exists(upload_folder):
                 os.makedirs(upload_folder)
 
@@ -811,52 +820,85 @@ if SUBDOMAIN:
 
         return render_template("add_guide.html")
 
-
+    @bp.route("/admin/update-version")
+    def update_version():
+        return render_template("update_version.html")
     # ZAMAN YOLCULUĞU BİLİMİ KURTAR
-    @app.route("/bilim-oyunu")
+    @bp.route("/bilim-oyunu",subdomain=None)
     def bilim_game():
         return render_template("bilimgame.html")
     # MEKAPUS
-    @app.route("/mekapus")
+    @bp.route("/mekapus",subdomain=None)
     def home_mekapus():
         return render_template("mekapus.html")
     # DİJİTAL OYKU | EN GÜÇLÜ KULE
-    @app.route("/dijital_oyku")
+    @bp.route("/dijital_oyku",subdomain=None)
     def dijital_oyku():
         return render_template("dijital_oyku.html")
+    @bp.route("/admin/update-version",subdomain=None)
+    def update_version():
+        if not session.get("can_delete"):
+            abort(403)
+        version=Version.query.get(1)
+        try:
+            if not version.version!=None:
+                return render_template("update_version.html")
+        except:
+            return render_template("update_version.html")
+        return render_template("update_version.html",version=version.version)
+    @bp.route("/admin/update-version/version",methods=["POST"],subdomain=None)
+    def version_data():
+        if not session.get("can_delete"):
+            abort(403)
+        Version.query.delete()
+        v1=request.form["v1"]
+        v2=request.form["v2"]
+        v3=request.form["v3"]
+        v=Version(
+            id=1,
+            version=f"{v1}.{v2}.{v3}"
+        )
+        db.session.add(v)
+        db.session.commit()
+        return redirect(url_for("app.projects"))
     # HATALAR
-    @app.errorhandler(404)
+    @bp.errorhandler(404)
     def page_not_found(e):
         return render_template("404.html"),404
-    @app.errorhandler(403)
+    @bp.errorhandler(403)
     def forbidden(e):
         return render_template("403.html"),403
-    @app.errorhandler(405)
+    @bp.errorhandler(405)
     def wrong_direction_to_come(e):
         return render_template("405.html"),405
-    @app.errorhandler(500)
+    @bp.errorhandler(500)
     def internal_error(e):
         return render_template("500.html"), 500
 
 else:
     UPLOAD_PASSWORD="yukle"
     ADMIN_PASSWORD_HASH="admin"
-    @app.route("/projects/<slug>")
+    @bp.route("/projects/<slug>")
     def project_detail(slug):
         project = Project.query.filter_by(slug=slug).first_or_404()
         return render_template("project_detail.html", project=project)
 
 
-    @app.route("/")
+    @bp.route("/")
     def projects():
-        return render_template("projects.html")
-
-    @app.route("/infinitecloud")
+        version=Version.query.get(1)
+        try:
+            if not version.version!=None:
+                return render_template("projects.html")
+        except:
+            return render_template("projects.html")
+        return render_template("projects.html",version=version.version)
+    @bp.route("/infinitecloud")
     @login_required
     def cloud():
         total_files=get_total_files_from_r2()
         return render_template("home_cloud.html",total_files=total_files)
-    @app.route("/__reset_db__", methods=["GET"])
+    @bp.route("/__reset_db__", methods=["GET"])
     def reset_db():
 
         if not session.get("can_delete"):
@@ -867,11 +909,11 @@ else:
 
         return "DB sıfırlandı ✅"
 
-    @app.route("/camsepeti/home")
+    @bp.route("/camsepeti/home")
     @login_required
     def home_shop():
         return render_template("home.html")
-    @app.route("/camsepeti/sepete_ekle",methods=["POST"])
+    @bp.route("/camsepeti/sepete_ekle",methods=["POST"])
     @login_required
     def sepete_ekle():
         urun={
@@ -885,7 +927,7 @@ else:
         sepet.append(urun)
         session["sepet"]=sepet
         return redirect("/camsepeti/home")
-    @app.route("/camsepeti/sepet_sil", methods=["POST"])
+    @bp.route("/camsepeti/sepet_sil", methods=["POST"])
     @login_required
     def sepet_sil():
         index = int(request.form["index"])
@@ -897,20 +939,20 @@ else:
             session["sepet"] = sepet
 
         return redirect("/camsepeti/sepet")
-    @app.route("/camsepeti/buy_success",methods=["POST"])
+    @bp.route("/camsepeti/buy_success",methods=["POST"])
     @login_required
     def buy_success():
         return render_template("buy_success.html")
-    @app.route("/camsepeti/sepet")
+    @bp.route("/camsepeti/sepet")
     @login_required
     def sepet():
         return render_template("sepet.html",sepet=session.get("sepet"))
-    @app.route("/camsepeti/buy")
+    @bp.route("/camsepeti/buy")
     @login_required
     def buy():
         return render_template("buy.html")
 
-    @app.route("/camsepeti/register",methods=["GET","POST"])
+    @bp.route("/camsepeti/register",methods=["GET","POST"])
     def register():
         if request.method=="POST":
             name=request.form["name"]
@@ -934,7 +976,7 @@ else:
             return redirect("/camsepeti")
         return render_template("register.html")
 
-    @app.route("/camsepeti",methods=["GET","POST"])
+    @bp.route("/camsepeti",methods=["GET","POST"])
     def login():
         if request.method=="POST":
             name=request.form["name"]
@@ -952,18 +994,18 @@ else:
             else:
                 return "Hatalı giriş❌"
         return render_template("login.html")
-    @app.route("/camsepeti/logout")
+    @bp.route("/camsepeti/logout")
     @login_required
     def logout():
         logout_user()
         return redirect("/camsepeti")
-    @app.route("/create_db")
+    @bp.route("/create_db")
     def create_db():
         if not session.get("can_delete"):
             abort(403)
         db.create_all()
         return redirect("/")
-    @app.route("/infinitecloud/upload", methods=["GET","POST"])
+    @bp.route("/infinitecloud/upload", methods=["GET","POST"])
     @login_required
     def upload():
         can_delete=session.get("can_delete")
@@ -1033,7 +1075,7 @@ else:
         return render_template("upload.html",can_delete=can_delete)
 
 
-    @app.route("/infinitecloud/files/<int:media_id>/download")
+    @bp.route("/infinitecloud/files/<int:media_id>/download")
     @login_required
     def download_file(media_id):
         media = Media.query.get_or_404(media_id)
@@ -1058,7 +1100,7 @@ else:
             }
         )
 
-    @app.route("/infinitecloud/files/<int:media_id>")
+    @bp.route("/infinitecloud/files/<int:media_id>")
     def look(media_id):
         media = Media.query.get_or_404(media_id)
 
@@ -1078,7 +1120,7 @@ else:
             }
         )
 
-    @app.route("/infinitecloud/delete/<int:file_id>", methods=["POST"])
+    @bp.route("/infinitecloud/delete/<int:file_id>", methods=["POST"])
     @login_required
     def delete_file(file_id):
         media = Media.query.get_or_404(file_id)
@@ -1099,7 +1141,7 @@ else:
         print("SİLİNEN KEY:", media.r2_key)
         print("DELETE RESPONSE:", response)
         return redirect(url_for("app.files"))
-    @app.route("/admin", methods=["GET", "POST"])
+    @bp.route("/admin", methods=["GET", "POST"])
     def reset_login():
         msg = ""
         if request.method == "POST":
@@ -1110,12 +1152,12 @@ else:
             else:
                 msg = "❌ Admin şifre yanlış"
         return render_template("reset_login.html", msg=msg)
-    @app.route("/infinitecloud/logout")
+    @bp.route("/infinitecloud/logout")
     @login_required
     def logout_ic():
         logout_user()
         return redirect(url_for("app.login_ic"))
-    @app.route("/infinitecloud/login", methods=["GET", "POST"])
+    @bp.route("/infinitecloud/login", methods=["GET", "POST"])
     def login_ic():
         if request.method == "POST":
             name = request.form.get("username")
@@ -1135,7 +1177,7 @@ else:
             return "Kullanıcı adı veya şifre yanlış"
 
         return render_template("login_ic.html")
-    @app.route("/infinitecloud/register", methods=["GET", "POST"])
+    @bp.route("/infinitecloud/register", methods=["GET", "POST"])
     def register_ic():
         if request.method == "POST":
             name = request.form.get("username")
@@ -1158,7 +1200,7 @@ else:
             return redirect("/infinitecloud/login")
 
         return render_template("register_ic.html")
-    @app.route("/infinitecloud/reset", methods=["POST"])
+    @bp.route("/infinitecloud/reset", methods=["POST"])
     def reset_files():
         if not session.get("can_reset"):
             return redirect("/infinitecloud/reset-login")
@@ -1204,7 +1246,7 @@ else:
         except Exception as e:
             print(f"ERROR DELETE ALL: {e}")
             return "Bir hata oluştu"
-    @app.route("/infinitecloud/files")
+    @bp.route("/infinitecloud/files")
     @login_required
     def files():
         if "uploader_id" not in session:
@@ -1241,7 +1283,7 @@ else:
         )
 
 
-    @app.route("/infinitecloud/files/download_all")
+    @bp.route("/infinitecloud/files/download_all")
     @login_required
     def download_all():
         medias = Media.query.all()
@@ -1267,7 +1309,7 @@ else:
             mimetype="application/zip"
         )
     # Sistemler
-    @app.route('/sitemap.xml', methods=['GET'])
+    @bp.route('/sitemap.xml', methods=['GET'])
     def sitemap():
         sitemap_xml = """<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -1277,7 +1319,7 @@ else:
     </urlset>
     """
         return Response(sitemap_xml, mimetype='application/xml')
-    @app.route("/infinitecloud/files/pa/download/<filename>")
+    @bp.route("/infinitecloud/files/pa/download/<filename>")
     def pa_download(filename):
         r = requests.get(
             f"https://wf5528.pythonanywhere.com/download/{filename}",
@@ -1294,7 +1336,7 @@ else:
                 "Content-Disposition": f'attachment; filename="{filename}"'
             }
         )
-    @app.route("/infinitecloud/pa/delete/<filename>", methods=["POST"])
+    @bp.route("/infinitecloud/pa/delete/<filename>", methods=["POST"])
     def pa_delete(filename):
         r = requests.post(
             f"https://wf5528.pythonanywhere.com/delete/{filename}",
@@ -1305,7 +1347,7 @@ else:
         if r.status_code == 200:
             return redirect("/infinitecloud/files")
         return "Silinemedi", 400
-    @app.route("/admin/broadcast", methods=["POST"])
+    @bp.route("/admin/broadcast", methods=["POST"])
     def admin_broadcast():
         if not session.get("can_delete"):
             abort(403)
@@ -1324,7 +1366,7 @@ else:
         db.session.commit()
 
         return redirect("/admin/broadcast-panel")
-    @app.route("/admins")
+    @bp.route("/admins")
     def admin_panel():
         # ... (yetki kontrolleri)
         
@@ -1350,7 +1392,7 @@ else:
             percent=round(percent, 2),
             bar_class="safe" if percent < 60 else "warning"
         )
-    @app.context_processor
+    @bp.context_processor
     def inject_broadcast():
         try:
             now = datetime.utcnow()
@@ -1366,12 +1408,12 @@ else:
             print(f"Broadcast hatası (yoksayıldı): {e}")
             return {"broadcast_message": None}
 
-    @app.route("/admin/broadcast-panel")
+    @bp.route("/admin/broadcast-panel")
     def broadcast_panel():
         if not session.get("can_delete"):
             return "Yetkisiz", 403
         return render_template("admin_broadcast.html")
-    @app.route("/infinitecloud/myfiles")
+    @bp.route("/infinitecloud/myfiles")
     @login_required
     def myfiles():
         
@@ -1391,7 +1433,7 @@ else:
             files_count=len(medias),
             can_reset=False # Veya senin yetki kontrolün
         )
-    @app.route("/infinitecloud/myfiles/<int:media_id>/delete")
+    @bp.route("/infinitecloud/myfiles/<int:media_id>/delete")
     @login_required
     def delete_myfile(media_id):
         media=Media.query.get_or_404(media_id)
@@ -1405,7 +1447,7 @@ else:
         db.session.delete(media)
         db.session.commit()
         return redirect("/infinitecloud/myfiles")
-    @app.route("/infinitecloud/lookmy/<int:file_id>")
+    @bp.route("/infinitecloud/lookmy/<int:file_id>")
     @login_required
     def lookmy(file_id):
         media = Media.query.get_or_404(file_id)
@@ -1422,7 +1464,7 @@ else:
             obj["Body"].read(),
             mimetype=media.mimetype
         )
-    @app.route("/infinitecloud/download/<int:file_id>")
+    @bp.route("/infinitecloud/download/<int:file_id>")
     @login_required
     def download(file_id):
         media = Media.query.get_or_404(file_id)
@@ -1443,21 +1485,21 @@ else:
             mimetype=media.mimetype
         )
     # PUSH GAME
-    @app.route("/pushgame")
+    @bp.route("/pushgame")
     def gamestart():
         return render_template("pushgame.html")
-    @app.route("/pushgame/game", methods=["POST"])
+    @bp.route("/pushgame/game", methods=["POST"])
     def game():
         return render_template("pushgame_game.html")
     # YENİLİKLER
-    @app.route("/news")
+    @bp.route("/news")
     def news():
         updates = SiteUpdate.query.order_by(
             SiteUpdate.created_at.desc()
         ).all()
         return render_template("last_updates.html", updates=updates)
 
-    @app.route("/admin/news", methods=["GET", "POST"])
+    @bp.route("/admin/news", methods=["GET", "POST"])
     def admin_news():
         if not session.get("can_delete"):
             abort(403)
@@ -1478,10 +1520,10 @@ else:
 
         return render_template("make_update.html")
     # UYGULAMAMIZ
-    @app.route("/indir")
+    @bp.route("/indir")
     def uygulama():
         return render_template("indir.html")
-    @app.route("/infinitesoft-tr.exe")
+    @bp.route("/infinitesoft-tr.exe")
     def indir():
         r = requests.get(PA_EXE_URL, stream=True)
         if r.status_code != 200:
@@ -1496,13 +1538,13 @@ else:
         )
 
     # AI_TOOLS
-    @app.route("/ai_tools")
+    @bp.route("/ai_tools")
     def tools():
         return render_template("ai_tools.html")
-    @app.route("/ai_tools/images")
+    @bp.route("/ai_tools/images")
     def images():
         return render_template("images.html")
-    @app.route("/api/delete/<filename>")
+    @bp.route("/api/delete/<filename>")
     def api_delete(filename):
         token = request.headers.get("X-SECRET")
         if token != os.environ.get("ADMIN_TOKEN"):
@@ -1514,10 +1556,10 @@ else:
             return jsonify({"ok": True})
         except Exception as e:
             return jsonify({"ok": False, "error": str(e)}), 500
-    @app.route("/ai_tools/backdeleter",methods=["GET","POST"])
+    @bp.route("/ai_tools/backdeleter",methods=["GET","POST"])
     def back_delete():
         return render_template("background_remover.html")
-    @app.route("/ai_tools/backdeleter/remove", methods=["POST"])
+    @bp.route("/ai_tools/backdeleter/remove", methods=["POST"])
     def delete_back():
         file = request.files["image"]
 
@@ -1533,7 +1575,7 @@ else:
         )
 
     # KART
-    @app.route('/cards')
+    @bp.route('/cards')
     def index():
         cards=Card.query.order_by(Card.id).all()
 
@@ -1541,16 +1583,16 @@ else:
                             #kartlar = kartlar
                                 cards=cards,
                             )
-    @app.route('/cards/card/<int:id>')
+    @bp.route('/cards/card/<int:id>')
     def card(id):
         # Görev #2. Id'ye göre doğru kartı görüntüleme
         card=Card.query.get(id)
 
         return render_template('card.html', card=card)
-    @app.route('/cards/create')
+    @bp.route('/cards/create')
     def create():
         return render_template('create_card.html')
-    @app.route('/cards/form_create', methods=['GET','POST'])
+    @bp.route('/cards/form_create', methods=['GET','POST'])
     def form_create():
         if request.method == 'POST':
             title =  request.form['title']
@@ -1565,19 +1607,19 @@ else:
         else:
             return render_template('create_card.html')
     # TEXT EDITOR
-    @app.route("/text_editor")
+    @bp.route("/text_editor")
     def editor():
         return render_template("text_editor.html")
     # GUIDES
-    @app.route("/guides")
+    @bp.route("/guides")
     def guides_home():
         recipes=Recipe.query.all()
         return render_template("guides.html",recipes=recipes)
-    @app.route("/recipes/<int:id>")
+    @bp.route("/recipes/<int:id>")
     def recipe_detail(id):
         recipe = Recipe.query.get_or_404(id)
         return render_template("recipe.html", recipe=recipe)
-    @app.route("/recipes/<int:id>/delete", methods=["POST"])
+    @bp.route("/recipes/<int:id>/delete", methods=["POST"])
     def delete_recipe(id):
         if not session.get("can_delete"):
             abort(403)
@@ -1588,7 +1630,7 @@ else:
         return redirect("/guides")
 
 
-    @app.route("/guides/add", methods=["GET","POST"])
+    @bp.route("/guides/add", methods=["GET","POST"])
     def add():
         if request.method == "POST":
             file = request.files["image"]
@@ -1615,31 +1657,55 @@ else:
             return redirect("/guides")
 
         return render_template("add_guide.html")
-
-
+    @bp.route("/admin/update-version")
+    def update_version():
+        if not session.get("can_delete"):
+            abort(403)
+        version=Version.query.get(1)
+        try:
+            if not version.version!=None:
+                return render_template("update_version.html")
+        except:
+            return render_template("update_version.html")
+        return render_template("update_version.html",version=version.version)
+    @bp.route("/admin/update-version/version",methods=["POST"])
+    def version_data():
+        if not session.get("can_delete"):
+            abort(403)
+        Version.query.delete()
+        v1=request.form["v1"]
+        v2=request.form["v2"]
+        v3=request.form["v3"]
+        v=Version(
+            id=1,
+            version=f"{v1}.{v2}.{v3}"
+        )
+        db.session.add(v)
+        db.session.commit()
+        return redirect(url_for("app.projects"))
     # ZAMAN YOLCULUĞU BİLİMİ KURTAR
-    @app.route("/bilim-oyunu")
+    @bp.route("/bilim-oyunu")
     def bilim_game():
         return render_template("bilimgame.html")
     # MEKAPUS
-    @app.route("/mekapus")
+    @bp.route("/mekapus")
     def home_mekapus():
         return render_template("mekapus.html")
     # DİJİTAL OYKU | EN GÜÇLÜ KULE
-    @app.route("/dijital_oyku")
+    @bp.route("/dijital_oyku")
     def dijital_oyku():
         return render_template("dijital_oyku.html")
     # HATALAR
-    @app.errorhandler(404)
+    @bp.errorhandler(404)
     def page_not_found(e):
         return render_template("404.html"),404
-    @app.errorhandler(403)
+    @bp.errorhandler(403)
     def forbidden(e):
         return render_template("403.html"),403
-    @app.errorhandler(405)
+    @bp.errorhandler(405)
     def wrong_direction_to_come(e):
         return render_template("405.html"),405
-    @app.errorhandler(500)
+    @bp.errorhandler(500)
     def internal_error(e):
         return render_template("500.html"), 500
 def send_to_pythonanywhere(filename, file_bytes):

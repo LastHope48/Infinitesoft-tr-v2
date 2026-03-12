@@ -106,7 +106,10 @@ if DATABASE_URL:
         version = db.Column(db.String(20), nullable=False)
         content = db.Column(db.Text, nullable=False)
         created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
+    class Version(db.Model):
+        __tablename__="site_version"
+        __table_args__={"schema":"system"}
+        version=db.Column(db.String(30),nullable=False)
 else:
     class Recipe(db.Model):
         __tablename__="recipes_table"
@@ -170,3 +173,7 @@ else:
         tech = db.Column(db.String(200))  
         github = db.Column(db.String(200))
         live_url = db.Column(db.String(200))
+    class Version(db.Model):
+        __tablename__="site_version"
+        id=db.Column(db.Integer,nullable=False,primary_key=True)
+        version=db.Column(db.String(30),nullable=False)

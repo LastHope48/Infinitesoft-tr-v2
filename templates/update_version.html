@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Infinitesoft-tr | Versiyon Güncelle</title>
+<link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+<link rel="stylesheet" href="../static/css/custom_scroll_bar_black.css">
+<style>
+
+body{
+    font-family:system-ui;
+    background:#0f0f12;
+    color:white;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.panel{
+    background:#1a1a1f;
+    padding:50px;
+    border-radius:20px;
+    text-align:center;
+    width:420px;
+    box-shadow:0 30px 80px rgba(0,0,0,0.6);
+}
+.version input::-webkit-outer-spin-button,
+.version input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+h1{
+    margin-bottom:8px;
+}
+
+.current{
+    opacity:.55;
+    font-size:14px;
+    margin-bottom:35px;
+}
+
+.version{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    margin-bottom:25px;
+}
+
+.version input{
+    width:90px;
+    height:80px;
+    font-size:38px;
+    text-align:center;
+    border:none;
+    border-radius:12px;
+    background:#0f0f12;
+    color:white;
+    outline:none;
+}
+
+.dot{
+    font-size:40px;
+    opacity:.7;
+}
+
+button{
+    width:100%;
+    padding:16px;
+    font-size:18px;
+    border:none;
+    border-radius:12px;
+    transition:.25s;
+}
+
+button:disabled{
+    background:#444;
+    color:#aaa;
+    cursor:not-allowed;
+}
+
+button.active{
+    background:#ff2e2e;
+    color:white;
+    cursor:pointer;
+}
+
+button.active:hover{
+    background:#ff4747;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="panel">
+
+<h1>Site Versiyonunu Güncelle</h1>
+<div class="current">Ana ekranda görünen sürüm: <b>{{version}}</b></div>
+<form action="{{url_for('app.version_data')}}" method="post">
+<div class="version">
+
+<input id="v1" type="number" min="0" max="99" name="v1">
+<div class="dot">.</div>
+
+<input id="v2" type="number" min="0" max="99"name="v2">
+<div class="dot">.</div>
+
+<input id="v3" type="number" min="0" max="99" name="v3">
+
+</div>
+
+<button id="btn" disabled>Versiyonu Güncelle</button>
+
+</div>
+</form>
+<script>
+
+const v1=document.getElementById("v1")
+const v2=document.getElementById("v2")
+const v3=document.getElementById("v3")
+const btn=document.getElementById("btn")
+
+function check(){
+
+if(v1.value && v2.value && v3.value){
+btn.disabled=false
+btn.classList.add("active")
+}else{
+btn.disabled=true
+btn.classList.remove("active")
+}
+
+}
+
+[v1,v2,v3].forEach(i=>{
+
+i.addEventListener("input",()=>{
+
+i.value=i.value.replace(/[^0-9]/g,'')
+
+check()
+
+})
+
+})
+
+</script>
+
+</body>
+</html>
