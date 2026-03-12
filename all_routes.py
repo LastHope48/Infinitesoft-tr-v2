@@ -820,9 +820,6 @@ if SUBDOMAIN:
 
         return render_template("add_guide.html")
 
-    @bp.route("/admin/update-version")
-    def update_version():
-        return render_template("update_version.html")
     # ZAMAN YOLCULUĞU BİLİMİ KURTAR
     @bp.route("/bilim-oyunu",subdomain=None)
     def bilim_game():
