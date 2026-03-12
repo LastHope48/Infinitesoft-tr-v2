@@ -1658,7 +1658,7 @@ else:
 
         return render_template("add_guide.html")
     @bp.route("/admin/update-version")
-    def update_version():
+    def update_version_not_sub():
         if not session.get("can_delete"):
             abort(403)
         version=Version.query.get(1)
