@@ -109,7 +109,7 @@ if DATABASE_URL:
     class Version(db.Model):
         __tablename__="site_version"
         __table_args__={"schema":"system"}
-        version=db.Column(db.String(30),nullable=False)
+        version=db.Column(db.String(30),nullable=False,primary_key=True)
 else:
     class Recipe(db.Model):
         __tablename__="recipes_table"
