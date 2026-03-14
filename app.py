@@ -35,7 +35,7 @@ s3 = boto3.client(
 )
 DATABASE_URL=os.getenv("DATABASE_URL")
 if DATABASE_URL:
-    app.config["SERVER_NAME"] = ".infinitesoft-tr.com"
+    app.config["SERVER_NAME"] =None
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
     app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
@@ -60,13 +60,6 @@ else:
     ADMIN_PASSWORD_HASH = "admin"
 db.init_app(app)
 R2_BUCKET = "infinitecloud"
-response = s3.list_objects_v2(Bucket=R2_BUCKET)
-
-@app.before_request
-def list_s3_objects():
-    response = s3.list_objects_v2(Bucket=R2_BUCKET)
-    for obj in response.get("Contents", []):
-        print("KEY:", obj["Key"], "SIZE:", obj["Size"])
 MAX_STORAGE = 10 * 1024 * 1024 * 1024
 DATABASE_URL = os.getenv("DATABASE_URL")
 PYANYWHERE_UPLOAD_URL = "https://wf5528.pythonanywhere.com/upload"
