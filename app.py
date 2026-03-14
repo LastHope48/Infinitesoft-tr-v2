@@ -74,12 +74,6 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_pre_ping": True,
     "pool_recycle": 300,
 }
-app.register_blueprint(bp,url_prefix="/")
-@bp.before_request
-def list_s3_objects():
-    response = s3.list_objects_v2(Bucket=R2_BUCKET)
-    for obj in response.get("Contents", []):
-        print("KEY:", obj["Key"], "SIZE:", obj["Size"])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret")
 UPLOAD_FOLDER = "/home/wf5528/infinitecloud_api/uploads"
@@ -137,7 +131,7 @@ def unauthorized():
 #     insp = inspect(db.engine)
 #     for schema_name in ["system", "storage", "auth", "details"]:
 #         print(f"Tables in schema '{schema_name}':", insp.get_table_names(schema=schema_name))
-    
+app.register_blueprint(bp,url_prefix="/")
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     with app.app_context():
