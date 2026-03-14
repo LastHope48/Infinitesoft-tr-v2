@@ -33,9 +33,28 @@ s3 = boto3.client(
     aws_secret_access_key=os.getenv("SECRET_KEY"),
     region_name="auto"
 )
+@app.before_request
+def handle_subdomains():
+    host = request.host.lower()  # güvenlik için
+
+    # 1️⃣ www yönlendirmesi
+    if host.startswith("www."):
+        new_host = host[4:]  # www. kaldır
+        return redirect(f"https://{new_host}{request.full_path}", code=301)
+
+    # 2️⃣ Subdomain kontrolü (Blueprint yönlendirmesi)
+    if host.startswith("camsepeti."):
+        # camsepeti blueprint route’ları çalışacak
+        pass
+
+    if host.startswith("infinitecloud."):
+        # infinitecloud blueprint route’ları çalışacak
+        pass
+
+    # 3️⃣ Ana domain ise hiçbir şey yapma (infinitesoft-tr.com)
 DATABASE_URL=os.getenv("DATABASE_URL")
 if DATABASE_URL:
-    app.config["SERVER_NAME"] =".infinitesoft-tr.com"
+    app.config["SERVER_NAME"] ="infinitesoft-tr.com"
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
     app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
@@ -131,7 +150,7 @@ def unauthorized():
 #     insp = inspect(db.engine)
 #     for schema_name in ["system", "storage", "auth", "details"]:
 #         print(f"Tables in schema '{schema_name}':", insp.get_table_names(schema=schema_name))
-app.register_blueprint(bp,url_prefix="/")
+app.register_blueprint(bp, url_prefix="/")
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     with app.app_context():
