@@ -26,14 +26,13 @@ app=Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
-with app.app_context():
-    s3 = boto3.client(
-        service_name="s3",
-        endpoint_url=f"https://{os.getenv('ACCOUNT_ID')}.r2.cloudflarestorage.com",
-        aws_access_key_id=os.getenv("ACCESS_KEY"),
-        aws_secret_access_key=os.getenv("SECRET_KEY"),
-        region_name="auto"
-    )
+s3 = boto3.client(
+    service_name="s3",
+    endpoint_url=f"https://{os.getenv('ACCOUNT_ID')}.r2.cloudflarestorage.com",
+    aws_access_key_id=os.getenv("ACCESS_KEY"),
+    aws_secret_access_key=os.getenv("SECRET_KEY"),
+    region_name="auto"
+)
 DATABASE_URL=os.getenv("DATABASE_URL")
 if DATABASE_URL:
     app.config["SERVER_NAME"] =None
@@ -76,7 +75,11 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_recycle": 300,
 }
 app.register_blueprint(bp,url_prefix="/")
-
+@bp.before_request
+def list_s3_objects():
+    response = s3.list_objects_v2(Bucket=R2_BUCKET)
+    for obj in response.get("Contents", []):
+        print("KEY:", obj["Key"], "SIZE:", obj["Size"])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret")
 UPLOAD_FOLDER = "/home/wf5528/infinitecloud_api/uploads"
