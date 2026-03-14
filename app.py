@@ -150,7 +150,19 @@ def unauthorized():
 #     insp = inspect(db.engine)
 #     for schema_name in ["system", "storage", "auth", "details"]:
 #         print(f"Tables in schema '{schema_name}':", insp.get_table_names(schema=schema_name))
-app.register_blueprint(bp, url_prefix="/")
+@app.before_request
+def handle_www():
+    host = request.host.split(":")[0].lower()  # portu kaldır
+    if host.startswith("www."):
+        new_host = host[4:]
+        path = request.full_path if request.full_path != "/" else ""
+        return redirect(f"https://{new_host}{path}", code=301)
+app.register_blueprint(bp, url_prefix="/", subdomain="camsepeti")
+app.register_blueprint(bp, url_prefix="/", subdomain="infinitecloud")
+app.register_blueprint(bp, url_prefix="/", subdomain="guides")
+app.register_blueprint(bp, url_prefix="/", subdomain="cards")
+app.register_blueprint(bp, url_prefix="/", subdomain="pushgame")
+app.register_blueprint(bp, url_prefix="/", subdomain="aitools")
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     with app.app_context():
