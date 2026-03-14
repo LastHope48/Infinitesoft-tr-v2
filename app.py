@@ -137,6 +137,11 @@ def unauthorized():
 #     insp = inspect(db.engine)
 #     for schema_name in ["system", "storage", "auth", "details"]:
 #         print(f"Tables in schema '{schema_name}':", insp.get_table_names(schema=schema_name))
+    
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port,debug=True) # debug=True ekledik
+    with app.app_context():
+        response = s3.list_objects_v2(Bucket=R2_BUCKET)
+        for obj in response.get("Contents", []):
+            print("KEY:", obj["Key"], "SIZE:", obj["Size"])
+    app.run(host="0.0.0.0", port=port, debug=False)

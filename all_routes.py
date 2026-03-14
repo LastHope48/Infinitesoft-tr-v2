@@ -25,14 +25,13 @@ ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "dev-token")  # 'dev-token' lokal i√
 HF_URL="https://wf5528-infinitesoft-tr.hf.space/remove-bg"
 PA_EXE_URL = "https://wf5529.pythonanywhere.com/static/uygulama/infinitesoft-tr.exe"
 UPLOAD_FOLDER_GUIDES = "static/uploads"
-with current_app.app_context():
-    s3 = boto3.client(
-        service_name="s3",
-        endpoint_url=f"https://{os.getenv('ACCOUNT_ID')}.r2.cloudflarestorage.com",
-        aws_access_key_id=os.getenv("ACCESS_KEY"),
-        aws_secret_access_key=os.getenv("SECRET_KEY"),
-        region_name="auto"
-    )
+s3 = boto3.client(
+    service_name="s3",
+    endpoint_url=f"https://{os.getenv('ACCOUNT_ID')}.r2.cloudflarestorage.com",
+    aws_access_key_id=os.getenv("ACCESS_KEY"),
+    aws_secret_access_key=os.getenv("SECRET_KEY"),
+    region_name="auto"
+)
 try:
     SUBDOMAIN = os.getenv("SUBDOMAIN")
 except:
