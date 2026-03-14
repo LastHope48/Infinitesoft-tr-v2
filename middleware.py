@@ -1,6 +1,5 @@
 # app/middleware.py
 from flask import render_template, request
-
 def maintenance_mode(app):
     @app.before_request
     def check_maintenance():
