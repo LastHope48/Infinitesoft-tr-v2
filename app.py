@@ -35,7 +35,7 @@ s3 = boto3.client(
 )
 DATABASE_URL=os.getenv("DATABASE_URL")
 if DATABASE_URL:
-    app.config["SERVER_NAME"] =None
+    app.config["SERVER_NAME"] =".infinitesoft-tr.com"
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
     app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
