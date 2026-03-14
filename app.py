@@ -62,7 +62,7 @@ db.init_app(app)
 R2_BUCKET = "infinitecloud"
 response = s3.list_objects_v2(Bucket=R2_BUCKET)
 
-@app.before_first_request
+@app.before_request
 def list_s3_objects():
     response = s3.list_objects_v2(Bucket=R2_BUCKET)
     for obj in response.get("Contents", []):
