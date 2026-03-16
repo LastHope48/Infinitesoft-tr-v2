@@ -30,7 +30,7 @@ try:
 except:
     pass
 app=Flask(__name__)
-app.config["SERVER_NAME"] = ".infinitesoft-tr.com"
+app.config["SERVER_NAME"] = "infinitesoft-tr.com"
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
