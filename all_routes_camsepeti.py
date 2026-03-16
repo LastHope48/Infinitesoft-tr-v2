@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 import io,zipfile
 from sqlalchemy import func,text
 from all_classes import db
-bp=Blueprint("camsepeti",__name__,url_prefix="/",subdomain="camsepeti")
+bp=Blueprint("camsepeti",__name__,subdomain="camsepeti")
 @bp.route("/home",subdomain="camsepeti")
 @login_required
 def home_shop():

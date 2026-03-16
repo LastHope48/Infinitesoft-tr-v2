@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 import io,zipfile
 from sqlalchemy import func,text
 from all_classes import db
-bp = Blueprint('infinitecloud', __name__,url_prefix="/",subdomain="infinitecloud")
+bp = Blueprint('infinitecloud', __name__,subdomain="infinitecloud")
 R2_BUCKET="infinitecloud"
 MAX_STORAGE = 10 * 1024 * 1024 * 1024
 PYANYWHERE_UPLOAD_URL = "https://wf5528.pythonanywhere.com/upload"
