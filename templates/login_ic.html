@@ -3,11 +3,11 @@
 <head>
     <title>InfiniteCloud</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../static/css/main_layout_infinitecloud.css">
-    <link rel="stylesheet" href="../static/css/decor_home_cloud.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/main_layout_infinitecloud.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_home_cloud.css')}}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
-    <link rel="stylesheet" href="../static/css/selection.css">
-    <link rel="stylesheet" href="../static/css/custom_scroll_bar_white.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/custom_scroll_bar_white.css')}}">
     <link rel="stylesheet" href="{{url_for('static',filename='css/decor_login_ic.css')}}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,13 +32,13 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <a href="{{url_for('app.cloud')}}" class="logo">InfiniteCloud</a>
+        <a href="{{url_for('infinitecloud.cloud')}}" class="logo">InfiniteCloud</a>
 
         <a href="/" class="nav-item">
             <i class="fa-brands fa-squarespace"></i> Projeler
         </a>
 
-        <a href="{{url_for('app.register_ic')}}" class="nav-item">
+        <a href="{{url_for('infinitecloud.register_ic')}}" class="nav-item">
             <i class="fa-solid fa-user-plus"></i> Hesap Oluştur
         </a>
     </div>
@@ -59,7 +59,7 @@
 
                 <p class="auth-switch">
                     Hesabın yok mu?
-                    <a href="{{url_for('app.register_ic')}}">Hesap Oluştur</a>
+                    <a href="{{url_for('infinitecloud.register_ic')}}">Hesap Oluştur</a>
                 </p>
             </div>
 

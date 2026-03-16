@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>Admin Reset</title>
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
-    <link rel="stylesheet" href="../static/css/decor_reset-login.css">
-    <link rel="stylesheet" href="../static/css/selection.css">
-    <link rel="stylesheet" href="../static/css/custom_scroll_bar_black.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_reset-login.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/custom_scroll_bar_black.css')}}">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -28,7 +28,7 @@
             <form class="reset-form" method="post">
                 <input type="password" name="password" placeholder="Admin şifresi" required>
                 <button type="submit" class="reset-form-button-blue">Giriş</button>
-                <button onclick="window.location.href='/'" class="reset-form-button-red">Geri Dön</button>
+                <button onclick="window.location.href='javascript:history.back'" class="reset-form-button-red">Geri Dön</button>
             </form>
 
             {% if msg %}
@@ -49,10 +49,10 @@
            <div class="admin-list">
             <ul>
                 <li>🗑️ Database Sıfırlama</li>
-                <li>💾 <a href="{{url_for('app.cloud')}}">Infinitecloud</a>'da bütün dosya uzantıları kaydedebilme</li>
+                <li>💾 <a href="{{url_for('infinitecloud.cloud',_external=True)}}">Infinitecloud</a>'da bütün dosya uzantıları kaydedebilme</li>
                 <li>✨ Yenilik ekleme</li>
                 <li>📢 Duyuru yapabilme</li>
-                <li>🎖️ <a href="{{url_for('app.cloud')}}">Infinitecloud</a>'da dilerseniz admin özel çerçeveli görümesini sağlayabilirsinbiz kaydedeceğiniz dosyayı</li>
+                <li>🎖️ <a href="{{url_for('infinitecloud.cloud',_external=True)}}">Infinitecloud</a>'da dilerseniz admin özel çerçeveli görümesini sağlayabilirsinbiz kaydedeceğiniz dosyayı</li>
             </ul>
            </div>
         </div>

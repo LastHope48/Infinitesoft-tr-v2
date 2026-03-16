@@ -4,7 +4,7 @@
 
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/decor_projects.css') }}">
-<link rel="stylesheet" href="../static/css/selection.css">
+<link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
 {% endblock %}
 {% block head %}
 <!-- Google tag (gtag.js) -->
@@ -36,7 +36,7 @@
 
     <ul class="list">
 <li class="list__item">
-    <a href="{{url_for('app.cloud', _external=True)}}" class="card-main">
+    <a href="{{url_for('infinitecloud.cloud', _external=True)}}" class="card-main">
         <img class="item__img"
              src="{{ url_for('static', filename='img/upload-icon-4.png') }}">
         <span>Infinitecloud</span>
@@ -52,7 +52,7 @@
 
 
         <li class="list__item">
-            <a href="{{url_for('app.home_shop', _external=True)}}">
+            <a href="{{url_for('camsepeti.home_shop', _external=True)}}">
                 <img class="item__img"
                      src="{{ url_for('static', filename='img/camsepeti.png') }}"
                      alt="camsepeti">
@@ -65,7 +65,7 @@
         </li>
 
                 <li class="list__item">
-            <a href="{{url_for('app.game', _external=True)}}">
+            <a href="{{url_for('pushgame.gamestart', _external=True)}}">
                 <img class="item__img"
                      src="{{ url_for('static', filename='img/mouse_pushgame.png') }}"
                      alt="PUSHGAME">
@@ -77,7 +77,7 @@
     </a>
         </li>
                     <li class="list__item">
-            <a href="{{url_for('app.tools', _external=True)}}">
+            <a href="{{url_for('aitools.tools', _external=True)}}">
                 <img class="item__img"
                      src="{{ url_for('static', filename='img/AI_tools.png') }}"
                      alt="AI_tools">
@@ -89,7 +89,7 @@
     </a>
         </li>
     <li class="list__item">
-        <a href="{{url_for('app.guides_home', _external=True)}}">
+        <a href="{{url_for('guides.guides_home', _external=True)}}">
             <img src="{{url_for('static',filename='img/guides.png')}}" alt="Tarifler" class="item__img">
             <span>Tarifler</span>
         </a>
@@ -99,7 +99,7 @@
     </a>
     </li>
     <li class="list__item">
-        <a href="{{url_for('app.index', _external=True)}}">
+        <a href="{{url_for('cards.index', _external=True)}}">
             <img class="item__img"
              src="{{url_for('static',filename='img/post_icon.png')}}"
              alt="Cards">

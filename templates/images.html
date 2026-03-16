@@ -160,7 +160,7 @@ fetch(HF_URL + "/list")
         e.stopPropagation();
         if (!confirm("Silinsin mi?")) return;
 
-        fetch("/api/delete/" + name, {
+        fetch("www.infinitesoft-tr.com/api/delete/" + name, {
           method: "GET", // veya POST, Flask tarafına göre
           headers: {
             "X-SECRET": ADMIN_TOKEN

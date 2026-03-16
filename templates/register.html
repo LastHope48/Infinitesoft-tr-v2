@@ -3,8 +3,8 @@
 <head>
     <title>Çamsepeti-Register</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../static/css/decor_login.css">
-    <link rel="stylesheet" href="../static/css/selection.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_login.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
@@ -43,7 +43,7 @@
     <button class="button" type="submit">Hesap oluştur</button>
     </form>
     {% endblock %}
-    <a href="{{url_for('app.login')}}">Hesabınız var mı? Giriş yapın!</a>
+    <a href="{{url_for('camsepeti.login')}}">Hesabınız var mı? Giriş yapın!</a>
         <footer class="site-footer">
         <p>
             ⚠️ Çamsepeti bir okul projesidir. Gerçek kişisel bilgilerinizi paylaşmayınız.

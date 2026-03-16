@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="../static/css/style.css">
-  <link rel="stylesheet" href="../static/css/selection.css">
+  <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+  <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
   <title>Programcının kütüphanesi </title>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
@@ -19,12 +19,12 @@
 </head>
 <body>
   <header class="header">
-    <a href="{{url_for('app.index')}}">
+    <a href="{{url_for('cards.index')}}">
             <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo" width="30" height="30">
     </a>
     <ul class="main-list">
         <li class="list__item">
-      <a href="{{url_for('app.projects')}}"><i class="fa-brands fa-squarespace"></i> Projeler</a>
+      <a href="{{url_for('app.projects',_external=True)}}"><i class="fa-brands fa-squarespace"></i> Projeler</a>
     </ul>
   </header>
   <main>
@@ -33,8 +33,8 @@
     <ul class="cards-list">
       {% for el in cards%}
       <li class="card">
-        <a class="card__link" href="{{url_for('card',id='el.id')}}">
-          <img class="card__img" src="../static/img/post_icon.png" width="250" height="250" alt="post_icon">
+        <a class="card__link" href="{{url_for('cards.card',id='el.id')}}">
+          <img class="card__img" src="{{url_for('static',filename='img/post_icon.png')}}" width="250" height="250" alt="post_icon">
           <div class="card__text">
             <h2 class="card__title">{{el.title}}</h2>
             <p class="card__subtitle">{{el.subtitle}}</p>
@@ -43,7 +43,7 @@
       </li>
       {% endfor %}
       <li class="card card--creat">
-          <a class="creat__link" href="{{url_for('app.create')}}"></a>
+          <a class="creat__link" href="{{url_for('cards.create')}}"></a>
       </li>
     </ul>
     {% endblock %}

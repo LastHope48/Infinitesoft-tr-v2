@@ -28,26 +28,26 @@
         <aside class="sidebar">
         <div class="logo">InfiniteCloud</div>
         <nav>
-            <a href="{{url_for('app.cloud')}}" class="nav-item">
+            <a href="{{url_for('infinitecloud.cloud')}}" class="nav-item">
                 <i class="fa-solid fa-house"></i> Ana Sayfa
             </a>
-            <a href="{{url_for('app.upload')}}" class="nav-item">
+            <a href="{{url_for('infinitecloud.upload')}}" class="nav-item active">
                 <i class="fa-solid fa-cloud-arrow-up"></i> Yükle
             </a>
-            <a href="{{url_for('app.files')}}" class="nav-item">
+            <a href="{{url_for('infinitecloud.files')}}" class="nav-item">
                 <i class="fa-solid fa-globe"></i> Global Dosyalar
             </a>
-            <a href="{{ url_for('app.myfiles') }}" class="nav-item active">
+            <a href="{{ url_for('infinitecloud.myfiles') }}" class="nav-item">
                 <i class="fa-solid fa-file"></i> Benim Dosyalarım
             </a>
-            <a href="{{url_for('app.logout_ic')}}" class="nav-item">
+            <a href="{{url_for('infinitecloud.logout_ic')}}" class="nav-item">
                 <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
             </a>
             <hr class="sidebar-divider">
-            <a href="{{url_for('app.projects')}}" class="nav-item">
+            <a href="{{url_for('app.projects',_external=True)}}" class="nav-item">
                 <i class="fa-brands fa-squarespace"></i> Projeler
             </a>
-            <a href="{{url_for('app.reset_login')}}" class="nav-item admin">
+            <a href="{{url_for('app.reset_login', _external=True)}}" class="nav-item admin">
                 <i class="fa-solid fa-user-shield"></i> Admin
             </a>
         </nav>
@@ -55,7 +55,7 @@
     <main class="main-content">
         <div class="center-wrapper">
             <div class="upload-box">
-                <img src="../static/img/upload_mor.png" alt="upload" class="upload-icon">
+                <img src="{{url_for('static',filename='img/upload_mor.png')}}" alt="upload" class="upload-icon">
                 <h2 class="box-title">Dosya Yükle</h2>
 
                 <form method="post" enctype="multipart/form-data" id="uploadForm">
@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const formData = new FormData(form);
 
         try {
-            const response = await fetch("/infinitecloud/upload", {
+            const response = await fetch("infinitecloud.infinitesoft-tr.com/upload", {
                 method: "POST",
                 body: formData
             });

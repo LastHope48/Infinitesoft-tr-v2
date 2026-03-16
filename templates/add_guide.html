@@ -3,7 +3,7 @@
 <head>
     <title>Tarifler | Ekle</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../static/css/decor_guides.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_guides.css')}}">
     <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
 </head>
 <body>
@@ -12,7 +12,7 @@
   <label>Başlık</label>
   <input name="title" placeholder="Başlık" required>
   <label>Görsel</label>
-  <input type="file" name="image" required>
+  <input type="file" name="image">
   <label>Açıklama</label>
   <textarea name="desc" placeholder="Açıklama"></textarea required>
   <label>Malzemeler</label>
@@ -55,7 +55,7 @@ function saveRecipe() {
 
     showToast();
     setTimeout(() => {
-      window.location.href = "{{url_for('app.projects')}}";
+      window.location.href = "{{url_for('app.projects',_external=True)}}";
     }, 1200);
   };
 

@@ -16,6 +16,13 @@ from werkzeug.security import check_password_hash,generate_password_hash
 from sqlalchemy.exc import IntegrityError
 from all_classes import db,Account
 from middleware import maintenance_mode
+from all_routes_aitools import bp as aitools
+from all_routes_camsepeti import bp as camsepeti
+from all_routes_cards import bp as cards
+from all_routes_guides import bp as guides
+from all_routes_infinitecloud import bp as infinitecloud
+from all_routes_pushgame import bp as pushgame
+from all_routes_root import bp as root
 load_dotenv()  # .env dosyasını yükler
 try:
     load_dotenv(r"C:\Users\Mehmet Serdar EREN\Desktop\orasu2v.txt")
@@ -33,34 +40,16 @@ s3 = boto3.client(
     aws_secret_access_key=os.getenv("SECRET_KEY"),
     region_name="auto"
 )
-@app.before_request
-def handle_subdomains():
-    host = request.host.lower()  # güvenlik için
-
-    # 1️⃣ www yönlendirmesi
-    if host.startswith("www."):
-        new_host = host[4:]  # www. kaldır
-        return redirect(f"https://{new_host}{request.full_path}", code=301)
-
-    # 2️⃣ Subdomain kontrolü (Blueprint yönlendirmesi)
-    if host.startswith("camsepeti."):
-        # camsepeti blueprint route’ları çalışacak
-        pass
-
-    if host.startswith("infinitecloud."):
-        # infinitecloud blueprint route’ları çalışacak
-        pass
-
-    # 3️⃣ Ana domain ise hiçbir şey yapma (infinitesoft-tr.com)
 DATABASE_URL=os.getenv("DATABASE_URL")
 if DATABASE_URL:
-    app.config["SERVER_NAME"] ="infinitesoft-tr.com"
+    app.config["SERVER_NAME"] ="infinitesoft-tr.com:10000"
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
     app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
     UPLOAD_PASSWORD=os.getenv("UPLOAD_PASSWORD")
     ADMIN_PASSWORD_HASH = os.getenv("ADMIN_PASSWORD")
 else:
+    app.config["SERVER_NAME"]="localhost:5000"
     load_dotenv(r"C:\Users\Mehmet Serdar EREN\Desktop\orasu2v.txt")
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///local.db"
 
@@ -80,6 +69,7 @@ else:
 db.init_app(app)
 R2_BUCKET = "infinitecloud"
 MAX_STORAGE = 10 * 1024 * 1024 * 1024
+login_manager.login_view = "infinitecloud.login_ic"
 DATABASE_URL = os.getenv("DATABASE_URL")
 PYANYWHERE_UPLOAD_URL = "https://wf5528.pythonanywhere.com/upload"
 PYANYWHERE_LIST_URL   = "https://wf5528.pythonanywhere.com/list"
@@ -125,10 +115,11 @@ def load_user(user_id):
     return Account.query.get(user_id)
 @login_manager.unauthorized_handler
 def unauthorized():
-    if request.path.startswith("/infinitecloud"):
-        return redirect(url_for("app.login_ic", next=request.path))
-    elif request.path.startswith("/camsepeti"):
-        return redirect(url_for("app.login", next=request.path))
+    host=request.host.split(".")[0]
+    if host=="infinitecloud":
+        return redirect(url_for("infinitecloud.login_ic", next=request.path))
+    elif host=="camsepeti":
+        return redirect(url_for("camsepeti.login", next=request.path))
 
 # with app.app_context():
 #     db.create_all()
@@ -150,23 +141,29 @@ def unauthorized():
 #     insp = inspect(db.engine)
 #     for schema_name in ["system", "storage", "auth", "details"]:
 #         print(f"Tables in schema '{schema_name}':", insp.get_table_names(schema=schema_name))
-@app.before_request
-def handle_www():
-    host = request.host.split(":")[0].lower()  # portu kaldır
-    if host.startswith("www."):
-        new_host = host[4:]
-        path = request.full_path if request.full_path != "/" else ""
-        return redirect(f"https://{new_host}{path}", code=301)
-app.register_blueprint(bp, url_prefix="/", subdomain="camsepeti")
-app.register_blueprint(bp, url_prefix="/", subdomain="infinitecloud")
-app.register_blueprint(bp, url_prefix="/", subdomain="guides")
-app.register_blueprint(bp, url_prefix="/", subdomain="cards")
-app.register_blueprint(bp, url_prefix="/", subdomain="pushgame")
-app.register_blueprint(bp, url_prefix="/", subdomain="aitools")
+SUBDOMAIN=os.getenv("SUBDOMAIN")
+if SUBDOMAIN=="true":
+    app.register_blueprint(camsepeti)
+    app.register_blueprint(infinitecloud)
+    app.register_blueprint(pushgame)
+    app.register_blueprint(cards)
+    app.register_blueprint(aitools)
+    app.register_blueprint(root)
+    app.register_blueprint(guides)
+else:
+    app.register_blueprint(bp)
+@app.errorhandler(404)
+def page_not_found(e):
+        return render_template("404.html"),404
+@app.errorhandler(403)
+def forbidden(e):
+        return render_template("403.html"),403
+@app.errorhandler(405)
+def wrong_direction_to_come(e):
+        return render_template("405.html"),405
+@app.errorhandler(500)
+def internal_error(e):
+        return render_template("500.html"), 500
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    with app.app_context():
-        response = s3.list_objects_v2(Bucket=R2_BUCKET)
-        for obj in response.get("Contents", []):
-            print("KEY:", obj["Key"], "SIZE:", obj["Size"])
-    app.run(host="0.0.0.0", port=port, debug=False)
+    app.run(host="0.0.0.0", port=port,debug=True)

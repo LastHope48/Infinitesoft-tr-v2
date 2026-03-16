@@ -6,7 +6,7 @@
     <title>405 | Yönteme İzin Verilmiyor</title>
     <link rel="stylesheet" href="{{url_for('static',filename='css/decor_any_background.css')}}">
     <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
-    <link rel="stylesheet" href="../static/css/405.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/405.css')}}">
     <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
 </head>
 <body>
@@ -18,7 +18,7 @@
             Yanlış bir istek göndermiş olabilirsin veya form yöntemi hatalı.
         </p>
         <div class="actions">
-            <a href="{{url_for('app.projects')}}" class="button primary">Ana Sayfaya Dön</a>
+            <a href="{{url_for('app.projects',_external=True)}}" class="button primary">Ana Sayfaya Dön</a>
             <a href="javascript:history.back()" class="button secondary">Geri Git</a>
         </div>
 <footer style="text-align:center; color:#888; font-size:14px; padding:20px;">

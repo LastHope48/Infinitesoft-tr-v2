@@ -2,9 +2,9 @@
 <html lang="tr">
 <head>
     <title>Çamsepeti-Teşekkürler!</title>
-    <link rel="stylesheet" href="../static/css/decor_buy_success.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_buy_success.css')}}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
-    <link rel="stylesheet" href="../static/css/selection.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -16,13 +16,13 @@
 </script>
 </head>
 <body>
-        <a class="btn" href="{{url_for('app.home_shop')}}">
+        <a class="btn" href="{{url_for('camsepeti.home_shop')}}">
         <i class="fa-solid fa-house"></i> Ana Sayfa
     </a>
-    <a href="{{url_for('app.logout')}}" class="btn_red">
+    <a href="{{url_for('camsepeti.logout')}}" class="btn_red">
         <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
     </a>
-    <a href="{{url_for('app.sepet')}}" class="btn_yellow">
+    <a href="{{url_for('camsepeti.sepet')}}" class="btn_yellow">
         <i class="fa-solid fa-basket-shopping"></i> Sepetim
     </a>
     <div class="snow"></div>
@@ -30,7 +30,7 @@
     <h1 class="baslik">ÇAMSEPETİ</h1>
     </main>
     <h2 class="baslik_alt">Çamsepeti üyeleri olarak teşekkür ederiz!</h2>
-    <img src="../static/img/tik.png" alt="tik.png" class="tik">
+    <img src="{{url_for('static',filename='img/tik.png')}}" alt="tik.png" class="tik">
     <h2 class="ok">İşleminiz tamamlanmıştır!</h2>
         <footer class="site-footer">
         <p>

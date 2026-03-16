@@ -2,9 +2,9 @@
 <html lang="tr">
 <head>
     <title>Çamsepeti-Sepet</title>
-    <link rel="stylesheet" href="../static/css/decor_sepet.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_sepet.css')}}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
-    <link rel="stylesheet" href="../static/css/selection.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -16,22 +16,22 @@
 </script>
 </head>
 <body>
-    <a class="btn" href="{{url_for('app.home_shop')}}">
+    <a class="btn" href="{{url_for('camsepeti.home_shop')}}">
         <i class="fa-solid fa-house"></i> Ana Sayfa
     </a>
-    <a href="{{url_for('app.logout')}}" class="btn_red">
+    <a href="{{url_for('camsepeti.logout')}}" class="btn_red">
         <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
     </a>
-    <a href="{{url_for('app.sepet')}}" class="btn_yellow">
+    <a href="{{url_for('camsepeti.sepet')}}" class="btn_yellow">
         <i class="fa-solid fa-basket-shopping"></i> Sepetim
     </a>
     <div class="snow"></div>
     <header class="header">
-        <img src="../static/img/header_background.jpg" alt="yilbasisusu" class="img0">
+        <img src="{{url_for('static',filename='img/header_background.jpg')}}" alt="yilbasisusu" class="img0">
     </header>
     <h1 class="baslik">ÇAMSEPETİ</h1>
         <div class="buy">
-        <a href="{{url_for('app.buy')}}">
+        <a href="{{url_for('camsepeti.buy')}}">
             <span>Satın Al</span>
         </a>
     </div>
@@ -46,7 +46,7 @@
             <div>
                 <strong>{{ urun.ad }}</strong><br>
                 {{ urun.fiyat }} ₺
-                <form action="{{url_for('app.sepet_sil')}}" method="POST">
+                <form action="{{url_for('camsepeti.sepet_sil')}}" method="POST">
                 <input type="hidden" name="index" value="{{ loop.index0 }}">
                 <button type="submit">❌</button>
             </form>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}InfiniteCloud{% endblock %}</title>
+
+<!-- Ortak CSS -->
+<link rel="stylesheet" href="{{url_for('static',filename='css/main_layout_infinitecloud.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/custom_scroll_bar_white.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/decor_files.css')}}">
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
+<link rel="stylesheet" href="{{url_for('static',filename='css/decor_home_cloud.css')}}">
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-4E0S2QW6KC');
+</script>
+{% block style %}{% endblock %}
+{% block head_extra %}{% endblock %}
+{% block css %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+<div class="dashboard-container">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="logo">InfiniteCloud</div>
+    <nav>
+        <a href="{{url_for('infinitecloud.cloud')}}" class="nav-item {% if active_page=='cloud' %}active{% endif %}"><i class="fa-solid fa-house"></i> Ana Sayfa</a>
+        <a href="{{url_for('infinitecloud.upload')}}" class="nav-item {% if active_page=='upload' %}active{% endif %}"><i class="fa-solid fa-cloud-arrow-up"></i> Yükle</a>
+        <a href="{{url_for('infinitecloud.files')}}" class="nav-item {% if active_page=='files' %}active{% endif %}"><i class="fa-solid fa-globe"></i> Global Dosyalar</a>
+        <a href="{{ url_for('infinitecloud.myfiles') }}" class="nav-item {% if active_page=='myfiles' %}active{% endif %}"><i class="fa-solid fa-file"></i> Benim Dosyalarım</a>
+        <a href="{{url_for('infinitecloud.logout_ic')}}" class="nav-item"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a>
+        <hr class="sidebar-divider">
+        <a href="{{url_for('app.projects',_external=True)}}" class="nav-item"><i class="fa-brands fa-squarespace"></i> Projeler</a>
+        <a href="{{url_for('app.reset_login')}}" class="nav-item admin"><i class="fa-solid fa-user-shield"></i> Admin</a>
+    </nav>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content">
+    {% block content %}{% endblock %}
+</main>
+
+</div>
+
+<!-- Footer -->
+
+<footer class="footer-text">
+    © <span id="year"></span> infinitesoft-tr • Tüm hakları saklıdır.
+    <div class="footer-links">
+        <a href="{{ url_for('app.privacy') }}">Gizlilik Politikası</a> • 
+        <a href="{{ url_for('app.terms') }}">Kullanım Şartları</a> • 
+        <a href="#">Destek</a>
+    </div>
+</footer>
+
+<script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Infinitesoft-tr Uygulama</title>
 <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
-<link rel="stylesheet" href="../static/css/selection.css">
+<link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -96,7 +96,7 @@ h1 {
 <body>
 <div class="container">
     <h1>Infinitesoft-tr Uygulamasını İndirin!</h1>
-    <a href="/infinitesoft-tr.exe" class="btn-download">İndir</a>
+    <a href="{{url_for('app.indir')}}" class="btn-download">İndir</a>
 </div>
 </body>
 </html>

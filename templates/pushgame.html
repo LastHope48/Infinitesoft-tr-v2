@@ -3,8 +3,8 @@
 <head>
     <title>Infinitesoft-tr | PushGame</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../static/css/decor_pushgame.css">
-    <link rel="stylesheet" href="../static/css/selection.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_pushgame.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
     <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
@@ -22,7 +22,7 @@
   <div class="blade"></div>
   <div class="blade"></div>
 </div>
-<form action="{{url_for('app.game')}}" method="post">
+<form action="{{url_for('pushgame.game')}}" method="post">
 <button id="target" type="submit">Oyuna başlamak için tıkla!</button>
 </form>
 <script>
