@@ -3,7 +3,7 @@
 {% block title %}{{ project.title }} | Infinitesoft{% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="{{url_for('static',filename='css/decor_any_background.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/decor_any_background.css', _external=True)}}">
 <style>
 body {
     overflow: hidden;
@@ -78,7 +78,7 @@ body {
 
     <div class="project-header">
         {% if project.icon %}
-            <img src="{{ url_for('static', filename='img/' + project.icon) }}">
+            <img src="{{ url_for('static', filename='img/' + project.icon, _external=True) }}">
         {% endif %}
         <h1>{{ project.title }}</h1>
     </div>

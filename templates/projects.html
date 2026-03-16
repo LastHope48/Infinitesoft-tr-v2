@@ -3,8 +3,8 @@
 {% block title %}Infinitesoft-tr{% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/decor_projects.css') }}">
-<link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/decor_projects.css', _external=True) }}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/selection.css', _external=True)}}">
 {% endblock %}
 {% block head %}
 <!-- Google tag (gtag.js) -->
@@ -38,7 +38,7 @@
 <li class="list__item">
     <a href="{{url_for('infinitecloud.cloud', _external=True)}}" class="card-main">
         <img class="item__img"
-             src="{{ url_for('static', filename='img/upload-icon-4.png') }}">
+             src="{{ url_for('static', filename='img/upload-icon-4.png', _external=True) }}">
         <span>Infinitecloud</span>
     </a>
 
@@ -54,7 +54,7 @@
         <li class="list__item">
             <a href="{{url_for('camsepeti.home_shop', _external=True)}}">
                 <img class="item__img"
-                     src="{{ url_for('static', filename='img/camsepeti.png') }}"
+                     src="{{ url_for('static', filename='img/camsepeti.png', _external=True) }}"
                      alt="camsepeti">
                 <span>Çamsepeti</span>
             </a>
@@ -67,7 +67,7 @@
                 <li class="list__item">
             <a href="{{url_for('pushgame.gamestart', _external=True)}}">
                 <img class="item__img"
-                     src="{{ url_for('static', filename='img/mouse_pushgame.png') }}"
+                     src="{{ url_for('static', filename='img/mouse_pushgame.png', _external=True) }}"
                      alt="PUSHGAME">
                 <span>Push Game <span class="badge">🚧</span></span>
             </a>
@@ -79,7 +79,7 @@
                     <li class="list__item">
             <a href="{{url_for('aitools.tools', _external=True)}}">
                 <img class="item__img"
-                     src="{{ url_for('static', filename='img/AI_tools.png') }}"
+                     src="{{ url_for('static', filename='img/AI_tools.png', _external=True) }}"
                      alt="AI_tools">
                 <span>AI Tools</span>
             </a>
@@ -90,7 +90,7 @@
         </li>
     <li class="list__item">
         <a href="{{url_for('guides.guides_home', _external=True)}}">
-            <img src="{{url_for('static',filename='img/guides.png')}}" alt="Tarifler" class="item__img">
+            <img src="{{url_for('static',filename='img/guides.png', _external=True)}}" alt="Tarifler" class="item__img">
             <span>Tarifler</span>
         </a>
             <a href="{{ url_for('app.project_detail', slug='guides') }}" 
@@ -101,7 +101,7 @@
     <li class="list__item">
         <a href="{{url_for('cards.index', _external=True)}}">
             <img class="item__img"
-             src="{{url_for('static',filename='img/post_icon.png')}}"
+             src="{{url_for('static',filename='img/post_icon.png', _external=True)}}"
              alt="Cards">
             <span>Notes</span>
         </a>
@@ -112,7 +112,7 @@
     </li>
     <li class="list__item">
         <a href="{{url_for('app.editor', _external=True)}}">
-            <img src="{{url_for('static',filename='img/note.png')}}" alt="text_editor" class="item__img">
+            <img src="{{url_for('static',filename='img/note.png', _external=True)}}" alt="text_editor" class="item__img">
             <span>Text Editor</span>
         </a>
             <a href="{{ url_for('app.project_detail', slug='texteditor') }}" 
@@ -122,7 +122,7 @@
     </li>
     <li class="list__item">
         <a href="{{url_for('app.home_mekapus', _external=True)}}">
-            <img src="{{url_for('static',filename='img/mekapus.png')}}" alt="mekapus" class="item__img">
+            <img src="{{url_for('static',filename='img/mekapus.png', _external=True)}}" alt="mekapus" class="item__img">
             <span>Mekapus <span class="badge">🚧</span></span>
         </a>
             <a href="{{ url_for('app.project_detail', slug='mekapus') }}" 

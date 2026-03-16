@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Panel</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/decor_admins.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="../static/css/selection.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/decor_admins.css', _external=True) }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico', _external=True) }}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>

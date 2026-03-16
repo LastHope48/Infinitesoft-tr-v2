@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Çamsepeti-Home</title>
-    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_home.css')}}">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_home.css', _external=True)}}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico', _external=True) }}?v=3">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css', _external=True)}}">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -36,7 +36,7 @@
     </main>
     <div class="products">
         <div class="product">
-            <img src="{{url_for('static',filename='img/yilbasiagaci.png')}}" alt="yilbasiagaci1">
+            <img src="{{url_for('static',filename='img/yilbasiagaci.png', _external=True)}}" alt="yilbasiagaci1">
             <h3>Yılbaşı ağacı</h3>
             <p class="price">999 ₺</p>
             <form action="{{url_for('camsepeti.sepete_ekle')}}" method="post">
@@ -47,7 +47,7 @@
             </form>
         </div>
         <div class="product">
-            <img src="{{url_for('static',filename='img/camagacisusu.png')}}" alt="sus">
+            <img src="{{url_for('static',filename='img/camagacisusu.png', _external=True)}}" alt="sus">
             <h3>Kalp şeklinde renkli yılbaşı ağacı süsü</h3>
             <p class="price">300 ₺</p>
             <form action="{{url_for('camsepeti.sepete_ekle')}}" method="post">
@@ -58,7 +58,7 @@
             </form>
         </div>
                 <div class="product">
-            <img src="{{url_for('static',filename='img/cuce.png')}}" alt="cuce">
+            <img src="{{url_for('static',filename='img/cuce.png', _external=True)}}" alt="cuce">
             <h3>Yılbaşına Özel Dekoratif Noel Baba Sunumluk Biblo Çerezlik Anahtarlık Saksı Heykel</h3>
             <p class="price">435 ₺</p>
             <form action="{{url_for('camsepeti.sepete_ekle')}}" method="post">
@@ -69,7 +69,7 @@
             </form>
         </div>
                 <div class="product">
-            <img src="{{url_for('static',filename='img/bardak.jpg')}}" alt="bardak">
+            <img src="{{url_for('static',filename='img/bardak.jpg', _external=True)}}" alt="bardak">
             <h3>Yılbaşına özel bardak/kupa</h3>
             <p class="price">150 ₺</p>
             <form action="{{url_for('camsepeti.sepete_ekle')}}" method="post">
@@ -80,7 +80,7 @@
             </form>
         </div>
                         <div class="product">
-            <img src="{{url_for('static',filename='img/karyapraklar.webp')}}" alt="cuce">
+            <img src="{{url_for('static',filename='img/karyapraklar.webp', _external=True)}}" alt="cuce">
             <h3>3 Adet kar beyazı yaprakları</h3>
             <p class="price">234 ₺</p>
             <form action="{{url_for('camsepeti.sepete_ekle')}}" method="post">
@@ -91,7 +91,7 @@
             </form>
         </div>
                 <div class="product">
-            <img src="{{url_for('static',filename='img/snowspray.jpeg')}}" alt="spray">
+            <img src="{{url_for('static',filename='img/snowspray.jpeg', _external=True)}}" alt="spray">
             <h3>Kar spreyi</h3>
             <p class="price">300 ₺</p>
             <form action="{{url_for('camsepeti.sepete_ekle')}}" method="post">
@@ -102,7 +102,7 @@
             </form>
         </div>
                 <div class="product">
-            <img src="{{url_for('static',filename='img/yilbasicorabi1.jpeg')}}" alt="yilbasiagaci1">
+            <img src="{{url_for('static',filename='img/yilbasicorabi1.jpeg', _external=True)}}" alt="yilbasiagaci1">
             <h3>Yılbaşı Çorabı 4 tane</h3>
             <p class="price">200 ₺</p>
             <form action="{{url_for('camsepeti.sepete_ekle')}}" method="post">

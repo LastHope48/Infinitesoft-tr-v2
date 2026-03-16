@@ -2,9 +2,9 @@
 <html lang="tr">
 <head>
     <title>Çamsepeti-Sepet</title>
-    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_sepet.css')}}">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_sepet.css', _external=True)}}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico', _external=True) }}?v=3">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css', _external=True)}}">
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -27,7 +27,7 @@
     </a>
     <div class="snow"></div>
     <header class="header">
-        <img src="{{url_for('static',filename='img/header_background.jpg')}}" alt="yilbasisusu" class="img0">
+        <img src="{{url_for('static',filename='img/header_background.jpg', _external=True)}}" alt="yilbasisusu" class="img0">
     </header>
     <h1 class="baslik">ÇAMSEPETİ</h1>
         <div class="buy">
@@ -42,7 +42,7 @@
     {% if sepet %}
         {% for urun in sepet %}
         <div class="sepet-item">
-            <img src="{{ url_for('static', filename='img/' + urun.resim) }}">
+            <img src="{{ url_for('static', filename='img/' + urun.resim, _external=True) }}">
             <div>
                 <strong>{{ urun.ad }}</strong><br>
                 {{ urun.fiyat }} ₺

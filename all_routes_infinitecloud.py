@@ -1,9 +1,10 @@
 import os
-from flask import Flask,render_template,request,send_from_directory,send_file,redirect,session,url_for,Response,abort,jsonify,Blueprint
+from flask import Flask,render_template,request,send_from_directory,send_file,redirect,session,url_for,Response,abort,jsonify,Blueprint,flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user,UserMixin
 from botocore.client import Config
 from werkzeug.security import check_password_hash,generate_password_hash
 from flask import current_app
+from flask_mail import Mail,Message
 from all_classes import Project,Account,Media,SiteMessage,SiteUpdate,Card,Recipe,Version
 from flask_sqlalchemy import SQLAlchemy
 import boto3
@@ -14,7 +15,7 @@ from datetime import datetime, timedelta
 import io,zipfile
 from sqlalchemy import func,text
 from all_classes import db
-bp = Blueprint('infinitecloud', __name__,subdomain="infinitecloud",static_folder="static",static_url_path="/static")
+bp = Blueprint('infinitecloud', __name__,subdomain="infinitecloud")
 R2_BUCKET="infinitecloud"
 MAX_STORAGE = 10 * 1024 * 1024 * 1024
 PYANYWHERE_UPLOAD_URL = "https://wf5528.pythonanywhere.com/upload"
@@ -207,26 +208,23 @@ def delete_file(file_id):
 def logout_ic():
         logout_user()
         return redirect(url_for("infinitecloud.login_ic"))
-@bp.route("/login", methods=["GET", "POST"],subdomain="infinitecloud")
+@bp.route("/login", methods=["GET", "POST"], subdomain="infinitecloud")
 def login_ic():
-        if request.method == "POST":
-            name = request.form.get("username")
-            password = request.form.get("password")
+    if request.method == "POST":
+        name = request.form.get("username")
+        password = request.form.get("password")
 
-            user = Account.query.filter_by(name=name).first()
+        user = Account.query.filter_by(name=name).first()
 
-            if user and check_password_hash(user.password, password):
-                login_user(user)
-                next_page = request.args.get("next")
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            next_page = request.args.get("next")
+            redirect_url = next_page if next_page else url_for("infinitecloud.cloud")
+            return jsonify({"success": True, "redirect": redirect_url})
 
-                if next_page:
-                    return redirect(next_page)
+        return jsonify({"success": False, "message": "Kullanıcı adı veya şifre yanlış"})
 
-                return redirect(url_for("infinitecloud.cloud"))  # varsayılan
-
-            return "Kullanıcı adı veya şifre yanlış"
-
-        return render_template("login_ic.html")
+    return render_template("login_ic.html")
 @bp.route("/register", methods=["GET", "POST"],subdomain="infinitecloud")
 def register_ic():
         if request.method == "POST":
@@ -431,3 +429,19 @@ def download(file_id):
             },
             mimetype=media.mimetype
         )
+@bp.route('/admin/send-email', methods=['GET', 'POST'])
+def admin_send_email():
+    # Sadece admin yetkisi kontrolü burada olmalı
+    if request.method == 'POST':
+        subject = request.form.get('subject')
+        body = request.form.get('body')
+        recipient = request.form.get('recipient')
+
+        msg = Message(subject, sender=current_app.config['MAIL_USERNAME'], recipients=[recipient])
+        msg.body = body
+        mail.send(msg)
+
+        flash("E-posta gönderildi!")
+        return redirect(url_for('admin_send_email'))
+
+    return render_template('admin_send_email.html')

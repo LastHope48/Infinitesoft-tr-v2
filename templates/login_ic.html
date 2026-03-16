@@ -3,12 +3,12 @@
 <head>
     <title>InfiniteCloud</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/main_layout_infinitecloud.css')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_home_cloud.css')}}">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/custom_scroll_bar_white.css')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_login_ic.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/main_layout_infinitecloud.css', _external=True)}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_home_cloud.css', _external=True)}}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico', _external=True) }}?v=3">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css', _external=True)}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/custom_scroll_bar_white.css', _external=True)}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_login_ic.css', _external=True)}}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -50,12 +50,14 @@
             <div class="auth-card">
                 <h2>Giriş Yap</h2>
 
-                <form method="POST">
+                <form id="loginForm" method="POST">
                     <input type="text" name="username" placeholder="Kullanıcı Adı" required>
                     <input type="password" name="password" placeholder="Şifre" required>
 
                     <button type="submit">Giriş Yap</button>
                 </form>
+                <!-- Hata mesajı buraya gelecek -->
+                <div id="loginError" style="color:red; margin-top:10px; display:none;"></div>
 
                 <p class="auth-switch">
                     Hesabın yok mu?
@@ -67,16 +69,40 @@
     </div>
 </div>
 <footer class="footer-text">
-    <div>© 2026 infinitesoft-tr. Tüm hakları saklıdır.</div>
-    <div class="footer-links-container">
-        <a href="#" class="footer-link">Gizlilik Politikası</a> • 
-        <a href="#" class="footer-link">Kullanım Şartları</a> • 
-        <a href="#" class="footer-link">Destek</a>
+    © <span id="year"></span> infinitesoft-tr • Tüm hakları saklıdır.
+    <div class="footer-links">
+        <a href="{{ url_for('app.privacy', _external=True) }}">Gizlilik Politikası</a> • 
+        <a href="{{ url_for('app.terms', _external=True) }}">Kullanım Şartları</a> • 
+        <a href="#">Destek</a>
     </div>
 </footer>
 </div>
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+<script>
+const form = document.getElementById("loginForm");
+const errorDiv = document.getElementById("loginError");
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    const response = await fetch("{{ url_for('infinitecloud.login_ic') }}", {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+        window.location.href = data.redirect;
+    } else {
+        errorDiv.style.display = "block";
+        errorDiv.textContent = data.message;
+    }
+});
 </script>
 </body>
 </html>

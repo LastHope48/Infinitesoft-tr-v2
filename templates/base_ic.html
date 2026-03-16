@@ -6,12 +6,12 @@
     <title>{% block title %}InfiniteCloud{% endblock %}</title>
 
 <!-- Ortak CSS -->
-<link rel="stylesheet" href="{{url_for('static',filename='css/main_layout_infinitecloud.css')}}">
-<link rel="stylesheet" href="{{url_for('static',filename='css/custom_scroll_bar_white.css')}}">
-<link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
-<link rel="stylesheet" href="{{url_for('static',filename='css/decor_files.css')}}">
-<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
-<link rel="stylesheet" href="{{url_for('static',filename='css/decor_home_cloud.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/main_layout_infinitecloud.css', _external=True)}}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/custom_scroll_bar_white.css', _external=True)}}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/selection.css', _external=True)}}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/decor_files.css', _external=True)}}">
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico', _external=True) }}?v=3">
+<link rel="stylesheet" href="{{url_for('static',filename='css/decor_home_cloud.css', _external=True)}}">
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -55,8 +55,8 @@
 <footer class="footer-text">
     © <span id="year"></span> infinitesoft-tr • Tüm hakları saklıdır.
     <div class="footer-links">
-        <a href="{{ url_for('app.privacy') }}">Gizlilik Politikası</a> • 
-        <a href="{{ url_for('app.terms') }}">Kullanım Şartları</a> • 
+        <a href="{{ url_for('app.privacy', _external=True) }}">Gizlilik Politikası</a> • 
+        <a href="{{ url_for('app.terms', _external=True) }}">Kullanım Şartları</a> • 
         <a href="#">Destek</a>
     </div>
 </footer>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>En Güçlü Kule</title>
-    <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_dijital_oyku.css')}}">
+    <link rel="icon" href="{{url_for('static',filename='favicon.ico',_external=True)}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_dijital_oyku.css',_external=True)}}">
 </head>
 <body>
     <div id="container">
@@ -36,6 +36,6 @@
 </div>
 
     </div>
-    <script src="../static/js/script_do.js"></script>
+    <script src="{{url_for('static',filename='js/script_do.js')}}"></script>
 </body>
 </html>

@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Programcının kütüphanesi</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css',_external=True) }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico',_external=True) }}?v=3">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css',_external=True)}}">
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -21,7 +21,7 @@
 <body>
     <header class="header">
     <a href="{{url_for('cards.index')}}">
-            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo" width="30" height="30">
+            <img src="{{ url_for('static', filename='img/logo.svg',_external=True) }}" alt="logo" width="30" height="30">
     </a>
         <ul class="main-list">
             <li class="list__item">
@@ -32,7 +32,7 @@
         {% block content %}
         <form action="{{ url_for('cards.form_create') }}" method="post" class="creat-form">
             <div class="form__card">
-                <img class="card__img" src="{{ url_for('static', filename='img/post_icon.png') }}" width="250" height="250" alt="post_icon">
+                <img class="card__img" src="{{ url_for('static', filename='img/post_icon.png',_external=True) }}" width="250" height="250" alt="post_icon">
                 <div class="form__inputs">
                     <label for="title">
                         <input class="form__input" type="text" name="title" id="title" placeholder="Kayıt başlığını yazın" required>

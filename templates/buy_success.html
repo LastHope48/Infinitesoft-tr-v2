@@ -2,9 +2,9 @@
 <html lang="tr">
 <head>
     <title>Çamsepeti-Teşekkürler!</title>
-    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_buy_success.css')}}">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_buy_success.css', _external=True)}}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico', _external=True) }}?v=3">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css', _external=True)}}">
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -30,7 +30,7 @@
     <h1 class="baslik">ÇAMSEPETİ</h1>
     </main>
     <h2 class="baslik_alt">Çamsepeti üyeleri olarak teşekkür ederiz!</h2>
-    <img src="{{url_for('static',filename='img/tik.png')}}" alt="tik.png" class="tik">
+    <img src="{{url_for('static',filename='img/tik.png', _external=True)}}" alt="tik.png" class="tik">
     <h2 class="ok">İşleminiz tamamlanmıştır!</h2>
         <footer class="site-footer">
         <p>

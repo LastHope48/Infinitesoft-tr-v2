@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>InfiniteCloud Upload</title>
-    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_submit.css')}}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/decor_upload.css') }}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
-    <link rel="stylesheet" href="../static/css/custom_scroll_bar_white.css">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_submit.css', _external=True)}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/decor_upload.css', _external=True) }}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css', _external=True)}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/custom_scroll_bar_white.css')}}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico', _external=True) }}?v=3">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -55,7 +55,7 @@
     <main class="main-content">
         <div class="center-wrapper">
             <div class="upload-box">
-                <img src="{{url_for('static',filename='img/upload_mor.png')}}" alt="upload" class="upload-icon">
+                <img src="{{url_for('static',filename='img/upload_mor.png', _external=True)}}" alt="upload" class="upload-icon">
                 <h2 class="box-title">Dosya Yükle</h2>
 
                 <form method="post" enctype="multipart/form-data" id="uploadForm">

@@ -7,10 +7,10 @@
     content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
   >
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css',_external=True) }}">
   <title>Programcının kütüphanesi</title>
-  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
-  <link rel="stylesheet" href="../static/css/selection.css">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico',_external=True) }}?v=3">
+  <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css',_external=True)}}">
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -24,7 +24,7 @@
 <body>
   <header class="header">
     <a href="{{url_for('cards.index')}}">
-            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo" width="30" height="30">
+            <img src="{{ url_for('static', filename='img/logo.svg',_external=True) }}" alt="logo" width="30" height="30">
     </a>
     <ul class="main-list">
         <li class="list__item">

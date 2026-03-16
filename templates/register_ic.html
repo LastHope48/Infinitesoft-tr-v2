@@ -3,12 +3,12 @@
 <head>
     <title>InfiniteCloud</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/main_layout_infinitecloud.css')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_home_cloud.css')}}">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=3">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/custom_scroll_bar_white.css')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_login_ic.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/main_layout_infinitecloud.css', _external=True)}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_home_cloud.css', _external=True)}}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico', _external=True) }}?v=3">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css', _external=True)}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/custom_scroll_bar_white.css', _external=True)}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_login_ic.css', _external=True)}}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -26,6 +26,12 @@
 
   gtag('config', 'G-4E0S2QW6KC');
 </script>
+<style>
+.terms {
+    display: flex;
+    flex-direction: row;
+}
+</style>
 </head>
 <body>
 <div class="dashboard-container">
@@ -48,11 +54,17 @@
             <div class="auth-card">
                 <h2>Hesap Oluştur</h2>
 
-                <form method="POST">
+                <form method="POST" id="registerForm">
                     <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+                    <input type="email" name="email" placeholder="E-posta" id="email">
                     <input type="password" name="password" placeholder="Şifre" required>
-
-                    <button type="submit">Hesap Oluştur</button>
+                    <div class="terms">
+                    <label for="terms">
+                        <a href="{{url_for('app.privacy')}}" target="_blank">Gizlilik Sözleşmesi</a>ni ve <a href="{{url_for('app.terms')}}" target="_blank">Kullanım Şartları</a>nı okudum ve kabul ediyorum
+                    </label>
+                    <input type="checkbox" name="terms" id="terms" required>
+                    </div>
+                    <button type="submit" disabled id="submitBtn" style="opacity: 0.5; cursor: not-allowed;">Hesap Oluştur</button>
                 </form>
 
                 <p class="auth-switch">
@@ -65,16 +77,43 @@
     </div>
 </div>
 <footer class="footer-text">
-    <div>© 2026 infinitesoft-tr. Tüm hakları saklıdır.</div>
-    <div class="footer-links-container">
-        <a href="#" class="footer-link">Gizlilik Politikası</a> • 
-        <a href="#" class="footer-link">Kullanım Şartları</a> • 
-        <a href="#" class="footer-link">Destek</a>
+    © <span id="year"></span> infinitesoft-tr • Tüm hakları saklıdır.
+    <div class="footer-links">
+        <a href="{{ url_for('app.privacy', _external=True) }}">Gizlilik Politikası</a> • 
+        <a href="{{ url_for('app.terms', _external=True) }}">Kullanım Şartları</a> • 
+        <a href="#">Destek</a>
     </div>
 </footer>
 </div>
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+<script>
+  const form = document.getElementById('registerForm');
+  const btn = document.getElementById('submitBtn');
+  const inputs = form.querySelectorAll('input[type=text], input[type=email], input[type=password]');
+  const checkbox = document.getElementById('terms');
+
+  function checkForm() {
+    let allFilled = true;
+    inputs.forEach(input => {
+      if (!input.value.trim()) allFilled = false;
+    });
+    if (!checkbox.checked) allFilled = false;
+
+    if (allFilled) {
+      btn.disabled = false;
+      btn.style.opacity = 1;
+      btn.style.cursor = 'pointer';
+    } else {
+      btn.disabled = true;
+      btn.style.opacity = 0.5;
+      btn.style.cursor = 'not-allowed';
+    }
+  }
+
+  inputs.forEach(input => input.addEventListener('input', checkForm));
+  checkbox.addEventListener('change', checkForm);
 </script>
 </body>
 </html>

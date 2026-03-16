@@ -5,13 +5,13 @@
     <title>{% block title %}Infinitesoft{% endblock %}</title>
     <meta name="description" content="Infinitesoft-tr'nin ürettiği projelere bakın! Infinitecloud adlı bulutumuz,AI tools ile arkaplan kaldırma vb. işlerinizde yardımcı olacaktır! Ancak sakın Çamsepeti adlı projemize kredi kartı bilgilerinizi girmeyin, okul projesidir.Sizi de bekleriz!">
     <!-- GLOBAL CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css', _external=True) }}">
     <!-- SAYFA ÖZEL CSS -->
     {% block css %}
-    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_projects.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_projects.css', _external=True)}}">
     {% endblock %}
     {% block icon %}
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico', _external=True) }}" type="image/x-icon">
     {% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>

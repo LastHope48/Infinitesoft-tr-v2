@@ -3,9 +3,9 @@
 <head>
     <title>Tarif</title>
     <meta charset="UTF-8">
-    <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_guides.css')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/custom_scroll_bar_black.css')}}">
+    <link rel="icon" href="{{url_for('static',filename='favicon.ico', _external=True)}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/decor_guides.css', _external=True)}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/custom_scroll_bar_black.css', _external=True)}}">
     <style>
         /* Recipes page */
         .recipe-container {
@@ -94,9 +94,9 @@
     <div class="recipe-container">
         <h1>{{ recipe.title }}</h1>
         {% if recipe.image_url=="NONE" %}
-        <img src="{{url_for('static',filename='img/default.webp')}}" alt="placeholder" width="500" height="500">
+        <img src="{{url_for('static',filename='img/default.webp', _external=True)}}" alt="placeholder" width="500" height="500">
         {% else %}
-        <img src="{{ url_for('static', filename=recipe.image_url)}}" width="500" height="500">
+        <img src="{{ url_for('static', filename=recipe.image_url, _external=True)}}" width="500" height="500">
         {% endif %}
         <div class="section">
             <h3>Açıklama</h3>

@@ -5,6 +5,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from botocore.config import Config
 from sqlalchemy import func,text
 import io,zipfile
+from flask_mail import Mail,Message
 import boto3
 from all_routes import bp
 from flask_sqlalchemy import SQLAlchemy
@@ -68,6 +69,14 @@ else:
     ADMIN_PASSWORD_HASH = "admin"
 db.init_app(app)
 R2_BUCKET = "infinitecloud"
+# app.config.update(
+#     MAIL_SERVER='smtp.yourserver.com',
+#     MAIL_PORT=587,
+#     MAIL_USE_TLS=True,
+#     MAIL_USERNAME='your_email@example.com',
+#     MAIL_PASSWORD='your_password'
+# )
+# mail = Mail(app)
 MAX_STORAGE = 10 * 1024 * 1024 * 1024
 login_manager.login_view = "infinitecloud.login_ic"
 DATABASE_URL = os.getenv("DATABASE_URL")
