@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>404 - Sayfa Bulunamadı</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/404.css') }}">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
-    <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/404.css', _external=True) }}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css', _external=True)}}">
+    <link rel="icon" href="{{url_for('static',filename='favicon.ico', _external=True)}}">
 </head>
 <body>
 
@@ -18,7 +18,7 @@
     </div>
 
     <div class="image-area">
-        <img src="{{url_for('static',filename='img/404.png')}}" alt="404 Worker">
+        <img src="{{url_for('static',filename='img/404.png', _external=True)}}" alt="404 Worker">
     </div>
 </div>
 <footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
