@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/decor_admins.css', _external=True) }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico', _external=True) }}">
     <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/custom_scroll_bar_white.css')}}">
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -68,6 +69,10 @@
         <a href="/admin/update-version" class="admin-card">
             <h3>Versiyon Güncelle</h3>
             <p>Projeler ekranında bütün kullanıcıların görebildiği versiyoru değiştir</p>
+        </a>
+        <a href="/admin/backup-db" class="admin-card">
+            <h3>Veri tabanının yedeğini indir</h3>
+            <p>Bütün veri tabanlarını dosya olarak bilgisayarına kaydet</p>
         </a>
     </div>
 

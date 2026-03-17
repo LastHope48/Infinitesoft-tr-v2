@@ -15,15 +15,10 @@ from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 from werkzeug.security import check_password_hash,generate_password_hash
 from sqlalchemy.exc import IntegrityError
+from flask_session import Session
 from all_classes import db,Account
 from middleware import maintenance_mode
-from all_routes_aitools import bp as aitools
-from all_routes_camsepeti import bp as camsepeti
-from all_routes_cards import bp as cards
-from all_routes_guides import bp as guides
-from all_routes_infinitecloud import bp as infinitecloud
-from all_routes_pushgame import bp as pushgame
-from all_routes_root import bp as root
+from extensions import mail
 load_dotenv()  # .env dosyasını yükler
 try:
     load_dotenv(r"C:\Users\Mehmet Serdar EREN\Desktop\orasu2v.txt")
@@ -31,6 +26,22 @@ try:
 except:
     pass
 app=Flask(__name__)
+app.secret_key = "supersecretkey"  # Güvenli bir key kullan
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
+MAIL_PASSWORD=os.getenv("MAIL_PASSWORD")
+print(MAIL_PASSWORD)
+app.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT=587,
+    MAIL_USE_TLS=True,
+    MAIL_USE_SSL=False,
+    MAIL_USERNAME='infinitesofttr.admin@gmail.com',
+    MAIL_PASSWORD=MAIL_PASSWORD,
+    MAIL_DEFAULT_SENDER='infinitesofttr.admin@gmail.com'
+)
+
+mail.init_app(app)  # burada bağla
 app.config["SERVER_NAME"] = "infinitesoft-tr.com"
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -69,14 +80,6 @@ else:
     ADMIN_PASSWORD_HASH = "admin"
 db.init_app(app)
 R2_BUCKET = "infinitecloud"
-# app.config.update(
-#     MAIL_SERVER='smtp.yourserver.com',
-#     MAIL_PORT=587,
-#     MAIL_USE_TLS=True,
-#     MAIL_USERNAME='your_email@example.com',
-#     MAIL_PASSWORD='your_password'
-# )
-# mail = Mail(app)
 MAX_STORAGE = 10 * 1024 * 1024 * 1024
 login_manager.login_view = "infinitecloud.login_ic"
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -150,6 +153,13 @@ def unauthorized():
 #     insp = inspect(db.engine)
 #     for schema_name in ["system", "storage", "auth", "details"]:
 #         print(f"Tables in schema '{schema_name}':", insp.get_table_names(schema=schema_name))
+from all_routes_aitools import bp as aitools
+from all_routes_camsepeti import bp as camsepeti
+from all_routes_cards import bp as cards
+from all_routes_guides import bp as guides
+from all_routes_infinitecloud import bp as infinitecloud
+from all_routes_pushgame import bp as pushgame
+from all_routes_root import bp as root
 SUBDOMAIN=os.getenv("SUBDOMAIN")
 if SUBDOMAIN=="true":
     app.register_blueprint(camsepeti)
@@ -175,4 +185,4 @@ def internal_error(e):
         return render_template("500.html"), 500
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port,debug=True)

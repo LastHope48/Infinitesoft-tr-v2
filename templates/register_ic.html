@@ -50,70 +50,132 @@
 
     <div class="main-content">
         <div class="center-wrapper">
-
             <div class="auth-card">
                 <h2>Hesap Oluştur</h2>
 
                 <form method="POST" id="registerForm">
                     <input type="text" name="username" placeholder="Kullanıcı Adı" required>
-                    <input type="email" name="email" placeholder="E-posta" id="email">
-                    <input type="password" name="password" placeholder="Şifre" required>
-                    <div class="terms">
-                    <label for="terms">
-                        <a href="{{url_for('app.privacy')}}" target="_blank">Gizlilik Sözleşmesi</a>ni ve <a href="{{url_for('app.terms')}}" target="_blank">Kullanım Şartları</a>nı okudum ve kabul ediyorum
-                    </label>
-                    <input type="checkbox" name="terms" id="terms" required>
-                    </div>
-                    <button type="submit" disabled id="submitBtn" style="opacity: 0.5; cursor: not-allowed;">Hesap Oluştur</button>
-                </form>
 
-                <p class="auth-switch">
-                    Zaten hesabın var mı?
-                    <a href="{{url_for('infinitecloud.login_ic')}}">Giriş Yap</a>
-                </p>
-            </div>
+                    <!-- Email inputu buraya ekliyoruz -->
+                    <!-- Tek bir email input + doğrula butonu -->
+<input type="email" name="email" placeholder="E-posta" id="emailInput" required>
+<button type="button" id="verifyBtn">Doğrula</button>
+<span id="checkIcon" style="display:none; color:green;">✔</span>
 
+<!-- Kod modal aynı -->
+<div id="codeModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
+    <div style="background:#fff; padding:30px; border-radius:8px; text-align:center;">
+        <h3>E-Postana gelen 6 haneli kodu gir</h3>
+        <div style="display:flex; gap:10px; justify-content:center; margin:20px 0;">
+            <input class="codeInput" maxlength="1" style="width:40px; font-size:24px; text-align:center;">
+            <input class="codeInput" maxlength="1" style="width:40px; font-size:24px; text-align:center;">
+            <input class="codeInput" maxlength="1" style="width:40px; font-size:24px; text-align:center;">
+            <input class="codeInput" maxlength="1" style="width:40px; font-size:24px; text-align:center;">
+            <input class="codeInput" maxlength="1" style="width:40px; font-size:24px; text-align:center;">
+            <input class="codeInput" maxlength="1" style="width:40px; font-size:24px; text-align:center;">
         </div>
+        <button id="verifyCodeBtn" style="padding:8px 20px;">Doğrula</button>
+        <div id="codeError" style="color:red; margin-top:10px; display:none;"></div>
     </div>
 </div>
-<footer class="footer-text">
-    © <span id="year"></span> infinitesoft-tr • Tüm hakları saklıdır.
-    <div class="footer-links">
-        <a href="{{ url_for('app.privacy', _external=True) }}">Gizlilik Politikası</a> • 
-        <a href="{{ url_for('app.terms', _external=True) }}">Kullanım Şartları</a> • 
-        <a href="#">Destek</a>
-    </div>
-</footer>
+
+<input type="password" name="password" placeholder="Şifre" required>
+
+<div class="terms">
+    <label for="terms">
+        <a href="{{url_for('app.privacy')}}" target="_blank">Gizlilik Sözleşmesi</a> ve 
+        <a href="{{url_for('app.terms')}}" target="_blank">Kullanım Şartları</a>'nı okudum ve kabul ediyorum
+    </label>
+    <input type="checkbox" name="terms" id="terms" required>
 </div>
+
+<button type="submit" disabled id="submitBtn" style="opacity:0.5; cursor:not-allowed;">Hesap Oluştur</button>
+
 <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
+document.addEventListener("DOMContentLoaded", () => {
+    const verifyBtn = document.getElementById("verifyBtn");
+    const emailInput = document.getElementById("emailInput");
+    const codeModal = document.getElementById("codeModal");
+    const verifyCodeBtn = document.getElementById("verifyCodeBtn");
+    const codeInputs = document.querySelectorAll(".codeInput");
+    const codeError = document.getElementById("codeError");
+    const submitBtn = document.getElementById("submitBtn");
+    const checkIcon = document.getElementById("checkIcon");
+    const termsCheckbox = document.getElementById("terms");
+
+    // Butonu aktif etme fonksiyonu
+    function updateSubmitBtn() {
+        const canSubmit = checkIcon.style.display === "inline" && termsCheckbox.checked;
+        submitBtn.disabled = !canSubmit;
+        submitBtn.style.opacity = canSubmit ? 1 : 0.5;
+        submitBtn.style.cursor = canSubmit ? "pointer" : "not-allowed";
+    }
+
+    // Checkbox değiştiğinde butonu kontrol et
+    termsCheckbox.addEventListener("change", updateSubmitBtn);
+
+    // E-posta doğrulama
+    verifyBtn.addEventListener("click", async () => {
+        const email = emailInput.value;
+        if (!email) return alert("Lütfen e-posta girin!");
+
+        await fetch("/send-code", {
+            method: "POST",
+            body: new URLSearchParams({ email })
+        });
+
+        codeModal.style.display = "flex";
+        codeInputs[0].focus();
+    });
+
+    // Kod input otomatik geçiş
+    codeInputs.forEach((input, i) => {
+        input.addEventListener("input", () => {
+            if (input.value.length === 1 && i < codeInputs.length - 1) {
+                codeInputs[i + 1].focus();
+            }
+        });
+    });
+
+    // Kod doğrulama
+    verifyCodeBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const code = Array.from(codeInputs).map(i => i.value).join("");
+        const email = emailInput.value;
+
+        const res = await fetch("/verify-code", {
+            method: "POST",
+            body: new URLSearchParams({ email, code })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            codeModal.style.display = "none";
+            checkIcon.style.display = "inline";
+            updateSubmitBtn(); // ✅ burada submit kontrol
+        } else {
+            codeError.style.display = "block";
+            codeError.textContent = "Kod yanlış!";
+        }
+    });
+});
 </script>
 <script>
-  const form = document.getElementById('registerForm');
-  const btn = document.getElementById('submitBtn');
-  const inputs = form.querySelectorAll('input[type=text], input[type=email], input[type=password]');
-  const checkbox = document.getElementById('terms');
-
-  function checkForm() {
-    let allFilled = true;
-    inputs.forEach(input => {
-      if (!input.value.trim()) allFilled = false;
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const res = await fetch("/register", {
+        method: "POST",
+        body: formData
     });
-    if (!checkbox.checked) allFilled = false;
-
-    if (allFilled) {
-      btn.disabled = false;
-      btn.style.opacity = 1;
-      btn.style.cursor = 'pointer';
+    const data = await res.json();
+    if(data.success){
+        window.location = data.redirect; // ← burada yönlendiriyoruz
     } else {
-      btn.disabled = true;
-      btn.style.opacity = 0.5;
-      btn.style.cursor = 'not-allowed';
+        alert(data.message);
     }
-  }
-
-  inputs.forEach(input => input.addEventListener('input', checkForm));
-  checkbox.addEventListener('change', checkForm);
+});
 </script>
 </body>
 </html>

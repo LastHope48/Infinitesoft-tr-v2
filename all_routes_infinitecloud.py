@@ -15,6 +15,8 @@ from datetime import datetime, timedelta
 import io,zipfile
 from sqlalchemy import func,text
 from all_classes import db
+import random
+from extensions import mail
 bp = Blueprint('infinitecloud', __name__,subdomain="infinitecloud")
 R2_BUCKET="infinitecloud"
 MAX_STORAGE = 10 * 1024 * 1024 * 1024
@@ -28,6 +30,8 @@ UPLOAD_PASSWORD=os.getenv("UPLOAD_PASSWORD")
 ADMIN_PASSWORD_HASH=os.getenv("ADMIN_PASSWORD")
 PA_EXE_URL = "https://wf5529.pythonanywhere.com/static/uygulama/infinitesoft-tr.exe"
 UPLOAD_FOLDER_GUIDES = "static/uploads"
+def generate_code():
+    return str(random.randint(100000, 999999))
 s3 = boto3.client(
     service_name="s3",
     endpoint_url=f"https://{os.getenv('ACCOUNT_ID')}.r2.cloudflarestorage.com",
@@ -208,46 +212,104 @@ def delete_file(file_id):
 def logout_ic():
         logout_user()
         return redirect(url_for("infinitecloud.login_ic"))
-@bp.route("/login", methods=["GET", "POST"], subdomain="infinitecloud")
+# @bp.route("/login", methods=["GET", "POST"], subdomain="infinitecloud")
+# def login_ic():
+#     if request.method == "POST":
+#         name = request.form.get("username")
+#         password = request.form.get("password")
+
+#         user = Account.query.filter_by(name=name).first()
+
+#         if user and check_password_hash(user.password, password):
+#             login_user(user)
+#             next_page = request.args.get("next")
+#             redirect_url = next_page if next_page else url_for("infinitecloud.cloud")
+#             return jsonify({"success": True, "redirect": redirect_url})
+
+#         return jsonify({"success": False, "message": "Kullanıcı adı veya şifre yanlış"})
+
+#     return render_template("login_ic.html")
+@bp.route("/login", methods=["GET","POST"])
 def login_ic():
+    if request.method == "GET":
+        return render_template("login_ic.html")
+    
+    # POST ile username/password al
+    name = request.form.get("username")
+    email=request.form["email"]
+    password = request.form.get("password")
+
+    user = Account.query.filter_by(name=name, email=email).first()
+
+    if user and check_password_hash(user.password, password):
+        code = generate_code()
+        session["login_code"] = code
+        session["login_user"] = user.id
+
+        # mail gönder
+        msg = Message("Giriş Doğrulama", recipients=[user.email])
+        msg.body = f"Giriş kodun: {code}"
+        mail.send(msg)
+
+        return jsonify({"step": "2fa"})  # JS bunu yakalayacak
+
+    return jsonify({"success": False, "message": "Girilen bilgiler yanlış"})
+@bp.route("/verify-login", methods=["POST"])
+def verify_login():
+    code = request.form.get("code")
+    user_id = session.get("login_user")
+
+    if session.get("login_code") == code and user_id:
+        user = db.session.get(Account, user_id)
+        login_user(user)
+
+        session.pop("login_code", None)
+        session.pop("login_user", None)
+
+        # Başarılı login sonrası yönlendirme URL'si gönderiyoruz
+        return jsonify({"success": True, "redirect": url_for("infinitecloud.cloud")})
+
+    return jsonify({"success": False})
+@bp.route("/register", methods=["GET", "POST"], subdomain="infinitecloud")
+def register_ic():
     if request.method == "POST":
+        # Form verileri
         name = request.form.get("username")
+        email = request.form.get("email")
         password = request.form.get("password")
 
-        user = Account.query.filter_by(name=name).first()
+        # 1️⃣ Email doğrulama kontrolü
+        if session.get("email_verified") != email:
+            return jsonify({"success": False, "message": "Email doğrulanmamış"})
 
-        if user and check_password_hash(user.password, password):
-            login_user(user)
-            next_page = request.args.get("next")
-            redirect_url = next_page if next_page else url_for("infinitecloud.cloud")
-            return jsonify({"success": True, "redirect": redirect_url})
+        # 2️⃣ Kullanıcı adı veya email zaten var mı kontrol
+        existing_user = Account.query.filter(
+            (Account.name == name) | (Account.email == email)
+        ).first()
+        if existing_user:
+            return jsonify({"success": False, "message": "Kullanıcı adı veya email zaten kayıtlı"})
 
-        return jsonify({"success": False, "message": "Kullanıcı adı veya şifre yanlış"})
+        # 3️⃣ Yeni kullanıcı oluştur
+        hashed_password = generate_password_hash(password)
+        new_user = Account(
+            id=str(uuid.uuid4()),
+            name=name,
+            email=email,
+            password=hashed_password
+        )
 
-    return render_template("login_ic.html")
-@bp.route("/register", methods=["GET", "POST"],subdomain="infinitecloud")
-def register_ic():
-        if request.method == "POST":
-            name = request.form.get("username")
-            password = request.form.get("password")
+        db.session.add(new_user)
+        db.session.commit()
 
-            # Kullanıcı var mı kontrol
-            existing = Account.query.filter_by(name=name).first()
-            if existing:
-                return "Bu kullanıcı adı zaten var"
+        # 4️⃣ Kayıt sonrası session temizle (isteğe bağlı)
+        session.pop("email_verified", None)
+        session.pop("login_code", None)
 
-            new_user = Account(
-                id=str(uuid.uuid4()),
-                name=name,
-                password=generate_password_hash(password)
-            )
+        # 5️⃣ Başarılı kayıt sonrası login sayfasına yönlendir
+        return jsonify({"success": True, "redirect": url_for("infinitecloud.login_ic")})
 
-            db.session.add(new_user)
-            db.session.commit()
-
-            return redirect(url_for("infinitecloud.login_ic"))
-
-        return render_template("register_ic.html")
+    # GET request
+    return render_template("register_ic.html")
 @bp.route("/reset", methods=["POST"],subdomain="infinitecloud")
 def reset_files():
         if not session.get("can_reset"):
@@ -429,19 +491,26 @@ def download(file_id):
             },
             mimetype=media.mimetype
         )
-@bp.route('/admin/send-email', methods=['GET', 'POST'])
-def admin_send_email():
-    # Sadece admin yetkisi kontrolü burada olmalı
-    if request.method == 'POST':
-        subject = request.form.get('subject')
-        body = request.form.get('body')
-        recipient = request.form.get('recipient')
+@bp.route("/send-code", methods=["POST"])
+def send_code():
+    email = request.form.get("email")
+    code = generate_code()
+    session["verify_code"] = code
+    session["verify_email"] = email
 
-        msg = Message(subject, sender=current_app.config['MAIL_USERNAME'], recipients=[recipient])
-        msg.body = body
-        mail.send(msg)
+    # Mail gönder
+    msg = Message("Kayıt Doğrulama Kodu", recipients=[email])
+    msg.body = f"Kaydınız için doğrulama kodunuz: {code}"
+    mail.send(msg)
 
-        flash("E-posta gönderildi!")
-        return redirect(url_for('admin_send_email'))
+    return jsonify({"success": True})
 
-    return render_template('admin_send_email.html')
+@bp.route("/verify-code", methods=["POST"])
+def verify_code():
+    email = request.form.get("email")
+    code = request.form.get("code")
+
+    if session.get("verify_code") == code:
+            session["email_verified"] = email  # ✅ burası önemli
+            return jsonify({"success": True})
+    return jsonify({"success": False})

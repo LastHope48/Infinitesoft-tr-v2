@@ -1,11 +1,12 @@
 import os
-from flask import Flask,render_template,request,send_from_directory,send_file,redirect,session,url_for,Response,abort,jsonify,Blueprint
+from flask import Flask,render_template,request,send_from_directory,send_file,redirect,session,url_for,Response,abort,jsonify,Blueprint,flash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user,UserMixin
 from botocore.client import Config
 from werkzeug.security import check_password_hash,generate_password_hash
 from flask import current_app
 from all_classes import Project,Account,Media,SiteMessage,SiteUpdate,Card,Recipe,Version
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail,Message
 import boto3
 import requests
 import subprocess
@@ -15,8 +16,12 @@ from datetime import datetime, timedelta
 import io,zipfile
 from sqlalchemy import func,text
 from all_classes import db
+from extensions import mail
+from dotenv import load_dotenv
 bp = Blueprint('app', __name__)
 R2_BUCKET="infinitecloud"
+MAIL_PASSWORD=os.getenv("MAIL_PASSWORD")
+DATABASE_URL=os.getenv("DATABASE_URL")
 MAX_STORAGE = 10 * 1024 * 1024 * 1024
 PYANYWHERE_UPLOAD_URL = "https://wf5528.pythonanywhere.com/upload"
 ALLOWED={"png","jpg","jpeg","mp4","mov","pdf","webp","mp3","pptx","zip"}
@@ -258,16 +263,19 @@ def backup_db():
         abort(403)  # Yetkisiz kullanıcı
     
     # Dosya ismini tarih ile oluştur
-    now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    now = datetime.now().strftime("%Y%m%d_%H%M%S")
     backup_file = f"backup_{now}.sql"
-
+    if not DATABASE_URL:
+        return "DATABASE_URL bulunamadı", 500
     # PostgreSQL backup komutu
     # Çevre değişkenlerinde DB bilgilerini tanımlamalısın: PGUSER, PGPASSWORD, PGHOST, PGDATABASE
     try:
-        subprocess.run(
-            ["pg_dump", "-Fc", "-f", backup_file],
-            check=True
-        )
+        subprocess.run([
+            "pg_dump",
+            DATABASE_URL,
+            "-Fc",
+            "-f", backup_file
+        ], check=True)
     except subprocess.CalledProcessError as e:
         return f"Backup alınamadı: {e}", 500
 
@@ -282,3 +290,30 @@ def privacy():
 @bp.route("/terms")
 def terms():
     return render_template("terms.html")
+@bp.route('/admin/send-email', methods=['GET', 'POST'])
+def admin_send_email():
+    # Sadece admin yetkisi kontrolü burada olmalı
+    if request.method == 'POST':
+        subject = request.form.get('subject')
+        body = request.form.get('body')
+        recipient = request.form.get('recipient')
+
+        msg = Message(subject, sender=current_app.config['MAIL_USERNAME'], recipients=[recipient])
+        msg.body = body
+        mail.send(msg)
+
+        flash("E-posta gönderildi!")
+        return redirect(url_for('admin_send_email'))
+
+    return render_template('admin_send_email.html')
+@bp.route("/test-mail")
+def test_mail():
+    msg = Message(
+        subject="InfiniteCloud Test",
+        sender=current_app.config['MAIL_USERNAME'],
+        recipients=["erenmehmetserdar87@gmail.com"]
+    )
+    msg.body = "Mail sistemi çalışıyor 🚀"
+    
+    mail.send(msg)
+    return "Mail gönderildi!"

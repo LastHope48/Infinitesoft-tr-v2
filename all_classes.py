@@ -60,6 +60,7 @@ if DATABASE_URL:
         __table_args__={"schema":"auth"}
         name = db.Column(db.String(20), nullable=False, unique=True)
         password = db.Column(db.String(300), nullable=False)
+        email = db.Column(db.String(120), nullable=False, unique=True)
         id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
 
     class Card(db.Model):
@@ -125,6 +126,7 @@ else:
         __tablename__ = "accounts_table"
 
         name = db.Column(db.String(20), nullable=False, unique=True)
+        email = db.Column(db.String(120), nullable=False, unique=True)
         password = db.Column(db.String(300), nullable=False)
         id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     class Card(db.Model):

@@ -52,9 +52,13 @@
 
                 <form id="loginForm" method="POST">
                     <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+                    <input type="email" name="email" placeholder="E-posta" id="emailInput" required>
                     <input type="password" name="password" placeholder="Şifre" required>
-
                     <button type="submit">Giriş Yap</button>
+                </form>
+                <form id="codeForm" style="display:none;">
+                    <input name="code" id="codeInput" placeholder="6 haneli kod">
+                    <button type="submit">Doğrula</button>
                 </form>
                 <!-- Hata mesajı buraya gelecek -->
                 <div id="loginError" style="color:red; margin-top:10px; display:none;"></div>
@@ -82,8 +86,10 @@
 </script>
 <script>
 const form = document.getElementById("loginForm");
+const codeForm = document.getElementById("codeForm");
 const errorDiv = document.getElementById("loginError");
 
+// Login form submit
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -96,11 +102,38 @@ form.addEventListener("submit", async (e) => {
 
     const data = await response.json();
 
+    // 🔥 2FA kontrolü
+    if (data.step === "2fa") {
+        form.style.display = "none";
+        codeForm.style.display = "block";
+        return;
+    }
+
     if (data.success) {
         window.location.href = data.redirect;
     } else {
         errorDiv.style.display = "block";
         errorDiv.textContent = data.message;
+    }
+});
+
+// 2FA form submit
+codeForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const code = codeForm.querySelector("input[name='code']").value;
+
+    const response = await fetch("{{ url_for('infinitecloud.verify_login') }}", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: new URLSearchParams({code})
+    });
+
+    const data = await response.json();
+
+    if(data.success){
+        window.location.href = data.redirect;  // cloud sayfasına yönlendir
+    } else {
+        alert("Kod yanlış veya süresi dolmuş");
     }
 });
 </script>
