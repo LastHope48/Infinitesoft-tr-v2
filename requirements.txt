@@ -10,3 +10,5 @@ gunicorn
 psycopg2-binary==2.9.7
 boto3
 flask-login
+Flask-Session
+Flask-Mail>=0.9.1
