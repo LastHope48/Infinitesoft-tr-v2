@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Infinitesoft-tr{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/decor_projects.css', _external=True) }}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/selection.css', _external=True)}}">
+{% endblock %}
+{% block head %}
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-4E0S2QW6KC');
+</script>
+{% endblock %}
+{% block content %}
+
+<main>
+    <header class="header">
+        <h3 class="header__item">
+            🧪 Infinitesoft-tr.com'un ürettiği projelere bakın!
+        </h3>
+    </header>
+
+    <ul class="list">
+
+                <li class="list__item">
+            <a href="{{url_for('fun.gamestart', _external=True)}}">
+                <img class="item__img"
+                     src="{{ url_for('static', filename='img/mouse_pushgame.png', _external=True) }}"
+                     alt="PUSHGAME">
+                <span>Push Game <span class="badge">🚧</span></span>
+            </a>
+                <a href="{{ url_for('app.project_detail', slug='pushgame') }}" 
+       class="detail-btn">
+       ⓘ Detay →
+    </a>
+        </li>
+    <li class="list__item">
+        <a href="/bilim-oyunu">
+            <img src="placeholder" alt="placeholder" class="item__img">
+            <span>ZAMAN YOLCULUĞU BİLİMİ KURTAR <span class="badge">🚧</span></span>
+        </a>
+    </li>
+    <li class="list__item">
+        <a href="/dijital_oyku">
+            <img src="" alt="" class="item__img">
+            <span>Dijital Öykü</span>
+        </a>
+    </li>
+    <li class="list__item">
+        <a href="{{url_for('fun.fun_forms')}}">
+            <img src="{{url_for('static',filename='img/fun_forms.webp')}}" alt="fun_forms">
+            <span>Formlar</span>
+        </a>
+    </li>
+    </ul>
+</main>
+<footer class="site-footer">
+    <p>Versiyon: {{version}}</p>
+</footer>
+<footer style="text-align:center; color:#888; font-size:14px; padding:20px;">
+  © <span id="year"></span> infinitesoft-tr. Tüm hakları saklıdır.
+</footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+
+{% endblock %}

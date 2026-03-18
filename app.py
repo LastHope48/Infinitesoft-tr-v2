@@ -160,6 +160,7 @@ from all_routes_guides import bp as guides
 from all_routes_infinitecloud import bp as infinitecloud
 from all_routes_pushgame import bp as pushgame
 from all_routes_root import bp as root
+from all_routes_fun import bp as fun
 SUBDOMAIN=os.getenv("SUBDOMAIN")
 if SUBDOMAIN=="true":
     app.register_blueprint(camsepeti)
@@ -169,6 +170,7 @@ if SUBDOMAIN=="true":
     app.register_blueprint(aitools)
     app.register_blueprint(root)
     app.register_blueprint(guides)
+    app.register_blueprint(fun)
 else:
     app.register_blueprint(bp)
 @app.errorhandler(404)

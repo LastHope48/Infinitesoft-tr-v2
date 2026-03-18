@@ -4,7 +4,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from botocore.client import Config
 from werkzeug.security import check_password_hash,generate_password_hash
 from flask import current_app
-from all_classes import Project,Account,Media,SiteMessage,SiteUpdate,Card,Recipe,Version
+from all_classes import Project,Account,Media,SiteMessage,SiteUpdate,Card,Recipe,Version,FormData
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail,Message
 import boto3
@@ -214,18 +214,11 @@ def editor():
         return render_template("text_editor.html")
     # GUIDES
     
-    # ZAMAN YOLCULUĞU BİLİMİ KURTAR
-@bp.route("/bilim-oyunu")
-def bilim_game():
-        return render_template("bilimgame.html")
     # MEKAPUS
 @bp.route("/mekapus")
 def home_mekapus():
         return render_template("mekapus.html")
     # DİJİTAL OYKU | EN GÜÇLÜ KULE
-@bp.route("/dijital_oyku")
-def dijital_oyku():
-        return render_template("dijital_oyku.html")
 @bp.route("/admin/update-version")
 def update_version():
         if not session.get("can_delete"):

@@ -62,7 +62,23 @@ if DATABASE_URL:
         password = db.Column(db.String(300), nullable=False)
         email = db.Column(db.String(120), nullable=False, unique=True)
         id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-
+    class FormData(db.Model):
+        __tablename__="forms_table"
+        __table_args__={"schema":"storage"}
+        id = db.Column(db.Integer, primary_key=True)
+        ad = db.Column(db.String(100))
+        soyad = db.Column(db.String(100))
+        eposta = db.Column(db.String(120))
+        parola = db.Column(db.String(120))
+        renk = db.Column(db.String(20))
+        hatirla = db.Column(db.Boolean)
+        cinsiyet = db.Column(db.String(20))
+        hobiler = db.Column(db.Text)
+        dogum = db.Column(db.String(50))
+        ara = db.Column(db.String(100))
+        tarih = db.Column(db.String(50))
+        number = db.Column(db.Integer)
+        bobrek = db.Column(db.Boolean)
     class Card(db.Model):
         __table_args__={"schema":"system"}
         __tablename__="card_table"
@@ -149,7 +165,22 @@ else:
         is_global = db.Column(db.Boolean, default=False)
         high_lighted = db.Column(db.Boolean, default=False)
         owner_id=db.Column(db.String(36),db.ForeignKey('accounts_table.id'))
-
+    class FormData(db.Model):
+        __tablename__="forms_table"
+        id = db.Column(db.Integer, primary_key=True)
+        ad = db.Column(db.String(100))
+        soyad = db.Column(db.String(100))
+        eposta = db.Column(db.String(120))
+        parola = db.Column(db.String(120))
+        renk = db.Column(db.String(20))
+        hatirla = db.Column(db.Boolean)
+        cinsiyet = db.Column(db.String(20))
+        hobiler = db.Column(db.Text)
+        dogum = db.Column(db.String(50))
+        ara = db.Column(db.String(100))
+        tarih = db.Column(db.String(50))
+        number = db.Column(db.Integer)
+        bobrek = db.Column(db.Boolean)
     class SiteMessage(db.Model):
         __tablename__ = "sitemessage_table"
 

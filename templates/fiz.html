@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dosyalar Formlar</title>
+    <link rel="icon" href="{{url_for('static',filename='favicon.ico')}}">
+</head>
+<body>
+    <h1>FORMLAR</h1>
+    {% for i in dosyalar %}
+    <div style="border:1px solid #ccc; padding:10px; margin:10px;">
+        <h2>{{ i.ad }} {{ i.soyad }}</h2>
+        <hr>
+        <p><b>E-posta:</b> {{ i.eposta }}</p>
+        <p><b>Renk:</b> {{ i.renk }}</p>
+        <p><b>Hatırla:</b> {{ i.hatirla }}</p>
+        <p><b>Cinsiyet:</b> {{ i.cinsiyet }}</p>
+        <p><b>Hobiler:</b> {{ i.hobiler }}</p>
+        <p><b>Şehir:</b> {{ i.dogum }}</p>
+        <p><b>Arama:</b> {{ i.ara }}</p>
+        <p><b>Tarih:</b> {{ i.tarih }}</p>
+        <p><b>Sayı:</b> {{ i.number }}</p>
+        <br>
+    </div>
+    {% endfor %}
+</body>
+</html>
