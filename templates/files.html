@@ -12,9 +12,34 @@
 <div class="files-wrapper">
     <ul class="file-list">
         {% for media in files %}
-        <li class="file-card {% if media.high_lighted %} admin-featured {% endif %}">
-            <!-- ... dosya kartları buraya ... -->
-        </li>
+                <li class="file-card {% if media.high_lighted %} admin-featured {% endif %}">
+                <div class="file-header">
+                    <div class="file-info-group">
+                        {% if media.high_lighted %}
+                        <span class="admin-badge">ADMIN</span>
+                        {% endif %}
+                        <span class="download-stats">⬇️ {{ media.download_count }} indirme</span>
+                        <span class="file-name">{{ media.original_name }}</span>
+                    </div>
+
+                    <!-- Chevron -->
+                    <svg class="chevron" width="18" height="18" viewBox="0 0 24 24">
+                        <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </div>
+
+                <div class="file-actions">
+                    <a target="_blank" href="{{url_for('infinitecloud.look', media_id=media.id)}}" class="btn-preview">Ön izle</a>
+                    <a href="{{ url_for('infinitecloud.download_file', media_id=media.id) }}" class="btn-download">İndir</a>
+
+                    {% if current_user.is_authenticated and (can_delete or media.owner_id == current_user.id) %}
+                    <form action="{{ url_for('infinitecloud.delete_file', file_id=media.id) }}" method="POST">
+                        <button type="submit" class="btn-bulk-delete">Sil</button>
+                    </form>
+                    {% endif %}
+                </div>
+
+            </li>
         {% else %}
         <li class="empty-state">Hiç dosya yok.</li>
         {% endfor %}
@@ -41,5 +66,19 @@ function toggleFile(header) {
     });
     card.classList.toggle('open');
 }
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const headers = document.querySelectorAll('.file-header');
+    headers.forEach(header => {
+        header.addEventListener('click', () => {
+            const card = header.parentElement;
+            document.querySelectorAll('.file-card').forEach(c => {
+                if(c !== card) c.classList.remove('open');
+            });
+            card.classList.toggle('open');
+        });
+    });
+});
 </script>
 {% endblock %}

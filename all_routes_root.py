@@ -22,6 +22,11 @@ bp = Blueprint('app', __name__)
 R2_BUCKET="infinitecloud"
 MAIL_PASSWORD=os.getenv("MAIL_PASSWORD")
 DATABASE_URL=os.getenv("DATABASE_URL")
+def reset_database():
+    db.session.commit()
+    db.reflect()
+    db.drop_all()
+    db.create_all()
 MAX_STORAGE = 10 * 1024 * 1024 * 1024
 PYANYWHERE_UPLOAD_URL = "https://wf5528.pythonanywhere.com/upload"
 ALLOWED={"png","jpg","jpeg","mp4","mov","pdf","webp","mp3","pptx","zip"}
@@ -59,17 +64,15 @@ def projects():
         return render_template("projects.html",version=version.version)
 
 
-@bp.route("/__reset_db__", methods=["GET"])
+@bp.route("/admin/__reset_db__", methods=["GET"])
 def reset_db():
         if not session.get("can_delete"):
             abort(403)
         try:
-            db.drop_all()
-            db.create_all()
-
-            return redirect(url_for("app.projects"))
-        except:
-            abort(403)
+             reset_database()
+        except Exception as e:
+             return f"Bir hata gerçekleşti: {e}"
+        return redirect(url_for("app.projects"))
 @bp.route("/admin", methods=["GET", "POST"])
 def reset_login():
         msg = ""

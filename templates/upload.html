@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/decor_upload.css', _external=True) }}">
     <link rel="stylesheet" href="{{url_for('static',filename='css/selection.css', _external=True)}}">
     <link rel="stylesheet" href="{{url_for('static',filename='css/custom_scroll_bar_white.css')}}">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico', _external=True) }}?v=3">
+    <link id="favicon" rel="icon" href="{{url_for('static',filename='favicon_infinitecloud.ico')}}">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4E0S2QW6KC"></script>
 <script>
@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const formData = new FormData(form);
 
         try {
-            const response = await fetch("infinitecloud.infinitesoft-tr.com/upload", {
+            const response = await fetch(window.location.href, {
                 method: "POST",
                 body: formData
             });
@@ -150,7 +150,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             msg.textContent = result.message;
             msg.style.color = result.success ? "lightgreen" : "red";
-
+            if (result.success) {
+                onSuccess();
+            } else {
+                onError();
+            }
             if (result.success) {
                 tickCircle.style.width = "50px";
                 tickCircle.style.height = "50px";
@@ -227,6 +231,34 @@ uploadBox.addEventListener("drop", (e) => {
 });
 
 });
+</script>
+<script>
+const successIcon = "{{ url_for('static', filename='Infinitecloud-Success.ico') }}";
+const errorIcon = "{{ url_for('static', filename='Infinitecloud-Error.ico') }}";
+function setFavicon(path) {
+    let link = document.querySelector("link[rel='icon']");
+
+    if (!link) {
+        link = document.querySelector("link[rel='shortcut icon']");
+    }
+
+    if (!link) {
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.head.appendChild(link);
+    }
+
+    link.href = path + "?v=" + Date.now();
+}
+</script>
+<script>
+function onSuccess() {
+    setFavicon(successIcon);
+}
+
+function onError() {
+    setFavicon(errorIcon);
+}
 </script>
 </body>
 </html>

@@ -46,13 +46,6 @@ app.config["SERVER_NAME"] = "infinitesoft-tr.com"
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
-s3 = boto3.client(
-    service_name="s3",
-    endpoint_url=f"https://{os.getenv('ACCOUNT_ID')}.r2.cloudflarestorage.com",
-    aws_access_key_id=os.getenv("ACCESS_KEY"),
-    aws_secret_access_key=os.getenv("SECRET_KEY"),
-    region_name="auto"
-)
 DATABASE_URL=os.getenv("DATABASE_URL")
 if DATABASE_URL:
     if DATABASE_URL.startswith("postgres://"):

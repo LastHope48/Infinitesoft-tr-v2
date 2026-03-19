@@ -16,7 +16,10 @@ import io,zipfile
 from sqlalchemy import func,text
 from all_classes import db
 import random
+from s3_connect import s3
 from extensions import mail
+from dotenv import load_dotenv
+load_dotenv(r"C:\Users\Mehmet Serdar EREN\Desktop\orasu2v.txt")
 bp = Blueprint('infinitecloud', __name__,subdomain="infinitecloud")
 R2_BUCKET="infinitecloud"
 MAX_STORAGE = 10 * 1024 * 1024 * 1024
@@ -32,13 +35,6 @@ PA_EXE_URL = "https://wf5529.pythonanywhere.com/static/uygulama/infinitesoft-tr.
 UPLOAD_FOLDER_GUIDES = "static/uploads"
 def generate_code():
     return str(random.randint(100000, 999999))
-s3 = boto3.client(
-    service_name="s3",
-    endpoint_url=f"https://{os.getenv('ACCOUNT_ID')}.r2.cloudflarestorage.com",
-    aws_access_key_id=os.getenv("ACCESS_KEY"),
-    aws_secret_access_key=os.getenv("SECRET_KEY"),
-    region_name="auto"
-)
 def get_total_files_from_r2():
     # R2 için S3 istemcisi oluşturma
     
@@ -80,7 +76,7 @@ def upload():
                 return jsonify(success=False, message="❌ Şifre yanlış")
 
             file = request.files.get("file")
-            if not file or not allowed(file.filename) and session.get("can_delete") is not True:
+            if not file or (not allowed(file.filename) and session.get("can_delete") is not True):
                 return jsonify(success=False, message="❌ Geçersiz dosya")
 
             original_name = secure_filename(file.filename)
@@ -120,8 +116,8 @@ def upload():
                         Body=file_bytes
                     )
                 except Exception as e:
-                    print("R2 UPLOAD HATA:", e)
-                    return jsonify(success=False, message="R2 upload hatası")
+                    print("R2 UPLOAD HATA:", str(e))
+                    return jsonify(success=False, message=str(e))
             media = Media(
                 original_name=original_name,
                 stored_name=stored_name,
@@ -134,7 +130,7 @@ def upload():
 
             db.session.add(media)
             db.session.commit()
-            send_to_pythonanywhere(original_name, file_bytes)
+            # send_to_pythonanywhere(original_name, file_bytes)
             print("UPLOAD OK:", original_name)
             return jsonify(success=True, message="✅ Dosya yüklendi")
 
