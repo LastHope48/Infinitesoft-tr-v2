@@ -27,7 +27,6 @@ except:
     pass
 app=Flask(__name__)
 app.config["SESSION_COOKIE_DOMAIN"] = ".infinitesoft-tr.com"
-app.secret_key = os.getenv("APP_SECRET_KEY")  # Güvenli bir key kullan
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 MAIL_PASSWORD=os.getenv("MAIL_PASSWORD")
@@ -90,7 +89,7 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_recycle": 300,
 }
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret")
+app.secret_key = os.getenv("FLASK_SECRET", "dev-secret")
 UPLOAD_FOLDER = "/home/wf5528/infinitecloud_api/uploads"
 app.config["UPLOAD_FOLDER"]="uploads"
 ALLOWED={"png","jpg","jpeg","mp4","mov","pdf","webp","mp3","pptx","zip"}
