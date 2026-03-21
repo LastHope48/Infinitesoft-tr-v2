@@ -26,7 +26,8 @@ try:
 except:
     pass
 app=Flask(__name__)
-app.secret_key = "supersecretkey"  # Güvenli bir key kullan
+app.config["SESSION_COOKIE_DOMAIN"] = ".infinitesoft-tr.com"
+app.secret_key = os.getenv("APP_SECRET_KEY")  # Güvenli bir key kullan
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 MAIL_PASSWORD=os.getenv("MAIL_PASSWORD")
