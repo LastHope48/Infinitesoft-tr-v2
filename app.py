@@ -26,7 +26,6 @@ try:
 except:
     pass
 app=Flask(__name__)
-app.config["SESSION_COOKIE_DOMAIN"] = ".infinitesoft-tr.com"
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 MAIL_PASSWORD=os.getenv("MAIL_PASSWORD")
@@ -48,6 +47,11 @@ login_manager.init_app(app)
 login_manager.login_view = "login"
 DATABASE_URL=os.getenv("DATABASE_URL")
 if DATABASE_URL:
+    app.config.update(
+    SESSION_COOKIE_DOMAIN=".infinitesoft-tr.com",
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_SAMESITE="None"
+    )
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
     app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
@@ -55,6 +59,8 @@ if DATABASE_URL:
     ADMIN_PASSWORD_HASH = os.getenv("ADMIN_PASSWORD")
 else:
     app.config["SERVER_NAME"]="localhost:5000"
+    app.config["SESSION_COOKIE_DOMAIN"]=".localhost:5000"
+    app.config["SESSION_COOKIE_SECURE"]=False
     load_dotenv(r"C:\Users\Mehmet Serdar EREN\Desktop\orasu2v.txt")
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///local.db"
 
