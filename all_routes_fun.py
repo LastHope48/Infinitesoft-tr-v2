@@ -18,7 +18,11 @@ from sqlalchemy import func,text
 from all_classes import db
 from extensions import mail
 from dotenv import load_dotenv
+
+
 bp = Blueprint('fun', __name__,subdomain="fun")
+
+
 @bp.route("/forms/get_form", methods=["POST"])
 def get_form():
     ad = request.form.get("ad")
@@ -55,7 +59,7 @@ def get_form():
     db.session.add(yeni)
     db.session.commit()
 
-    return "Kayıt alındı 😎"
+    return "Kayıt alındı lan"
 @bp.route("/forms/forms")
 def fun_forms():
     dosyalar = FormData.query.all()
@@ -70,10 +74,12 @@ def game():
 def games():
       version=Version.query.get(1)
       return render_template("games.html",version=version.version)
-    # ZAMAN YOLCULUĞU BİLİMİ KURTAR
+
+# ZAMAN YOLCULUĞU BİLİMİ KURTAR
 @bp.route("/bilim-oyunu")
 def bilim_game():
         return render_template("bilimgame.html")
+
 @bp.route("/dijital_oyku")
 def dijital_oyku():
         return render_template("dijital_oyku.html")

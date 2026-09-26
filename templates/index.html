@@ -33,7 +33,7 @@
     <ul class="cards-list">
       {% for el in cards%}
       <li class="card">
-        <a class="card__link" href="{{url_for('cards.card',id='el.id')}}">
+        <a class="card__link" href="{{url_for('cards.card',id=el.id)}}">
           <img class="card__img" src="{{url_for('static',filename='img/post_icon.png', _external=True)}}" width="250" height="250" alt="post_icon">
           <div class="card__text">
             <h2 class="card__title">{{el.title}}</h2>

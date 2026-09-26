@@ -19,12 +19,15 @@ from flask_session import Session
 from all_classes import db,Account
 from middleware import maintenance_mode
 from extensions import mail
+
 load_dotenv()  # .env dosyasını yükler
+
 try:
     load_dotenv(r"C:\Users\Mehmet Serdar EREN\Desktop\orasu2v.txt")
     print("LOCAL MODE: ENVIRONMENT SUCCESS")
 except:
     pass
+
 app=Flask(__name__)
 app.secret_key = "supersecretkey"  # Güvenli bir key kullan
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -154,8 +157,10 @@ from all_routes_infinitecloud import bp as infinitecloud
 from all_routes_pushgame import bp as pushgame
 from all_routes_root import bp as root
 from all_routes_fun import bp as fun
+from all_routes_api import bp as api
+
 SUBDOMAIN=os.getenv("SUBDOMAIN")
-if SUBDOMAIN=="true":
+if True:
     app.register_blueprint(camsepeti)
     app.register_blueprint(infinitecloud)
     app.register_blueprint(pushgame)
@@ -164,20 +169,26 @@ if SUBDOMAIN=="true":
     app.register_blueprint(root)
     app.register_blueprint(guides)
     app.register_blueprint(fun)
+    app.register_blueprint(api)
 else:
     app.register_blueprint(bp)
+
 @app.errorhandler(404)
 def page_not_found(e):
-        return render_template("404.html"),404
+    return render_template("404.html"), 404
+
 @app.errorhandler(403)
 def forbidden(e):
-        return render_template("403.html"),403
+    return render_template("403.html"), 403
+
 @app.errorhandler(405)
 def wrong_direction_to_come(e):
-        return render_template("405.html"),405
+    return render_template("405.html"), 405
+
 @app.errorhandler(500)
 def internal_error(e):
         return render_template("500.html"), 500
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port,debug=True)
