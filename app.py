@@ -49,10 +49,23 @@ app.config["SERVER_NAME"] = "infinitesoft-tr.com"
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
-DATABASE_URL=os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL")
+
 if DATABASE_URL:
+
     if DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+        DATABASE_URL = DATABASE_URL.replace(
+            "postgres://",
+            "postgresql+psycopg2://",
+            1
+        )
+
+    elif DATABASE_URL.startswith("postgresql://"):
+        DATABASE_URL = DATABASE_URL.replace(
+            "postgresql://",
+            "postgresql+psycopg2://",
+            1
+        )
     app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
     UPLOAD_PASSWORD=os.getenv("UPLOAD_PASSWORD")
     ADMIN_PASSWORD_HASH = os.getenv("ADMIN_PASSWORD")
