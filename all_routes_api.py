@@ -100,3 +100,9 @@ def savas_oyunu_1_device_verify():
     return jsonify({
         "valid": valid
     })
+
+@bp.route("/health", methods=["GET"], subdomain="api")
+def health():
+    return jsonify({
+        "online": True
+    })
