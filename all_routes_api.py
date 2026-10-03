@@ -11,7 +11,10 @@ SAVAS_OYUNU_1_ACHIVEMENTS_SECRET_KEY = os.environ[
 ]
 
 ACHIEVEMENTS = {
-    "win"
+    "win",
+    "500_kill",
+    "10_000_kill",
+    "1_000_000_kill"
 }
 
 @bp.route("/achievements/unlock", methods=["POST"], subdomain="api")
