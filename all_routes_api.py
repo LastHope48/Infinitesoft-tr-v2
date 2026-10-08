@@ -14,7 +14,8 @@ ACHIEVEMENTS = {
     "win",
     "500_kill",
     "10_000_kill",
-    "1_000_000_kill"
+    "1_000_000_kill",
+    "masks_importance"
 }
 
 @bp.route("/achievements/unlock", methods=["POST"], subdomain="api")
